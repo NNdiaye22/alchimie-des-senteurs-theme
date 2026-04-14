@@ -74,7 +74,7 @@ function ads_customizer_register( $wp_customize ) {
     ============================================================== */
     $wp_customize->add_section( 'ads_colors', array(
         'title'       => '\ud83c\udfa8 Couleurs Globales',
-        'description' => 'Ces couleurs s’appliquent sur tout le site.',
+        'description' => 'Ces couleurs s'appliquent sur tout le site.',
         'panel'       => 'ads_theme_panel',
         'priority'    => 1,
     ) );
@@ -106,7 +106,7 @@ function ads_customizer_register( $wp_customize ) {
     ============================================================== */
     $wp_customize->add_section( 'ads_scroll_infos', array(
         'title'       => 'Animation Scroll — Infos flottantes',
-        'description' => 'Les 3 blocs d’info visibles pendant l’animation.',
+        'description' => 'Les 3 blocs d'info visibles pendant l'animation.',
         'panel'       => 'ads_theme_panel',
     ) );
     $scroll_infos = array(
@@ -149,7 +149,7 @@ function ads_customizer_register( $wp_customize ) {
         1 => array(
             'tag'   => array( 'Phase 1 — Tag',   "I — L\u2019Allumage" ),
             'title' => array( 'Phase 1 — Titre', "L\u2019instant du premier souffle" ),
-            'body'  => array( 'Phase 1 — Texte', 'La braise s\u2019\u00e9veille. Un fil de fumée s’élève, portant avec lui des siècles de tradition olfactive orientale.' ),
+            'body'  => array( 'Phase 1 — Texte', 'La braise s\u2019\u00e9veille. Un fil de fumée s\u2019élève, portant avec lui des siècles de tradition olfactive orientale.' ),
         ),
         2 => array(
             'tag'   => array( 'Phase 2 — Tag',   'II — La Consumation' ),
@@ -159,7 +159,7 @@ function ads_customizer_register( $wp_customize ) {
         3 => array(
             'tag'   => array( 'Phase 3 — Tag',   "III — L\u2019Empreinte" ),
             'title' => array( 'Phase 3 — Titre', 'Ce qui reste après le silence' ),
-            'body'  => array( 'Phase 3 — Texte', 'La fumée s’est dissipée, mais le souvenir olfactif persiste.' ),
+            'body'  => array( 'Phase 3 — Texte', 'La fumée s\u2019est dissipée, mais le souvenir olfactif persiste.' ),
         ),
     );
     foreach ( $phases as $i => $parts ) {
@@ -179,7 +179,7 @@ function ads_customizer_register( $wp_customize ) {
     _ads_text( $wp_customize, 'ads_reveal_title_l2',  'Titre ligne 2 (italique ambre)', 'Arabesque',      'ads_reveal' );
     _ads_text( $wp_customize, 'ads_reveal_desc',      'Texte descriptif',               'Notre encens le plus emblématique.', 'ads_reveal', 'textarea' );
     _ads_text( $wp_customize, 'ads_reveal_btn1_text', 'Bouton 1 — Texte',              'Acheter',        'ads_reveal' );
-    _ads_text( $wp_customize, 'ads_reveal_btn1_prix', 'Bouton 1 — Prix affiché',       '2 300 XOF',    'ads_reveal' );
+    _ads_text( $wp_customize, 'ads_reveal_btn1_prix', 'Bouton 1 — Prix affiché',       '2 300 XOF',    'ads_reveal' );
     _ads_text( $wp_customize, 'ads_reveal_btn1_url',  'Bouton 1 — Lien',              '#',              'ads_reveal' );
     _ads_text( $wp_customize, 'ads_reveal_btn2_text', 'Bouton 2 — Texte',              'En savoir plus', 'ads_reveal' );
     _ads_text( $wp_customize, 'ads_reveal_btn2_url',  'Bouton 2 — Lien',              '#',              'ads_reveal' );
@@ -203,7 +203,7 @@ function ads_customizer_register( $wp_customize ) {
         'panel' => 'ads_theme_panel',
     ) );
     _ads_check( $wp_customize, 'ads_quote_show', 'Afficher cette section', '1', 'ads_quote' );
-    _ads_text(  $wp_customize, 'ads_quote_text', 'Texte de la citation', '« Un parfum ne se voit pas, mais il se souvient. »', 'ads_quote', 'textarea' );
+    _ads_text(  $wp_customize, 'ads_quote_text', 'Texte de la citation', '« Un parfum ne se voit pas, mais il se souvient. »', 'ads_quote', 'textarea' );
     _ads_text(  $wp_customize, 'ads_quote_attr', 'Attribution', '— La Philosophie des Senteurs', 'ads_quote' );
 
     /* ==============================================================
@@ -216,8 +216,8 @@ function ads_customizer_register( $wp_customize ) {
     _ads_check( $wp_customize, 'ads_collection_show',     'Afficher cette section',         '1',            'ads_collection' );
     _ads_text(  $wp_customize, 'ads_collection_tag',      'Tag',                            'Nos Encens',   'ads_collection' );
     _ads_text(  $wp_customize, 'ads_collection_title',    'Titre',                          'La Collection','ads_collection' );
-    _ads_text(  $wp_customize, 'ads_collection_cta_text', 'Bouton « Tout voir » — Texte', 'Tout voir', 'ads_collection' );
-    _ads_text(  $wp_customize, 'ads_collection_cta_url',  'Bouton « Tout voir » — Lien',  '#',         'ads_collection' );
+    _ads_text(  $wp_customize, 'ads_collection_cta_text', 'Bouton « Tout voir » — Texte', 'Tout voir', 'ads_collection' );
+    _ads_text(  $wp_customize, 'ads_collection_cta_url',  'Bouton « Tout voir » — Lien',  '#',         'ads_collection' );
     $wp_customize->add_setting( 'ads_collection_nb', array( 'default' => 6, 'sanitize_callback' => 'absint', 'transport' => 'postMessage' ) );
     $wp_customize->add_control( 'ads_collection_nb', array(
         'label'       => 'Nombre de produits affichés',
@@ -269,7 +269,7 @@ function ads_customizer_register( $wp_customize ) {
     _ads_text(  $wp_customize, 'ads_shop_title_l2',       'Hero — Titre ligne 2 (ambre)', 'Alchimie',        'ads_shop' );
     _ads_text(  $wp_customize, 'ads_shop_sub',            'Hero — Sous-titre',            'Encens, résines et accessoires sélectionnés pour leur authenticité et leur intensité olfactive.', 'ads_shop', 'textarea' );
     _ads_text(  $wp_customize, 'ads_shop_editorial_label','Case éditoriale — Label',      'La philosophie',              'ads_shop' );
-    _ads_text(  $wp_customize, 'ads_shop_editorial',      'Case éditoriale — Citation',   '« L’encens comme rituel. »', 'ads_shop', 'textarea' );
+    _ads_text(  $wp_customize, 'ads_shop_editorial',      'Case éditoriale — Citation',   '« L\u2019encens comme rituel. »', 'ads_shop', 'textarea' );
     _ads_text(  $wp_customize, 'ads_shop_card_btn',       'Bouton sur chaque carte',       'Voir',                        'ads_shop' );
     _ads_text(  $wp_customize, 'ads_shop_empty',          'Message si aucun produit',      'Aucun produit trouvé.',      'ads_shop' );
     _ads_color( $wp_customize, 'ads_shop_hero_bg',        'Hero — Couleur de fond',       '#1a1714',                     'ads_shop' );
@@ -279,12 +279,12 @@ function ads_customizer_register( $wp_customize ) {
     ============================================================== */
     $wp_customize->add_section( 'ads_cat_defaults', array(
         'title'       => 'Pages Catégories — Défauts',
-        'description' => 'Ces textes s’appliquent à TOUTES les catégories sans réglages spécifiques.',
+        'description' => 'Ces textes s\u2019appliquent à TOUTES les catégories sans réglages spécifiques.',
         'panel'       => 'ads_theme_panel',
     ) );
     _ads_text( $wp_customize, 'ads_cat_default_tag',      'Tag générique',              'Collection',                                          'ads_cat_defaults' );
     _ads_text( $wp_customize, 'ads_cat_default_ed_label', 'Case éditoriale — Label',   'La sélection',                                         'ads_cat_defaults' );
-    _ads_text( $wp_customize, 'ads_cat_default_ed_text',  'Case éditoriale — Citation','« Chaque forme, une expérience olfactive unique. »',   'ads_cat_defaults', 'textarea' );
+    _ads_text( $wp_customize, 'ads_cat_default_ed_text',  'Case éditoriale — Citation','« Chaque forme, une expérience olfactive unique. »',   'ads_cat_defaults', 'textarea' );
 
     $known_cats = array(
         'batonnets' => array(
@@ -292,14 +292,14 @@ function ads_customizer_register( $wp_customize ) {
             'tag_def' => 'Collection Bâtonnets',
             'sub_def' => 'Nos encens en bâtonnets : une combustion lente, une diffusion continuelle. Le format traditionnel par excellence.',
             'ed_lbl'  => 'Le classique',
-            'ed_txt'  => '« Le bâtonnet d’encens, génération après génération. »',
+            'ed_txt'  => '« Le bâtonnet d\u2019encens, génération après génération. »',
         ),
         'cones' => array(
             'label'   => 'Catégorie — Cônes',
             'tag_def' => 'Collection Cônes',
             'sub_def' => 'Nos encés en cônes : une combustion concentrée, une diffusion intense et enveloppante. Parfait pour les grands espaces.',
-            'ed_lbl'  => 'L’intensité',
-            'ed_txt'  => '« Le cône concentre toute la puissance du parfum. »',
+            'ed_lbl'  => 'L\u2019intensité',
+            'ed_txt'  => '« Le cône concentre toute la puissance du parfum. »',
         ),
     );
     foreach ( $known_cats as $slug => $cfg ) {
@@ -325,14 +325,14 @@ function ads_customizer_register( $wp_customize ) {
     ) );
     $contact_fields = array(
         'ads_contact_hero_tag'   => array( 'Hero — Tag',                            'Nous Contacter'                    ),
-        'ads_contact_hero_title' => array( 'Hero — Titre ligne 1',                  'Une question ?'                   ),
+        'ads_contact_hero_title' => array( 'Hero — Titre ligne 1',                  'Une question ?'                   ),
         'ads_contact_hero_em'    => array( 'Hero — Titre ligne 2 (italique)',       'Parlons-en.'                       ),
         'ads_contact_hero_sub'   => array( 'Hero — Sous-titre',                     'Notre équipe est disponible du lundi au samedi, de 9h à 18h.' ),
         'ads_contact_adresse'    => array( 'Adresse',                                'Dakar, Sénégal'                    ),
         'ads_contact_whatsapp'   => array( 'Lien WhatsApp (https://wa.me/...)',      'https://wa.me/221776440125'        ),
         'ads_contact_wa_label'   => array( 'WhatsApp — Texte affiché',              '+221 77 644 01 25'                 ),
         'ads_contact_email'      => array( 'Email de contact',                      'contact@alchimie-des-senteurs.sn'  ),
-        'ads_contact_horaires'   => array( 'Horaires',                               'Lun — Sam : 9h à 18h'              ),
+        'ads_contact_horaires'   => array( 'Horaires',                               'Lun — Sam : 9h à 18h'              ),
         'ads_contact_form_tag'   => array( 'Formulaire — Tag',                      'Formulaire'                        ),
         'ads_contact_form_title' => array( 'Formulaire — Titre ligne 1',            'Envoyez-nous'                      ),
         'ads_contact_form_em'    => array( 'Formulaire — Titre ligne 2 (italique)', 'un message'                        ),
@@ -361,20 +361,16 @@ function ads_customizer_register( $wp_customize ) {
 
     /* ==============================================================
        13. NUMERO DE TELEPHONE
-       Contrôle l’affichage du numero partout sur le site.
     ============================================================== */
     $wp_customize->add_section( 'ads_phone', array(
         'title'       => '\ud83d\udcf1 Numéro de Téléphone',
-        'description' => 'Gérez le numéro de téléphone/WhatsApp affiché sur le site et activez ou désactivez son affichage page par page.',
+        'description' => 'Gérez le numéro WhatsApp affiché sur le site et activez/désactivez son affichage page par page.',
         'panel'       => 'ads_theme_panel',
         'priority'    => 200,
     ) );
+    _ads_text( $wp_customize, 'ads_phone_number', 'Numéro affiché',            '+221 77 644 01 25',           'ads_phone' );
+    _ads_text( $wp_customize, 'ads_phone_link',   'Lien (https://wa.me/...)', 'https://wa.me/221776440125',  'ads_phone' );
 
-    // --- Le numero et le lien ---
-    _ads_text( $wp_customize, 'ads_phone_number', 'Numéro affiché',              '+221 77 644 01 25',          'ads_phone' );
-    _ads_text( $wp_customize, 'ads_phone_link',   'Lien (https://wa.me/...)',   'https://wa.me/221776440125','ads_phone' );
-
-    // --- Cases à cocher : afficher sur... ---
     $phone_locations = array(
         'ads_phone_show_cart'     => 'Afficher dans le Panier',
         'ads_phone_show_checkout' => 'Afficher dans le Checkout',
@@ -391,20 +387,30 @@ add_action( 'customize_register', 'ads_customizer_register' );
 
 /* ================================================================
    HELPER GLOBAL : ads_phone()
-   Retourne le HTML du bloc telephone si la case est cochee.
+   Affiche un bouton WhatsApp avec logo officiel + label + numéro.
    Usage : <?php ads_phone('cart'); ?>
 ================================================================ */
 function ads_phone( $location, $class = '' ) {
     $show = get_theme_mod( 'ads_phone_show_' . $location, '1' );
     if ( ! $show ) return;
+
     $number = get_theme_mod( 'ads_phone_number', '+221 77 644 01 25' );
     $link   = get_theme_mod( 'ads_phone_link',   'https://wa.me/221776440125' );
     if ( ! $number ) return;
-    $cls = 'ads-phone-block' . ( $class ? ' ' . esc_attr($class) : '' );
-    echo '<div class="' . $cls . '">';
-    echo '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 7.18 2 2 0 014.99 5h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L9.91 12a16 16 0 006.09 6.09l.31-.31a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 20z"/></svg>';
-    echo '<a href="' . esc_url($link) . '" class="ads-phone-link">' . esc_html($number) . '</a>';
-    echo '</div>';
+
+    $cls = 'ads-phone-block' . ( $class ? ' ' . esc_attr( $class ) : '' );
+
+    // Logo WhatsApp officiel (SVG path issu du brand kit Meta/WhatsApp)
+    $wa_icon = '<svg class="ads-wa-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">'
+        . '<path fill="#25D366" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>'
+        . '<path fill="#25D366" d="M12 0C5.373 0 0 5.373 0 12c0 2.117.554 4.103 1.523 5.828L.057 23.57a.75.75 0 0 0 .92.919l5.8-1.453A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.006-1.373l-.36-.214-3.713.929.959-3.629-.235-.374A9.818 9.818 0 1 1 12 21.818z"/>'
+        . '</svg>';
+
+    echo '<a href="' . esc_url( $link ) . '" class="' . $cls . '" target="_blank" rel="noopener">';
+    echo $wa_icon;
+    echo '<span class="ads-wa-label">WhatsApp</span>';
+    echo '<span class="ads-wa-number">' . esc_html( $number ) . '</span>';
+    echo '</a>';
 }
 
 /* ================================================================
@@ -427,7 +433,6 @@ function ads_customizer_preview() { ?>
             });
         }); });
     }
-    // Couleurs
     wp.customize('ads_color_ink',     function(v){ v.bind(function(val){ cssVar('--ink',val); }); });
     wp.customize('ads_color_amber',   function(v){ v.bind(function(val){ cssVar('--amber',val); }); });
     wp.customize('ads_color_amber_l', function(v){ v.bind(function(val){ cssVar('--amber-l',val); }); });
@@ -438,15 +443,12 @@ function ads_customizer_preview() { ?>
     wp.customize('ads_shop_hero_bg',  function(v){ v.bind(function(val){
         var h = document.querySelector('.shop-hero'); if(h) h.style.background = val;
     }); });
-    // Textes homepage
     txt('ads_hero_tag', '.ov-tag');
     txt('ads_hero_sub', '.ov-sub');
-    // Boutique
     txt('ads_shop_tag',             '.shop-hero-tag');
     txt('ads_shop_sub',             '.shop-hero-sub');
     txt('ads_shop_editorial_label', '.shop-editorial-label');
     txt('ads_shop_editorial',       '.shop-editorial-text');
-    // Catégories
     txt('ads_cat_batonnets_tag',      '.cat-batonnets .shop-hero-tag');
     txt('ads_cat_batonnets_sub',      '.cat-batonnets .shop-hero-sub');
     txt('ads_cat_batonnets_ed_label', '.cat-batonnets .shop-editorial-label');
@@ -455,17 +457,14 @@ function ads_customizer_preview() { ?>
     txt('ads_cat_cones_sub',          '.cat-cones .shop-hero-sub');
     txt('ads_cat_cones_ed_label',     '.cat-cones .shop-editorial-label');
     txt('ads_cat_cones_ed_text',      '.cat-cones .shop-editorial-text');
-    // Newsletter
     txt('ads_nl_tag',   '.nl-tag');
     txt('ads_nl_title', '.nl-title');
     txt('ads_nl_sub',   '.nl-sub');
     txt('ads_nl_btn',   '.nl-form button');
-    // Footer
     txt('ads_footer_brand', '.f-brand');
     txt('ads_footer_sub',   '.f-sub');
     txt('ads_footer_about', '.f-about');
     txt('ads_footer_copy',  '.f-copy');
-    // Téléphone — toggle live
     tog('ads_phone_show_cart',    '.cart-wrap .ads-phone-block');
     tog('ads_phone_show_footer',  '.site-footer .ads-phone-block');
     tog('ads_phone_show_header',  '.site-header .ads-phone-block');
@@ -479,7 +478,7 @@ add_action( 'customize_preview_init', function(){
 } );
 
 /* ================================================================
-   OUTPUT CSS — Variables couleurs + style bloc telephone
+   OUTPUT CSS
 ================================================================ */
 function ads_customizer_css() {
     $ink     = get_theme_mod( 'ads_color_ink',     '#1a1714' );
@@ -510,22 +509,37 @@ function ads_customizer_css() {
     <?php if ( $shop_bg !== '#1a1714' ) : ?>
     .shop-hero { background: <?php echo sanitize_hex_color($shop_bg); ?> !important; }
     <?php endif; ?>
-    /* Bloc telephone global */
+
+    /* ---- Bouton WhatsApp ---- */
     .ads-phone-block {
-        display: flex;
+        display:     inline-flex;
         align-items: center;
-        gap: 0.6rem;
-        font-size: 0.65rem;
-        color: var(--stone);
-    }
-    .ads-phone-block svg { flex-shrink: 0; color: var(--amber); }
-    .ads-phone-link {
+        gap:         0.5rem;
+        padding:     0.35rem 0.75rem 0.35rem 0.5rem;
+        border:      1px solid #25D36640;
+        border-radius: 999px;
+        background:  #25D36610;
         text-decoration: none;
-        color: inherit;
-        transition: color 0.2s;
-        letter-spacing: 0.04em;
+        color:       var(--stone, #9a9088);
+        font-size:   0.72rem;
+        line-height: 1;
+        transition:  background 0.2s, border-color 0.2s;
     }
-    .ads-phone-link:hover { color: var(--amber); }
+    .ads-phone-block:hover {
+        background:    #25D36620;
+        border-color:  #25D366;
+    }
+    .ads-wa-icon   { flex-shrink: 0; display: block; }
+    .ads-wa-label  {
+        font-weight:    600;
+        color:          #25D366;
+        letter-spacing: 0.02em;
+        font-size:      0.7rem;
+    }
+    .ads-wa-number {
+        letter-spacing: 0.04em;
+        color:          var(--stone, #9a9088);
+    }
     </style>
     <?php
 }
