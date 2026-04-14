@@ -76,7 +76,7 @@
     </div><!-- .footer-inner -->
 
     <div class="footer-bottom">
-        <p><?php echo wp_kses_post( ads_option( 'ads_footer_copy', '&copy; 2026 Alchimie des Senteurs &middot; Dakar, S&eacute;n&eacute;gal' ) ); ?></p>
+        <p><?php echo wp_kses_post( ads_option( 'ads_footer_copy', '&copy; ' . date('Y') . ' Alchimie des Senteurs &middot; Dakar, S&eacute;n&eacute;gal' ) ); ?></p>
         <div class="pay-row">
             <?php
             $methods = ads_option( 'ads_footer_pay', 'Orange Money,Wave,Carte' );
@@ -86,6 +86,10 @@
             endforeach;
             ?>
         </div>
+    </div>
+
+    <div class="footer-signature">
+        <p><?php esc_html_e( 'Th&egrave;me cr&eacute;&eacute; par', 'alchimie-des-senteurs' ); ?> <span class="signature-name">BUUR DIGITAL</span></p>
     </div>
 
 </footer>
