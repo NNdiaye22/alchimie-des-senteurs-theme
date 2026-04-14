@@ -23,35 +23,43 @@ function ads_c( $key, $default = '' ) {
     <div class="ov-sub" id="os"><?php echo ads_c('ads_hero_sub', 'Oud · Arabesque · Musc · Andalous'); ?></div>
   </div>
 
+  <!-- Blocs info flottants — modifiables depuis Apparence > Personnaliser > Animation Scroll -->
   <div class="info-block" id="info-left">
-    <div class="info-label">Combustion</div>
-    <div class="info-value">2h à 5h</div>
-    <div class="info-sub">Diffusion lente<br>et continue</div>
+    <div class="info-label"><?php echo ads_c('ads_scroll_left_label', 'Combustion'); ?></div>
+    <div class="info-value"><?php echo ads_c('ads_scroll_left_value', '2h à 5h'); ?></div>
+    <div class="info-sub">
+      <?php echo ads_c('ads_scroll_left_sub1', 'Diffusion lente'); ?><br>
+      <?php echo ads_c('ads_scroll_left_sub2', 'et continue'); ?>
+    </div>
   </div>
   <div class="info-block" id="info-right">
-    <div class="info-label">Matière première</div>
-    <div class="info-value">Résine naturelle</div>
-    <div class="info-sub">Bois précieux<br>sélectionné</div>
+    <div class="info-label"><?php echo ads_c('ads_scroll_right_label', 'Matière première'); ?></div>
+    <div class="info-value"><?php echo ads_c('ads_scroll_right_value', 'Résine naturelle'); ?></div>
+    <div class="info-sub">
+      <?php echo ads_c('ads_scroll_right_sub1', 'Bois précieux'); ?><br>
+      <?php echo ads_c('ads_scroll_right_sub2', 'sélectionné'); ?>
+    </div>
   </div>
   <div class="info-block" id="info-bottom">
-    <div class="info-label">Notes olfactives</div>
-    <div class="info-value">Oud · Bois de Santal · Ambre</div>
+    <div class="info-label"><?php echo ads_c('ads_scroll_bottom_label', 'Notes olfactives'); ?></div>
+    <div class="info-value"><?php echo ads_c('ads_scroll_bottom_value', 'Oud · Bois de Santal · Ambre'); ?></div>
   </div>
 
+  <!-- Phases — modifiables depuis Apparence > Personnaliser > Animation Scroll — Phases -->
   <div class="phase-copy" id="pc1">
-    <div class="ph-tag">I — L'Allumage</div>
-    <div class="ph-title">L'instant<br>du premier souffle</div>
-    <div class="ph-body">La braise s'éveille. Un fil de fumée s'élève, portant avec lui des siècles de tradition olfactive orientale.</div>
+    <div class="ph-tag"><?php echo ads_c('ads_phase_1_tag', 'I — L’Allumage'); ?></div>
+    <div class="ph-title"><?php echo ads_c('ads_phase_1_title', "L'instant du premier souffle"); ?></div>
+    <div class="ph-body"><?php echo ads_c('ads_phase_1_body', 'La braise s’éveille. Un fil de fumée s’élève, portant avec lui des siècles de tradition olfactive orientale.'); ?></div>
   </div>
   <div class="phase-copy right" id="pc2">
-    <div class="ph-tag">II — La Consumation</div>
-    <div class="ph-title">Le temps<br>qui parfume</div>
-    <div class="ph-body" style="margin-left:auto;">Au fil des heures, le bâtonnet révèle ses couches olfactives. Du cœur épicé aux notes boisées de fond.</div>
+    <div class="ph-tag"><?php echo ads_c('ads_phase_2_tag', 'II — La Consumation'); ?></div>
+    <div class="ph-title"><?php echo ads_c('ads_phase_2_title', 'Le temps qui parfume'); ?></div>
+    <div class="ph-body" style="margin-left:auto;"><?php echo ads_c('ads_phase_2_body', 'Au fil des heures, le bâtonnet révèle ses couches olfactives. Du cœur épicé aux notes boisées de fond.'); ?></div>
   </div>
   <div class="phase-copy" id="pc3">
-    <div class="ph-tag">III — L'Empreinte</div>
-    <div class="ph-title">Ce qui reste<br>après le silence</div>
-    <div class="ph-body">La fumée s'est dissipée, mais le souvenir olfactif persiste. C'est la magie du bon encens.</div>
+    <div class="ph-tag"><?php echo ads_c('ads_phase_3_tag', 'III — L’Empreinte'); ?></div>
+    <div class="ph-title"><?php echo ads_c('ads_phase_3_title', 'Ce qui reste après le silence'); ?></div>
+    <div class="ph-body"><?php echo ads_c('ads_phase_3_body', 'La fumée s’est dissipée, mais le souvenir olfactif persiste. C’est la magie du bon encens.'); ?></div>
   </div>
 
   <div id="cue">
@@ -82,7 +90,7 @@ function ads_c( $key, $default = '' ) {
     <div class="spec-row"><div class="spec-label">Contenu</div><div class="spec-value">10 bâtonnets</div></div>
     <div class="spec-row"><div class="spec-label">Famille olfactive</div><div class="spec-value">Oriental · Boisé · Épicé</div></div>
     <div class="spec-row"><div class="spec-label">Origine</div><div class="spec-value">Résines d'Orient</div></div>
-    <div class="spec-row"><div class="spec-label">Livraison</div><div class="spec-value">Dakar & environs</div></div>
+    <div class="spec-row"><div class="spec-label">Livraison</div><div class="spec-value">Dakar &amp; environs</div></div>
   </div>
 </section>
 

@@ -4,6 +4,9 @@
  * Template Post Type: page
  */
 get_header();
+function ads_ct( $key, $default = '' ) {
+    return wp_kses_post( get_theme_mod( $key, $default ) );
+}
 ?>
 
 <div class="contact-wrap">
@@ -11,39 +14,52 @@ get_header();
   <!-- HERO -->
   <section class="contact-hero">
     <div class="contact-hero-inner">
-      <div class="contact-tag">Nous Contacter</div>
-      <h1 class="contact-title">Une question&nbsp;?<br><em>Parlons-en.</em></h1>
-      <p class="contact-sub">Notre équipe est disponible du lundi au samedi,&nbsp;de&nbsp;9h&nbsp;à&nbsp;18h.</p>
+      <div class="contact-tag"><?php echo ads_ct('ads_contact_hero_tag', 'Nous Contacter'); ?></div>
+      <h1 class="contact-title">
+        <?php echo ads_ct('ads_contact_hero_title', 'Une question ?'); ?><br>
+        <em><?php echo ads_ct('ads_contact_hero_em', 'Parlons-en.'); ?></em>
+      </h1>
+      <p class="contact-sub"><?php echo ads_ct('ads_contact_hero_sub', 'Notre équipe est disponible du lundi au samedi, de 9h à 18h.'); ?></p>
     </div>
   </section>
 
-  <!-- INFOS RAPIDES : 4 blocs en ligne -->
+  <!-- BANDE INFOS RAPIDES -->
   <div class="contact-quick">
     <div class="cq-item">
       <div class="cq-label">Adresse</div>
-      <div class="cq-value">Dakar, Sénégal</div>
+      <div class="cq-value"><?php echo ads_ct('ads_contact_adresse', 'Dakar, Sénégal'); ?></div>
     </div>
     <div class="cq-item">
       <div class="cq-label">WhatsApp</div>
-      <a class="cq-value cq-link" href="https://wa.me/221776440125" target="_blank" rel="noopener">+221 77 644 01 25</a>
+      <a class="cq-value cq-link"
+         href="<?php echo esc_url( get_theme_mod('ads_contact_whatsapp', 'https://wa.me/221776440125') ); ?>"
+         target="_blank" rel="noopener">
+        <?php echo ads_ct('ads_contact_wa_label', '+221 77 644 01 25'); ?>
+      </a>
     </div>
     <div class="cq-item">
       <div class="cq-label">Email</div>
-      <a class="cq-value cq-link" href="mailto:contact@alchimie-des-senteurs.sn">contact@alchimie-des-senteurs.sn</a>
+      <a class="cq-value cq-link"
+         href="mailto:<?php echo esc_attr( get_theme_mod('ads_contact_email', 'contact@alchimie-des-senteurs.sn') ); ?>">
+        <?php echo ads_ct('ads_contact_email', 'contact@alchimie-des-senteurs.sn'); ?>
+      </a>
     </div>
     <div class="cq-item">
       <div class="cq-label">Horaires</div>
-      <div class="cq-value">Lun — Sam&nbsp;: 9h à 18h</div>
+      <div class="cq-value"><?php echo ads_ct('ads_contact_horaires', 'Lun — Sam : 9h à 18h'); ?></div>
     </div>
   </div>
 
-  <!-- FORMULAIRE -->
+  <!-- SECTION FORMULAIRE -->
   <section class="contact-form-section">
 
     <div class="contact-form-intro">
-      <div class="cf-intro-tag">Formulaire</div>
-      <div class="cf-intro-title">Envoyez-nous<br><em>un message</em></div>
-      <p class="cf-intro-sub">Nous vous répondons sous 24h. Pour les commandes urgentes, préférez WhatsApp.</p>
+      <div class="cf-intro-tag"><?php echo ads_ct('ads_contact_form_tag', 'Formulaire'); ?></div>
+      <div class="cf-intro-title">
+        <?php echo ads_ct('ads_contact_form_title', 'Envoyez-nous'); ?><br>
+        <em><?php echo ads_ct('ads_contact_form_em', 'un message'); ?></em>
+      </div>
+      <p class="cf-intro-sub"><?php echo ads_ct('ads_contact_form_sub', 'Nous vous répondons sous 24h. Pour les commandes urgentes, préférez WhatsApp.'); ?></p>
 
       <div class="ci-socials">
         <?php $wa = get_theme_mod('ads_footer_wa','https://wa.me/221776440125'); if ($wa) : ?>
@@ -63,7 +79,6 @@ get_header();
       while ( have_posts() ) : the_post();
         $content = get_the_content();
       endwhile;
-
       if ( ! empty( trim( strip_tags( $content ) ) ) ) :
         echo '<div class="contact-form-shortcode">';
         the_content();
@@ -84,10 +99,6 @@ get_header();
         <div class="cf-field">
           <label class="cf-label" for="cf-email">Email</label>
           <input class="cf-input" type="email" id="cf-email" name="email" placeholder="votre@email.com" required />
-        </div>
-        <div class="cf-field">
-          <label class="cf-label" for="cf-tel">Téléphone <span class="cf-opt">(optionnel)</span></label>
-          <input class="cf-input" type="tel" id="cf-tel" name="telephone" placeholder="+221 77 000 00 00" />
         </div>
         <div class="cf-field">
           <label class="cf-label" for="cf-sujet">Sujet</label>
