@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Fichier d'import WordPress (WXR) pour Alchimie des Senteurs -->
+<!-- Import via : Outils > Importer > WordPress -->
+<rss version="2.0"
+  xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/"
+  xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xmlns:wp="http://wordpress.org/export/1.2/">
+
+<channel>
+  <title>Alchimie des Senteurs</title>
+  <link>https://alchimiedessenteurs.com</link>
+  <description>Maison d&#8217;Encens &#183; Dakar</description>
+  <pubDate>Tue, 14 Apr 2026 14:00:00 +0000</pubDate>
+  <language>fr-FR</language>
+  <wp:wxr_version>1.2</wp:wxr_version>
+  <wp:base_site_url>https://alchimiedessenteurs.com</wp:base_site_url>
+  <wp:base_blog_url>https://alchimiedessenteurs.com</wp:base_blog_url>
+
+  <wp:author>
+    <wp:author_id>1</wp:author_id>
+    <wp:author_login><![CDATA[admin]]></wp:author_login>
+    <wp:author_email><![CDATA[admin@alchimiedessenteurs.com]]></wp:author_email>
+    <wp:author_display_name><![CDATA[Alchimie des Senteurs]]></wp:author_display_name>
+    <wp:author_first_name><![CDATA[Alchimie]]></wp:author_first_name>
+    <wp:author_last_name><![CDATA[des Senteurs]]></wp:author_last_name>
+  </wp:author>
+
+  <wp:category>
+    <wp:term_id>10</wp:term_id>
+    <wp:category_nicename><![CDATA[conseils]]></wp:category_nicename>
+    <wp:category_parent></wp:category_parent>
+    <wp:cat_name><![CDATA[Conseils]]></wp:cat_name>
+  </wp:category>
+
+  <!-- Categories WooCommerce -->
+  <wp:term>
+    <wp:term_id>20</wp:term_id>
+    <wp:term_taxonomy><![CDATA[product_cat]]></wp:term_taxonomy>
+    <wp:term_slug><![CDATA[batonnets]]></wp:term_slug>
+    <wp:term_parent></wp:term_parent>
+    <wp:term_name><![CDATA[Bâtonnets]]></wp:term_name>
+    <wp:term_description><![CDATA[Nos encens en bâtonnets]]></wp:term_description>
+  </wp:term>
+  <wp:term>
+    <wp:term_id>21</wp:term_id>
+    <wp:term_taxonomy><![CDATA[product_cat]]></wp:term_taxonomy>
+    <wp:term_slug><![CDATA[cones]]></wp:term_slug>
+    <wp:term_parent></wp:term_parent>
+    <wp:term_name><![CDATA[Cônes]]></wp:term_name>
+    <wp:term_description><![CDATA[Nos encens en cônes]]></wp:term_description>
+  </wp:term>
+
+  <!-- Menus de navigation -->
+  <wp:term>
+    <wp:term_id>22</wp:term_id>
+    <wp:term_taxonomy><![CDATA[nav_menu]]></wp:term_taxonomy>
+    <wp:term_slug><![CDATA[menu-principal]]></wp:term_slug>
+    <wp:term_parent></wp:term_parent>
+    <wp:term_name><![CDATA[Menu Principal]]></wp:term_name>
+  </wp:term>
+  <wp:term>
+    <wp:term_id>23</wp:term_id>
+    <wp:term_taxonomy><![CDATA[nav_menu]]></wp:term_taxonomy>
+    <wp:term_slug><![CDATA[footer-collection]]></wp:term_slug>
+    <wp:term_parent></wp:term_parent>
+    <wp:term_name><![CDATA[Footer - Collection]]></wp:term_name>
+  </wp:term>
+  <wp:term>
+    <wp:term_id>24</wp:term_id>
+    <wp:term_taxonomy><![CDATA[nav_menu]]></wp:term_taxonomy>
+    <wp:term_slug><![CDATA[footer-boutique]]></wp:term_slug>
+    <wp:term_parent></wp:term_parent>
+    <wp:term_name><![CDATA[Footer - Boutique]]></wp:term_name>
+  </wp:term>
+  <wp:term>
+    <wp:term_id>25</wp:term_id>
+    <wp:term_taxonomy><![CDATA[nav_menu]]></wp:term_taxonomy>
+    <wp:term_slug><![CDATA[footer-aide]]></wp:term_slug>
+    <wp:term_parent></wp:term_parent>
+    <wp:term_name><![CDATA[Footer - Aide]]></wp:term_name>
+  </wp:term>
+
+  <!-- ============================================================ -->
+  <!-- PAGES                                                        -->
+  <!-- ============================================================ -->
+
+  <item>
+    <title>Accueil</title>
+    <link>https://alchimiedessenteurs.com/</link>
+    <pubDate>Tue, 14 Apr 2026 14:00:00 +0000</pubDate>
+    <dc:creator><![CDATA[admin]]></dc:creator>
+    <guid isPermaLink="false">https://alchimiedessenteurs.com/?page_id=100</guid>
+    <content:encoded><![CDATA[<!-- Page d'accueil contrôlée par front-page.php -->]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>100</wp:post_id>
+    <wp:post_date><![CDATA[2026-04-14 14:00:00]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_date_gmt>
+    <wp:post_modified><![CDATA[2026-04-14 14:00:00]]></wp:post_modified>
+    <wp:post_modified_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_modified_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[accueil]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[page]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+  </item>
+
+  <item>
+    <title>Boutique</title>
+    <link>https://alchimiedessenteurs.com/boutique/</link>
+    <pubDate>Tue, 14 Apr 2026 14:00:00 +0000</pubDate>
+    <dc:creator><![CDATA[admin]]></dc:creator>
+    <guid isPermaLink="false">https://alchimiedessenteurs.com/?page_id=101</guid>
+    <content:encoded><![CDATA[]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>101</wp:post_id>
+    <wp:post_date><![CDATA[2026-04-14 14:00:00]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_date_gmt>
+    <wp:post_modified><![CDATA[2026-04-14 14:00:00]]></wp:post_modified>
+    <wp:post_modified_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_modified_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[boutique]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[page]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+  </item>
+
+  <item>
+    <title>Notre Histoire</title>
+    <link>https://alchimiedessenteurs.com/notre-histoire/</link>
+    <pubDate>Tue, 14 Apr 2026 14:00:00 +0000</pubDate>
+    <dc:creator><![CDATA[admin]]></dc:creator>
+    <guid isPermaLink="false">https://alchimiedessenteurs.com/?page_id=102</guid>
+    <content:encoded><![CDATA[<h2>L&#8217;Alchimie des Senteurs</h2>
+<p>Née à Dakar, Alchimie des Senteurs est une maison d&#8217;encens dédiée à la préservation et à la transmission des traditions olfactives d&#8217;Orient et d&#8217;Occident.</p>
+<p>Nous sélectionnons des matières premières d&#8217;une authenticité rare, pour que chaque moment d&#8217;allumage devienne un acte de présence. Chaque bâtonnet est un pont entre le présent et l&#8217;ancestral.</p>
+<h3>Notre philosophie</h3>
+<p>Le parfum ne se voit pas, mais il se souvient. Il reste longtemps après que tout le reste s&#8217;est tu. C&#8217;est cette conviction qui guide chaque création de notre maison.</p>]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>102</wp:post_id>
+    <wp:post_date><![CDATA[2026-04-14 14:00:00]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_date_gmt>
+    <wp:post_modified><![CDATA[2026-04-14 14:00:00]]></wp:post_modified>
+    <wp:post_modified_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_modified_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[notre-histoire]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[page]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+  </item>
+
+  <item>
+    <title>Contact</title>
+    <link>https://alchimiedessenteurs.com/contact/</link>
+    <pubDate>Tue, 14 Apr 2026 14:00:00 +0000</pubDate>
+    <dc:creator><![CDATA[admin]]></dc:creator>
+    <guid isPermaLink="false">https://alchimiedessenteurs.com/?page_id=103</guid>
+    <content:encoded><![CDATA[<h2>Nous contacter</h2>
+<p>Pour toute question sur nos produits ou pour passer commande :</p>
+<ul>
+<li><strong>WhatsApp :</strong> <a href="https://wa.me/221776440125">+221 77 644 01 25</a></li>
+<li><strong>Email :</strong> contact@alchimiedessenteurs.com</li>
+<li><strong>Adresse :</strong> Dakar, Sénégal</li>
+</ul>]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>103</wp:post_id>
+    <wp:post_date><![CDATA[2026-04-14 14:00:00]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_date_gmt>
+    <wp:post_modified><![CDATA[2026-04-14 14:00:00]]></wp:post_modified>
+    <wp:post_modified_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_modified_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[contact]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[page]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+  </item>
+
+  <item>
+    <title>Livraison &amp; Retours</title>
+    <link>https://alchimiedessenteurs.com/livraison-retours/</link>
+    <pubDate>Tue, 14 Apr 2026 14:00:00 +0000</pubDate>
+    <dc:creator><![CDATA[admin]]></dc:creator>
+    <guid isPermaLink="false">https://alchimiedessenteurs.com/?page_id=104</guid>
+    <content:encoded><![CDATA[<h2>Livraison</h2>
+<p>Nous livrons partout au Sénégal via nos partenaires logistiques. Délai de livraison : 24 à 72h à Dakar, 3 à 5 jours pour les autres régions.</p>
+<h3>Modes de paiement</h3>
+<ul><li>Orange Money</li><li>Wave</li><li>Paiement par carte</li><li>Paiement à la livraison (Dakar uniquement)</li></ul>
+<h3>Retours</h3>
+<p>En cas de produit endommagé ou non conforme, contactez-nous dans les 48h suivant la réception.</p>]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>104</wp:post_id>
+    <wp:post_date><![CDATA[2026-04-14 14:00:00]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_date_gmt>
+    <wp:post_modified><![CDATA[2026-04-14 14:00:00]]></wp:post_modified>
+    <wp:post_modified_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_modified_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[livraison-retours]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[page]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+  </item>
+
+  <item>
+    <title>Politique de Confidentialité</title>
+    <link>https://alchimiedessenteurs.com/politique-confidentialite/</link>
+    <pubDate>Tue, 14 Apr 2026 14:00:00 +0000</pubDate>
+    <dc:creator><![CDATA[admin]]></dc:creator>
+    <guid isPermaLink="false">https://alchimiedessenteurs.com/?page_id=105</guid>
+    <content:encoded><![CDATA[<p>Vos données personnelles sont utilisées uniquement pour le traitement de vos commandes et ne sont jamais partagées avec des tiers. Conformément au RGPD, vous disposez d&#8217;un droit d&#8217;accès, de rectification et de suppression de vos données.</p>]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>105</wp:post_id>
+    <wp:post_date><![CDATA[2026-04-14 14:00:00]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_date_gmt>
+    <wp:post_modified><![CDATA[2026-04-14 14:00:00]]></wp:post_modified>
+    <wp:post_modified_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_modified_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[politique-confidentialite]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[page]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+  </item>
+
+  <item>
+    <title>Mentions Légales</title>
+    <link>https://alchimiedessenteurs.com/mentions-legales/</link>
+    <pubDate>Tue, 14 Apr 2026 14:00:00 +0000</pubDate>
+    <dc:creator><![CDATA[admin]]></dc:creator>
+    <guid isPermaLink="false">https://alchimiedessenteurs.com/?page_id=106</guid>
+    <content:encoded><![CDATA[<p>Alchimie des Senteurs — Dakar, Sénégal. NINEA : [à compléter]. Directeur de publication : [à compléter]. Hébergement : [à compléter].</p>]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>106</wp:post_id>
+    <wp:post_date><![CDATA[2026-04-14 14:00:00]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_date_gmt>
+    <wp:post_modified><![CDATA[2026-04-14 14:00:00]]></wp:post_modified>
+    <wp:post_modified_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_modified_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[mentions-legales]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[page]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+  </item>
+
+  <item>
+    <title>Conditions Générales de Vente</title>
+    <link>https://alchimiedessenteurs.com/cgv/</link>
+    <pubDate>Tue, 14 Apr 2026 14:00:00 +0000</pubDate>
+    <dc:creator><![CDATA[admin]]></dc:creator>
+    <guid isPermaLink="false">https://alchimiedessenteurs.com/?page_id=107</guid>
+    <content:encoded><![CDATA[<h2>Conditions Générales de Vente</h2>
+<p>En passant commande sur notre boutique, vous acceptez les présentes conditions générales de vente.</p>
+<h3>Prix</h3>
+<p>Les prix sont indiqués en Francs CFA (XOF) toutes taxes comprises.</p>
+<h3>Commandes</h3>
+<p>Toute commande est ferme et définitive après validation du paiement.</p>]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>107</wp:post_id>
+    <wp:post_date><![CDATA[2026-04-14 14:00:00]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_date_gmt>
+    <wp:post_modified><![CDATA[2026-04-14 14:00:00]]></wp:post_modified>
+    <wp:post_modified_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_modified_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[cgv]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[page]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+  </item>
+
+  <!-- ============================================================ -->
+  <!-- ARTICLES DE BLOG                                             -->
+  <!-- ============================================================ -->
+
+  <item>
+    <title>L&#8217;art d&#8217;allumer l&#8217;encens</title>
+    <link>https://alchimiedessenteurs.com/lart-de-allumer-encens/</link>
+    <pubDate>Tue, 14 Apr 2026 14:00:00 +0000</pubDate>
+    <dc:creator><![CDATA[admin]]></dc:creator>
+    <guid isPermaLink="false">https://alchimiedessenteurs.com/?p=200</guid>
+    <content:encoded><![CDATA[<p>Allumer un bâtonnet d&#8217;encens est bien plus qu&#8217;un geste anodin. C&#8217;est un rituel, une invitation à la présence.</p>
+<h2>Choisir le bon moment</h2>
+<p>L&#8217;encens se marie parfaitement avec les moments de méditation, de lecture ou simplement de détente en fin de journée.</p>
+<h2>La bonne technique</h2>
+<p>Enflammez la pointe du bâtonnet quelques secondes, puis soufflez doucement pour laisser la braise se former. Placez-le dans un porte-encens stable, à l&#8217;abri des courants d&#8217;air.</p>
+<h2>Les notes olfactives</h2>
+<p>Chaque encens révèle ses arômes progressivement : les notes de tête dès l&#8217;allumage, puis les notes de cœur et enfin les notes de fond qui persistent longtemps après l&#8217;extinction.</p>]]></content:encoded>
+    <excerpt:encoded><![CDATA[Allumer un bâtonnet d&#8217;encens est bien plus qu&#8217;un geste anodin. C&#8217;est un rituel, une invitation à la présence.]]></excerpt:encoded>
+    <category domain="category" nicename="conseils"><![CDATA[Conseils]]></category>
+    <wp:post_id>200</wp:post_id>
+    <wp:post_date><![CDATA[2026-04-14 14:00:00]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_date_gmt>
+    <wp:post_modified><![CDATA[2026-04-14 14:00:00]]></wp:post_modified>
+    <wp:post_modified_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_modified_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[lart-de-allumer-encens]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[post]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+  </item>
+
+  <item>
+    <title>Oud : la résine précieuse</title>
+    <link>https://alchimiedessenteurs.com/oud-la-resine-precieuse/</link>
+    <pubDate>Tue, 14 Apr 2026 14:00:00 +0000</pubDate>
+    <dc:creator><![CDATA[admin]]></dc:creator>
+    <guid isPermaLink="false">https://alchimiedessenteurs.com/?p=201</guid>
+    <content:encoded><![CDATA[<p>L&#8217;oud, ou bois d&#8217;agar, est l&#8217;une des matières premières les plus précieuses de la parfumerie mondiale.</p>
+<h2>Une origine millénaire</h2>
+<p>Originaire des forêts d&#8217;Asie du Sud-Est, l&#8217;oud se forme naturellement lorsque le bois d&#8217;un arbre Aquilaria est infecté par un champignon spécifique.</p>
+<h2>Un profil olfactif unique</h2>
+<p>Son profil olfactif est d&#8217;une complexité rare : boisé, animal, fumé, avec des nuances sucrées et épicées qui évoluent sur la peau et dans l&#8217;air.</p>]]></content:encoded>
+    <excerpt:encoded><![CDATA[L&#8217;oud, ou bois d&#8217;agar, est l&#8217;une des matières premières les plus précieuses de la parfumerie mondiale.]]></excerpt:encoded>
+    <category domain="category" nicename="conseils"><![CDATA[Conseils]]></category>
+    <wp:post_id>201</wp:post_id>
+    <wp:post_date><![CDATA[2026-04-14 14:00:00]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_date_gmt>
+    <wp:post_modified><![CDATA[2026-04-14 14:00:00]]></wp:post_modified>
+    <wp:post_modified_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_modified_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[oud-la-resine-precieuse]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[post]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+  </item>
+
+  <!-- ============================================================ -->
+  <!-- PRODUITS WOOCOMMERCE                                         -->
+  <!-- ============================================================ -->
+
+  <item>
+    <title>Arabesque 2h30</title>
+    <link>https://alchimiedessenteurs.com/produit/arabesque-2h30/</link>
+    <pubDate>Tue, 14 Apr 2026 14:00:00 +0000</pubDate>
+    <dc:creator><![CDATA[admin]]></dc:creator>
+    <guid isPermaLink="false">https://alchimiedessenteurs.com/?post_type=product&amp;p=300</guid>
+    <content:encoded><![CDATA[Un voyage olfactif entre Orient et modernité. Notes de bois de santal, oud léger et épices douces. Combustion de 2h30.]]></content:encoded>
+    <excerpt:encoded><![CDATA[Un voyage olfactif entre Orient et modernité. Notes de bois de santal, oud léger et épices douces.]]></excerpt:encoded>
+    <wp:post_id>300</wp:post_id>
+    <wp:post_date><![CDATA[2026-04-14 14:00:00]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_date_gmt>
+    <wp:post_modified><![CDATA[2026-04-14 14:00:00]]></wp:post_modified>
+    <wp:post_modified_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_modified_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[arabesque-2h30]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[product]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+    <category domain="product_cat" nicename="batonnets"><![CDATA[Bâtonnets]]></category>
+    <wp:postmeta><wp:meta_key><![CDATA[_price]]></wp:meta_key><wp:meta_value><![CDATA[2300]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_regular_price]]></wp:meta_key><wp:meta_value><![CDATA[2300]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_stock_status]]></wp:meta_key><wp:meta_value><![CDATA[instock]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_visibility]]></wp:meta_key><wp:meta_value><![CDATA[visible]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_ads_duration]]></wp:meta_key><wp:meta_value><![CDATA[Oriental · Boisé]]></wp:meta_value></wp:postmeta>
+  </item>
+
+  <item>
+    <title>Oud Original 3h</title>
+    <link>https://alchimiedessenteurs.com/produit/oud-original-3h/</link>
+    <pubDate>Tue, 14 Apr 2026 14:00:00 +0000</pubDate>
+    <dc:creator><![CDATA[admin]]></dc:creator>
+    <guid isPermaLink="false">https://alchimiedessenteurs.com/?post_type=product&amp;p=301</guid>
+    <content:encoded><![CDATA[Notre encens le plus emblématique. Façonné à partir de résines précieuses et de bois de santal sélectionnés à la source. Combustion de 3h.]]></content:encoded>
+    <excerpt:encoded><![CDATA[Notre encens le plus emblématique. Façonné à partir de résines précieuses et de bois de santal sélectionnés à la source.]]></excerpt:encoded>
+    <wp:post_id>301</wp:post_id>
+    <wp:post_date><![CDATA[2026-04-14 14:00:00]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_date_gmt>
+    <wp:post_modified><![CDATA[2026-04-14 14:00:00]]></wp:post_modified>
+    <wp:post_modified_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_modified_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[oud-original-3h]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[product]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+    <category domain="product_cat" nicename="batonnets"><![CDATA[Bâtonnets]]></category>
+    <wp:postmeta><wp:meta_key><![CDATA[_price]]></wp:meta_key><wp:meta_value><![CDATA[2500]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_regular_price]]></wp:meta_key><wp:meta_value><![CDATA[2500]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_stock_status]]></wp:meta_key><wp:meta_value><![CDATA[instock]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_visibility]]></wp:meta_key><wp:meta_value><![CDATA[visible]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_ads_duration]]></wp:meta_key><wp:meta_value><![CDATA[Oriental · Profond]]></wp:meta_value></wp:postmeta>
+  </item>
+
+  <item>
+    <title>Arabesque 5h</title>
+    <link>https://alchimiedessenteurs.com/produit/arabesque-5h/</link>
+    <pubDate>Tue, 14 Apr 2026 14:00:00 +0000</pubDate>
+    <dc:creator><![CDATA[admin]]></dc:creator>
+    <guid isPermaLink="false">https://alchimiedessenteurs.com/?post_type=product&amp;p=302</guid>
+    <content:encoded><![CDATA[La version longue durée de notre Arabesque. Florales et boisées, ses notes se déploient lentement pendant 5 heures.]]></content:encoded>
+    <excerpt:encoded><![CDATA[La version longue durée de notre Arabesque. Florales et boisées, ses notes se déploient lentement pendant 5 heures.]]></excerpt:encoded>
+    <wp:post_id>302</wp:post_id>
+    <wp:post_date><![CDATA[2026-04-14 14:00:00]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_date_gmt>
+    <wp:post_modified><![CDATA[2026-04-14 14:00:00]]></wp:post_modified>
+    <wp:post_modified_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_modified_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[arabesque-5h]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[product]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+    <category domain="product_cat" nicename="batonnets"><![CDATA[Bâtonnets]]></category>
+    <wp:postmeta><wp:meta_key><![CDATA[_price]]></wp:meta_key><wp:meta_value><![CDATA[3000]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_regular_price]]></wp:meta_key><wp:meta_value><![CDATA[3000]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_stock_status]]></wp:meta_key><wp:meta_value><![CDATA[instock]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_visibility]]></wp:meta_key><wp:meta_value><![CDATA[visible]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_ads_duration]]></wp:meta_key><wp:meta_value><![CDATA[Floral · Boisé]]></wp:meta_value></wp:postmeta>
+  </item>
+
+  <item>
+    <title>Musc Original 5h</title>
+    <link>https://alchimiedessenteurs.com/produit/musc-original-5h/</link>
+    <pubDate>Tue, 14 Apr 2026 14:00:00 +0000</pubDate>
+    <dc:creator><![CDATA[admin]]></dc:creator>
+    <guid isPermaLink="false">https://alchimiedessenteurs.com/?post_type=product&amp;p=303</guid>
+    <content:encoded><![CDATA[Un musc doux et enveloppant, aux notes poudrées et sensuelles. Idéal pour la détente et la méditation. Combustion de 5h.]]></content:encoded>
+    <excerpt:encoded><![CDATA[Un musc doux et enveloppant, aux notes poudrées et sensuelles. Idéal pour la détente et la méditation.]]></excerpt:encoded>
+    <wp:post_id>303</wp:post_id>
+    <wp:post_date><![CDATA[2026-04-14 14:00:00]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_date_gmt>
+    <wp:post_modified><![CDATA[2026-04-14 14:00:00]]></wp:post_modified>
+    <wp:post_modified_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_modified_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[musc-original-5h]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[product]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+    <category domain="product_cat" nicename="batonnets"><![CDATA[Bâtonnets]]></category>
+    <wp:postmeta><wp:meta_key><![CDATA[_price]]></wp:meta_key><wp:meta_value><![CDATA[3000]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_regular_price]]></wp:meta_key><wp:meta_value><![CDATA[3000]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_stock_status]]></wp:meta_key><wp:meta_value><![CDATA[instock]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_visibility]]></wp:meta_key><wp:meta_value><![CDATA[visible]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_ads_duration]]></wp:meta_key><wp:meta_value><![CDATA[Musqué · Doux]]></wp:meta_value></wp:postmeta>
+  </item>
+
+  <item>
+    <title>Andalous 2h30</title>
+    <link>https://alchimiedessenteurs.com/produit/andalous-2h30/</link>
+    <pubDate>Tue, 14 Apr 2026 14:00:00 +0000</pubDate>
+    <dc:creator><![CDATA[admin]]></dc:creator>
+    <guid isPermaLink="false">https://alchimiedessenteurs.com/?post_type=product&amp;p=304</guid>
+    <content:encoded><![CDATA[L&#8217;héritage andalou en bâtonnet : frais, oriental avec une pointe d&#8217;agrumes et de bois blanc. Combustion de 2h30.]]></content:encoded>
+    <excerpt:encoded><![CDATA[L&#8217;héritage andalou en bâtonnet : frais, oriental avec une pointe d&#8217;agrumes et de bois blanc.]]></excerpt:encoded>
+    <wp:post_id>304</wp:post_id>
+    <wp:post_date><![CDATA[2026-04-14 14:00:00]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_date_gmt>
+    <wp:post_modified><![CDATA[2026-04-14 14:00:00]]></wp:post_modified>
+    <wp:post_modified_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_modified_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[andalous-2h30]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[product]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+    <category domain="product_cat" nicename="batonnets"><![CDATA[Bâtonnets]]></category>
+    <wp:postmeta><wp:meta_key><![CDATA[_price]]></wp:meta_key><wp:meta_value><![CDATA[2300]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_regular_price]]></wp:meta_key><wp:meta_value><![CDATA[2300]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_stock_status]]></wp:meta_key><wp:meta_value><![CDATA[instock]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_visibility]]></wp:meta_key><wp:meta_value><![CDATA[visible]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_ads_duration]]></wp:meta_key><wp:meta_value><![CDATA[Oriental · Frais]]></wp:meta_value></wp:postmeta>
+  </item>
+
+  <item>
+    <title>Arabesque Cône</title>
+    <link>https://alchimiedessenteurs.com/produit/arabesque-cone/</link>
+    <pubDate>Tue, 14 Apr 2026 14:00:00 +0000</pubDate>
+    <dc:creator><![CDATA[admin]]></dc:creator>
+    <guid isPermaLink="false">https://alchimiedessenteurs.com/?post_type=product&amp;p=305</guid>
+    <content:encoded><![CDATA[Notre collection en cônes. Diffusion intense et rapide, idéale pour les grandes pièces. Notes orientales vanilées.]]></content:encoded>
+    <excerpt:encoded><![CDATA[Notre collection en cônes. Diffusion intense et rapide, idéale pour les grandes pièces.]]></excerpt:encoded>
+    <wp:post_id>305</wp:post_id>
+    <wp:post_date><![CDATA[2026-04-14 14:00:00]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_date_gmt>
+    <wp:post_modified><![CDATA[2026-04-14 14:00:00]]></wp:post_modified>
+    <wp:post_modified_gmt><![CDATA[2026-04-14 14:00:00]]></wp:post_modified_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[arabesque-cone]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[product]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+    <category domain="product_cat" nicename="cones"><![CDATA[Cônes]]></category>
+    <wp:postmeta><wp:meta_key><![CDATA[_price]]></wp:meta_key><wp:meta_value><![CDATA[5500]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_regular_price]]></wp:meta_key><wp:meta_value><![CDATA[5500]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_stock_status]]></wp:meta_key><wp:meta_value><![CDATA[instock]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_visibility]]></wp:meta_key><wp:meta_value><![CDATA[visible]]></wp:meta_value></wp:postmeta>
+    <wp:postmeta><wp:meta_key><![CDATA[_ads_duration]]></wp:meta_key><wp:meta_value><![CDATA[Oriental · Vanilé]]></wp:meta_value></wp:postmeta>
+  </item>
+
+</channel>
+</rss>
