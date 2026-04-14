@@ -24,7 +24,6 @@ function ads_enqueue_assets() {
     );
 
     // CSS WooCommerce global
-    // Boutique + categories + panier + checkout + compte
     $is_shop_area = (
         ( function_exists('is_shop')             && is_shop() ) ||
         ( function_exists('is_product_category') && is_product_category() ) ||
@@ -33,7 +32,6 @@ function ads_enqueue_assets() {
         ( function_exists('is_checkout')         && is_checkout() ) ||
         ( function_exists('is_account_page')     && is_account_page() )
     );
-
     if ( $is_shop_area ) {
         wp_enqueue_style(
             'ads-woocommerce',
@@ -51,6 +49,16 @@ function ads_enqueue_assets() {
         wp_enqueue_style(
             'ads-shop',
             ADS_URI . '/assets/css/shop.css',
+            array( 'ads-main' ),
+            ADS_VERSION
+        );
+    }
+
+    // CSS panier
+    if ( function_exists('is_cart') && is_cart() ) {
+        wp_enqueue_style(
+            'ads-cart',
+            ADS_URI . '/assets/css/cart.css',
             array( 'ads-main' ),
             ADS_VERSION
         );
@@ -111,7 +119,7 @@ add_action( 'wp_enqueue_scripts', 'ads_enqueue_assets' );
 add_filter( 'woocommerce_enqueue_styles', '__return_empty_array' );
 
 // -------------------------------------------------------
-// Customizer : JS de preview live (couleurs + textes)
+// Customizer : JS de preview live
 // -------------------------------------------------------
 function ads_enqueue_customizer_preview() {
     wp_enqueue_script(
