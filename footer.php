@@ -1,8 +1,6 @@
 <?php
 /**
  * Footer global — affiché sur toutes les pages via get_footer()
- * Configurable : Apparence > Personnaliser > Alchimie des Senteurs > Footer
- * Menus : Apparence > Menus (footer_1, footer_2, footer_3)
  */
 function ads_c_f( $key, $default = '' ) {
     return wp_kses_post( get_theme_mod( $key, $default ) );
@@ -43,18 +41,18 @@ function ads_c_f( $key, $default = '' ) {
   </div>
 </footer>
 
+<!-- Barre basse : copyright + moyens de paiement + signature -->
 <div class="f-bottom">
-  <p><?php echo ads_c_f('ads_footer_copy', '© ' . date('Y') . ' Alchimie des Senteurs · Dakar, Sénégal'); ?></p>
+  <p class="f-copy"><?php echo ads_c_f('ads_footer_copy', '© ' . date('Y') . ' Alchimie des Senteurs · Dakar, Sénégal'); ?></p>
+
   <div class="pay-row">
     <?php
     $methods = array_map('trim', explode(',', get_theme_mod('ads_footer_pay', 'Orange Money,Wave,Carte')));
     foreach ( $methods as $m ) if ( $m ) echo '<span class="pay">' . esc_html($m) . '</span>';
     ?>
   </div>
-</div>
 
-<div class="footer-signature">
-  <p>Thème créé par <span class="signature-name">BUUR DIGITAL</span></p>
+  <p class="f-signature">Thème par <span class="f-signature-brand">BUUR DIGITAL</span></p>
 </div>
 
 <?php wp_footer(); ?>
