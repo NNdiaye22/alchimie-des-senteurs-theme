@@ -1,0 +1,18 @@
+/*
+Theme Name: Alchimie des Senteurs
+Theme URI: https://alchimiedessenteurs.com
+Author: Alchimie des Senteurs
+Author URI: https://alchimiedessenteurs.com
+Description: Theme premium pour Alchimie des Senteurs. Design blanc epure style Apple avec animation scroll-driven sur canvas. Compatible WooCommerce.
+Version: 1.0.0
+Requires at least: 6.0
+Tested up to: 6.7
+Requires PHP: 8.0
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: alchimie-des-senteurs
+Tags: woocommerce, custom-menu, custom-logo, featured-images, full-width-template, theme-options
+*/
+
+/* Ce fichier est requis par WordPress pour la declaration du theme. */
+/* Les styles principaux sont dans assets/css/main.css */
