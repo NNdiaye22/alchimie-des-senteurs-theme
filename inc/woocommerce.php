@@ -1,114 +1,72 @@
 <?php
 /**
- * Hooks et filtres WooCommerce.
- * Personnalisation de l'integration WooCommerce dans le theme.
+ * Integrations WooCommerce — Alchimie des Senteurs
  */
-
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-// -------------------------------------------------------
-// Supprimer les wrappers par defaut de WooCommerce
-// pour utiliser notre propre structure HTML
-// -------------------------------------------------------
+// Retirer les wrappers WooCommerce natifs
 remove_action( 'woocommerce_before_main_content', 'woocommerce_output_content_wrapper', 10 );
 remove_action( 'woocommerce_after_main_content',  'woocommerce_output_content_wrapper_end', 10 );
-
-function ads_woo_wrapper_start() {
-    echo '<main id="main" class="ads-woo-main">';
-}
-function ads_woo_wrapper_end() {
-    echo '</main>';
-}
-add_action( 'woocommerce_before_main_content', 'ads_woo_wrapper_start', 10 );
-add_action( 'woocommerce_after_main_content',  'ads_woo_wrapper_end',   10 );
-
-// -------------------------------------------------------
-// Supprimer la sidebar sur les pages WooCommerce
-// -------------------------------------------------------
 remove_action( 'woocommerce_sidebar', 'woocommerce_get_sidebar', 10 );
 
-// -------------------------------------------------------
-// Personnaliser le nombre de produits par page
-// -------------------------------------------------------
-function ads_woo_products_per_page() {
-    return (int) get_theme_mod( 'ads_collection_nb', 6 );
-}
-add_filter( 'loop_shop_per_page', 'ads_woo_products_per_page', 20 );
+// Retirer le fil d'Ariane WooCommerce natif
+remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 );
+
+// Retirer le titre d'archive natif
+add_filter( 'woocommerce_show_page_title', '__return_false' );
 
 // -------------------------------------------------------
-// Nombre de colonnes dans la grille
+// FORCER notre template pour les pages de categories
+// WooCommerce peut parfois ignorer taxonomy-product_cat.php
+// dans le dossier /woocommerce/ du theme — ce hook le force.
 // -------------------------------------------------------
-function ads_woo_loop_columns() {
-    return 3;
-}
-add_filter( 'loop_shop_columns', 'ads_woo_loop_columns' );
+add_filter( 'template_include', function( $template ) {
+    if ( is_tax( 'product_cat' ) ) {
+        $custom = get_template_directory() . '/woocommerce/taxonomy-product_cat.php';
+        if ( file_exists( $custom ) ) {
+            return $custom;
+        }
+    }
+    return $template;
+}, 99 );
 
 // -------------------------------------------------------
-// Breadcrumb personnalise
+// Nombre de produits par page sur les archives
 // -------------------------------------------------------
-add_filter( 'woocommerce_breadcrumb_defaults', function( $defaults ) {
-    $defaults['delimiter']   = ' &rsaquo; ';
-    $defaults['wrap_before'] = '<nav class="ads-breadcrumb">';
-    $defaults['wrap_after']  = '</nav>';
-    return $defaults;
-} );
+add_filter( 'loop_shop_per_page', function() {
+    return absint( get_theme_mod( 'ads_collection_nb', 6 ) );
+}, 20 );
 
 // -------------------------------------------------------
-// Bouton Ajouter au panier : texte personnalise
-// -------------------------------------------------------
-add_filter( 'woocommerce_product_single_add_to_cart_text', function() {
-    return __( 'Ajouter au panier', 'alchimie-des-senteurs' );
-} );
-add_filter( 'woocommerce_product_add_to_cart_text', function() {
-    return __( 'Ajouter', 'alchimie-des-senteurs' );
-} );
-
-// -------------------------------------------------------
-// Desactiver le CSS WooCommerce par defaut
-// (deja gere dans enqueue.php mais double securite)
+// Desactiver les styles WooCommerce natifs
 // -------------------------------------------------------
 add_filter( 'woocommerce_enqueue_styles', '__return_empty_array' );
 
 // -------------------------------------------------------
-// Afficher le prix dans la bonne devise
+// AJAX : Ajouter au panier depuis les cards
 // -------------------------------------------------------
-add_filter( 'woocommerce_currency', function() {
-    return 'XOF';
-} );
+add_action( 'wp_ajax_ads_add_to_cart',        'ads_ajax_add_to_cart' );
+add_action( 'wp_ajax_nopriv_ads_add_to_cart', 'ads_ajax_add_to_cart' );
 
-add_filter( 'woocommerce_currency_symbol', function( $symbol, $currency ) {
-    if ( $currency === 'XOF' ) return 'XOF';
-    return $symbol;
-}, 10, 2 );
-
-// -------------------------------------------------------
-// Fragment panier AJAX (mise a jour compteur nav)
-// -------------------------------------------------------
-add_filter( 'woocommerce_add_to_cart_fragments', function( $fragments ) {
-    $count = WC()->cart->get_cart_contents_count();
-    $fragments['.nav-cart-count'] = '<span class="nav-cart-count">' . $count . '</span>';
-    return $fragments;
-} );
-
-// -------------------------------------------------------
-// Retirer les onglets inutiles sur la page produit
-// -------------------------------------------------------
-add_filter( 'woocommerce_product_tabs', function( $tabs ) {
-    unset( $tabs['additional_information'] );
-    return $tabs;
-}, 98 );
-
-// -------------------------------------------------------
-// Structure des images produit dans la boucle
-// -------------------------------------------------------
-function ads_woo_loop_thumbnail() {
-    global $product;
-    $img_id  = $product->get_image_id();
-    $img_url = $img_id
-        ? wp_get_attachment_image_url( $img_id, 'ads-product-card' )
-        : wc_placeholder_img_src( 'ads-product-card' );
-    $alt = get_the_title();
-    echo '<div class="ads-product-img-wrap">';
-    echo '<img src="' . esc_url( $img_url ) . '" alt="' . esc_attr( $alt ) . '" loading="lazy">';
-    echo '</div>';
+function ads_ajax_add_to_cart() {
+    check_ajax_referer( 'ads-nonce', 'nonce' );
+    $product_id = absint( $_POST['product_id'] ?? 0 );
+    $qty        = absint( $_POST['quantity']   ?? 1 );
+    if ( ! $product_id ) wp_send_json_error( 'invalid_product' );
+    $added = WC()->cart->add_to_cart( $product_id, $qty );
+    if ( $added ) {
+        wp_send_json_success( array(
+            'count'   => WC()->cart->get_cart_contents_count(),
+            'message' => 'Ajouté au panier',
+        ) );
+    } else {
+        wp_send_json_error( 'could_not_add' );
+    }
 }
+
+// -------------------------------------------------------
+// Taille des images produit
+// -------------------------------------------------------
+add_filter( 'woocommerce_get_image_size_gallery_thumbnail', function( $size ) {
+    return array( 'width' => 150, 'height' => 150, 'crop' => 1 );
+} );
