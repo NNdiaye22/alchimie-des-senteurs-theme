@@ -1,0 +1,254 @@
+/* ====================================================
+   PAGE BOUTIQUE — shop.css
+   Variables héritées de main.css
+==================================================== */
+
+.shop-wrap {
+  padding-top: 0;
+}
+
+/* ── HERO ── */
+.shop-hero {
+  background: var(--off);
+  padding: 14rem 6vw 6rem;
+  border-bottom: 1px solid var(--light);
+}
+.shop-hero-inner { max-width: 640px; }
+.shop-hero-tag {
+  font-size: 0.54rem;
+  letter-spacing: 0.7em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 1.8rem;
+}
+.shop-hero-title {
+  font-size: clamp(2.8rem, 5vw, 5rem);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  color: var(--ink);
+  margin-bottom: 1.8rem;
+}
+.shop-hero-title em {
+  font-style: italic;
+  color: var(--amber);
+}
+.shop-hero-sub {
+  font-size: 0.86rem;
+  line-height: 2;
+  color: var(--stone);
+  max-width: 480px;
+}
+
+/* ── BARRE FILTRES ── */
+.shop-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.4rem 6vw;
+  border-bottom: 1px solid var(--light);
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+.shop-toolbar-left .woocommerce-result-count {
+  font-size: 0.6rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin: 0;
+}
+.shop-toolbar-right .orderby {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--stone);
+  border: 1px solid var(--mid);
+  background: var(--white);
+  padding: 0.5rem 1rem;
+  outline: none;
+  cursor: pointer;
+  font-family: Georgia, serif;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+}
+
+/* ── GRILLE ── */
+.shop-grid-wrap {
+  padding: 5rem 6vw 6rem;
+}
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem 2rem;
+}
+
+/* ── CARTE PRODUIT ── */
+.shop-card {
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.shop-card:hover { transform: translateY(-6px); }
+
+.shop-card-img {
+  position: relative;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  background: var(--light);
+  margin-bottom: 1.5rem;
+}
+.shop-card-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.shop-card:hover .shop-card-img img { transform: scale(1.04); }
+
+/* Badge */
+.shop-badge {
+  position: absolute; top: 1rem; left: 1rem;
+  font-size: 0.48rem; letter-spacing: 0.35em;
+  text-transform: uppercase;
+  padding: 0.28rem 0.65rem;
+}
+.shop-badge-promo { background: var(--ink); color: var(--white); }
+.shop-badge-out   { background: var(--mid); color: var(--stone); }
+
+/* Lien rapide au survol */
+.shop-card-quick {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(26,23,20,0.82);
+  color: var(--white);
+  font-size: 0.56rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  text-align: center;
+  text-decoration: none;
+  padding: 1rem;
+  font-family: Georgia, serif;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.shop-card:hover .shop-card-quick {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Corps carte */
+.shop-card-body {}
+.shop-card-cat {
+  font-size: 0.5rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 0.5rem;
+}
+.shop-card-name {
+  font-size: 1.05rem;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+.shop-card-desc {
+  font-size: 0.76rem;
+  line-height: 1.7;
+  color: var(--stone);
+  margin-bottom: 1.2rem;
+}
+.shop-card-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.shop-card-price { display: flex; align-items: center; gap: 0.6rem; }
+.shop-card-old {
+  font-size: 0.72rem;
+  color: var(--stone);
+  text-decoration: line-through;
+}
+.shop-card-current {
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  font-weight: 500;
+}
+.shop-card-btn {
+  font-size: 0.52rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  padding: 0.5rem 1.1rem;
+  border: 1px solid var(--mid);
+  background: transparent;
+  color: var(--stone);
+  cursor: pointer;
+  transition: border-color 0.3s, color 0.3s, background 0.3s;
+  font-family: Georgia, serif;
+}
+.shop-card-btn:hover {
+  border-color: var(--ink);
+  color: var(--white);
+  background: var(--ink);
+}
+.shop-card-out {
+  font-size: 0.52rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--stone);
+}
+
+/* ── VIDE ── */
+.shop-empty {
+  text-align: center;
+  padding: 6rem 0;
+  font-size: 0.86rem;
+  color: var(--stone);
+  letter-spacing: 0.2em;
+}
+
+/* ── PAGINATION ── */
+.shop-pagination {
+  padding: 0 6vw 5rem;
+  display: flex;
+  justify-content: center;
+}
+.shop-pagination .woocommerce-pagination ul {
+  display: flex;
+  gap: 0.4rem;
+  list-style: none;
+  padding: 0; margin: 0;
+}
+.shop-pagination .woocommerce-pagination ul li a,
+.shop-pagination .woocommerce-pagination ul li span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem; height: 2.4rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--stone);
+  text-decoration: none;
+  border: 1px solid var(--light);
+  transition: all 0.3s;
+}
+.shop-pagination .woocommerce-pagination ul li a:hover,
+.shop-pagination .woocommerce-pagination ul li span.current {
+  background: var(--ink);
+  color: var(--white);
+  border-color: var(--ink);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .shop-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .shop-hero { padding: 10rem 6vw 4rem; }
+  .shop-hero-title { font-size: 2.2rem; }
+  .shop-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .shop-grid-wrap { padding: 3rem 6vw 4rem; }
+}

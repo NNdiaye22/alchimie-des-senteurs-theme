@@ -23,7 +23,6 @@ function ads_c( $key, $default = '' ) {
     <div class="ov-sub" id="os"><?php echo ads_c('ads_hero_sub', 'Oud · Arabesque · Musc · Andalous'); ?></div>
   </div>
 
-  <!-- Blocs info flottants — modifiables depuis Apparence > Personnaliser > Animation Scroll -->
   <div class="info-block" id="info-left">
     <div class="info-label"><?php echo ads_c('ads_scroll_left_label', 'Combustion'); ?></div>
     <div class="info-value"><?php echo ads_c('ads_scroll_left_value', '2h à 5h'); ?></div>
@@ -45,7 +44,6 @@ function ads_c( $key, $default = '' ) {
     <div class="info-value"><?php echo ads_c('ads_scroll_bottom_value', 'Oud · Bois de Santal · Ambre'); ?></div>
   </div>
 
-  <!-- Phases — modifiables depuis Apparence > Personnaliser > Animation Scroll — Phases -->
   <div class="phase-copy" id="pc1">
     <div class="ph-tag"><?php echo ads_c('ads_phase_1_tag', 'I — L’Allumage'); ?></div>
     <div class="ph-title"><?php echo ads_c('ads_phase_1_title', "L'instant du premier souffle"); ?></div>
@@ -76,21 +74,44 @@ function ads_c( $key, $default = '' ) {
 <!-- ═══ REVEAL ═══ -->
 <section id="reveal">
   <div class="reveal-left">
-    <h2>L'Encens<br><em>Arabesque</em></h2>
-    <p>Notre encens le plus emblématique. Façonné à partir de résines précieuses et de bois de santal sélectionnés à la source.</p>
+    <h2>
+      <?php echo ads_c('ads_reveal_title_l1', "L'Encens"); ?><br>
+      <em><?php echo ads_c('ads_reveal_title_l2', 'Arabesque'); ?></em>
+    </h2>
+    <p><?php echo ads_c('ads_reveal_desc', 'Notre encens le plus emblématique. Façonné à partir de résines précieuses et de bois de santal sélectionnés à la source.'); ?></p>
     <div class="cta-row">
-      <button class="btn-dark" onclick="window.location='<?php echo esc_url( wc_get_page_permalink('shop') ); ?>'">
-        Acheter — 2 300 XOF
+      <?php
+        $btn1_url  = get_theme_mod('ads_reveal_btn1_url', '#');
+        $btn1_text = ads_c('ads_reveal_btn1_text', 'Acheter');
+        $btn1_prix = ads_c('ads_reveal_btn1_prix', '2 300 XOF');
+        $btn2_url  = get_theme_mod('ads_reveal_btn2_url', '#');
+        $btn2_text = ads_c('ads_reveal_btn2_text', 'En savoir plus');
+      ?>
+      <button class="btn-dark" onclick="window.location='<?php echo esc_url($btn1_url); ?>'">
+        <?php echo $btn1_text; ?> — <?php echo $btn1_prix; ?>
       </button>
-      <button class="btn-text">En savoir plus</button>
+      <button class="btn-text" onclick="window.location='<?php echo esc_url($btn2_url); ?>'">
+        <?php echo $btn2_text; ?>
+      </button>
     </div>
   </div>
   <div class="reveal-right">
-    <div class="spec-row"><div class="spec-label">Durée de combustion</div><div class="spec-value">2h30 continues</div></div>
-    <div class="spec-row"><div class="spec-label">Contenu</div><div class="spec-value">10 bâtonnets</div></div>
-    <div class="spec-row"><div class="spec-label">Famille olfactive</div><div class="spec-value">Oriental · Boisé · Épicé</div></div>
-    <div class="spec-row"><div class="spec-label">Origine</div><div class="spec-value">Résines d'Orient</div></div>
-    <div class="spec-row"><div class="spec-label">Livraison</div><div class="spec-value">Dakar &amp; environs</div></div>
+    <?php for ( $i = 1; $i <= 5; $i++ ) :
+      $defaults = array(
+        1 => array('Durée de combustion', '2h30 continues'),
+        2 => array('Contenu', '10 bâtonnets'),
+        3 => array('Famille olfactive', 'Oriental · Boisé · Épicé'),
+        4 => array('Origine', "Résines d'Orient"),
+        5 => array('Livraison', 'Dakar & environs'),
+      );
+      $label = ads_c("ads_reveal_spec_{$i}_label", $defaults[$i][0]);
+      $value = ads_c("ads_reveal_spec_{$i}_value", $defaults[$i][1]);
+    ?>
+    <div class="spec-row">
+      <div class="spec-label"><?php echo $label; ?></div>
+      <div class="spec-value"><?php echo $value; ?></div>
+    </div>
+    <?php endfor; ?>
   </div>
 </section>
 
