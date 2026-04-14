@@ -98,49 +98,30 @@ function ads_c( $key, $default = '' ) {
       <?php echo ads_c('ads_collection_cta_text', 'Tout voir'); ?>
     </a>
   </div>
-
   <?php
   $nb = (int) get_theme_mod('ads_collection_nb', 6);
-  $args = array(
+  $products = new WP_Query(array(
     'post_type'      => 'product',
     'posts_per_page' => $nb,
     'post_status'    => 'publish',
     'orderby'        => 'menu_order',
     'order'          => 'ASC',
-  );
-  $products = new WP_Query( $args );
+  ));
   ?>
-
   <?php if ( $products->have_posts() ) : ?>
   <div class="products-grid">
     <?php while ( $products->have_posts() ) : $products->the_post();
       global $product;
-      $product = wc_get_product( get_the_ID() );
+      $product   = wc_get_product( get_the_ID() );
       if ( ! $product ) continue;
-
-      // Image
-      $img_id  = $product->get_image_id();
-      $img_url = $img_id
-        ? wp_get_attachment_image_url( $img_id, 'ads-product-card' )
-        : wc_placeholder_img_src();
-
-      // Prix
-      $price_html  = $product->get_price_html();
-      $reg_price   = $product->get_regular_price();
-      $sale_price  = $product->get_sale_price();
-
-      // Stock
-      $in_stock    = $product->is_in_stock();
-
-      // Lien
-      $link        = get_permalink();
-
-      // Catégorie (famille olfactive)
-      $terms = get_the_terms( get_the_ID(), 'product_cat' );
-      $fam   = ( $terms && ! is_wp_error($terms) ) ? esc_html( $terms[0]->name ) : '';
-
-      // Description courte
-      $desc = $product->get_short_description();
+      $img_url   = ( $product->get_image_id() ) ? wp_get_attachment_image_url( $product->get_image_id(), 'ads-product-card' ) : wc_placeholder_img_src();
+      $reg_price = $product->get_regular_price();
+      $sale_price= $product->get_sale_price();
+      $in_stock  = $product->is_in_stock();
+      $link      = get_permalink();
+      $terms     = get_the_terms( get_the_ID(), 'product_cat' );
+      $fam       = ( $terms && ! is_wp_error($terms) ) ? esc_html($terms[0]->name) : '';
+      $desc      = $product->get_short_description();
       if ( ! $desc ) $desc = wp_trim_words( $product->get_description(), 15 );
     ?>
     <div class="product-card" onclick="window.location='<?php echo esc_url($link); ?>'">
@@ -153,24 +134,16 @@ function ads_c( $key, $default = '' ) {
         <?php endif; ?>
       </div>
       <div class="card-body">
-        <?php if ( $fam ) : ?>
-          <div class="card-fam"><?php echo $fam; ?></div>
-        <?php endif; ?>
+        <?php if ( $fam ) echo '<div class="card-fam">'.$fam.'</div>'; ?>
         <div class="card-name"><?php the_title(); ?></div>
-        <?php if ( $desc ) : ?>
-          <div class="card-desc"><?php echo wp_strip_all_tags($desc); ?></div>
-        <?php endif; ?>
+        <?php if ( $desc ) echo '<div class="card-desc">'.wp_strip_all_tags($desc).'</div>'; ?>
         <div class="card-foot">
           <div>
-            <?php if ( $sale_price && $reg_price ) : ?>
-              <span class="card-old"><?php echo wc_price($reg_price); ?></span>
-            <?php endif; ?>
+            <?php if ( $sale_price && $reg_price ) echo '<span class="card-old">'.wc_price($reg_price).'</span>'; ?>
             <span class="card-price"><?php echo strip_tags($product->get_price_html()); ?></span>
           </div>
           <?php if ( $in_stock ) : ?>
-            <button class="card-add" onclick="event.stopPropagation();window.location='<?php echo esc_url($link); ?>'">
-              Ajouter
-            </button>
+            <button class="card-add" onclick="event.stopPropagation();window.location='<?php echo esc_url($link); ?>'">Ajouter</button>
           <?php else : ?>
             <span class="card-out-txt">Épuisé</span>
           <?php endif; ?>
@@ -180,7 +153,6 @@ function ads_c( $key, $default = '' ) {
     <?php endwhile; wp_reset_postdata(); ?>
   </div>
   <?php endif; ?>
-
 </section>
 <?php endif; ?>
 
@@ -195,10 +167,10 @@ function ads_c( $key, $default = '' ) {
   <div class="phi-right">
     <?php
     $phi_defaults = array(
-      1 => array( 'num' => '12',    'unit' => 'Fragrances', 'desc' => 'Une collection soigneusement éditée.' ),
-      2 => array( 'num' => '5h',    'unit' => 'Maximum',    'desc' => 'La plus longue diffusion de notre gamme.' ),
-      3 => array( 'num' => '100%',  'unit' => 'Naturel',    'desc' => 'Résines et bois sans additifs chimiques.' ),
-      4 => array( 'num' => 'Dakar', 'unit' => 'Livraison',  'desc' => 'Livré directement chez vous.' ),
+      1 => array('num'=>'12',   'unit'=>'Fragrances','desc'=>'Une collection soigneusement éditée.'),
+      2 => array('num'=>'5h',   'unit'=>'Maximum',   'desc'=>'La plus longue diffusion de notre gamme.'),
+      3 => array('num'=>'100%', 'unit'=>'Naturel',   'desc'=>'Résines et bois sans additifs chimiques.'),
+      4 => array('num'=>'Dakar','unit'=>'Livraison', 'desc'=>'Livré directement chez vous.'),
     );
     for ( $i = 1; $i <= 4; $i++ ) :
       $num  = ads_c("ads_phi_stat_{$i}_num",  $phi_defaults[$i]['num']);
@@ -228,36 +200,5 @@ function ads_c( $key, $default = '' ) {
 </section>
 <?php endif; ?>
 
-<!-- ═══ FOOTER ═══ -->
-<footer>
-  <div>
-    <div class="f-brand"><?php echo ads_c('ads_footer_brand', 'Alchimie des Senteurs'); ?></div>
-    <div class="f-sub"><?php echo ads_c('ads_footer_sub', "Maison d'Encens · Dakar"); ?></div>
-    <p class="f-about"><?php echo ads_c('ads_footer_about', "Depuis Dakar, nous apportons les fragrances les plus authentiques d'Orient dans vos foyers."); ?></p>
-    <div class="f-soc">
-      <a href="<?php echo esc_url(get_theme_mod('ads_footer_wa','https://wa.me/221776440125')); ?>">WhatsApp</a>
-      <a href="<?php echo esc_url(get_theme_mod('ads_footer_insta','#')); ?>">Instagram</a>
-      <a href="<?php echo esc_url(get_theme_mod('ads_footer_fb','#')); ?>">Facebook</a>
-    </div>
-  </div>
-  <div class="f-col"><h5>Collection</h5>
-    <?php wp_nav_menu(array('theme_location'=>'footer_1','container'=>false,'fallback_cb'=>false)); ?>
-  </div>
-  <div class="f-col"><h5>Boutique</h5>
-    <?php wp_nav_menu(array('theme_location'=>'footer_2','container'=>false,'fallback_cb'=>false)); ?>
-  </div>
-  <div class="f-col"><h5>Aide</h5>
-    <?php wp_nav_menu(array('theme_location'=>'footer_3','container'=>false,'fallback_cb'=>false)); ?>
-  </div>
-</footer>
-<div class="f-bottom">
-  <p><?php echo ads_c('ads_footer_copy', '© 2026 Alchimie des Senteurs · Dakar, Sénégal'); ?></p>
-  <div class="pay-row">
-    <?php foreach(explode(',', ads_c('ads_footer_pay','Orange Money,Wave,Carte')) as $pay) echo '<span class="pay">'.esc_html(trim($pay)).'</span>'; ?>
-  </div>
-</div>
-
 <script src="<?php echo get_template_directory_uri(); ?>/assets/js/canvas.js"></script>
-<?php wp_footer(); ?>
-</body>
-</html>
+<?php get_footer(); ?>
