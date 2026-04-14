@@ -15,11 +15,21 @@ function ads_enqueue_assets() {
         ADS_VERSION
     );
 
-    // CSS WooCommerce (charge uniquement sur les pages WooCommerce)
+    // CSS WooCommerce (boutique, panier, checkout, compte)
     if ( function_exists( 'is_woocommerce' ) && ( is_woocommerce() || is_cart() || is_checkout() || is_account_page() ) ) {
         wp_enqueue_style(
             'ads-woocommerce',
             ADS_URI . '/assets/css/woocommerce.css',
+            array( 'ads-main' ),
+            ADS_VERSION
+        );
+    }
+
+    // CSS page produit unique
+    if ( function_exists( 'is_product' ) && is_product() ) {
+        wp_enqueue_style(
+            'ads-single-product',
+            ADS_URI . '/assets/css/single-product.css',
             array( 'ads-main' ),
             ADS_VERSION
         );
@@ -57,5 +67,5 @@ function ads_enqueue_assets() {
 }
 add_action( 'wp_enqueue_scripts', 'ads_enqueue_assets' );
 
-// Desactiver les styles par defaut de WooCommerce pour utiliser les notres
+// Desactiver les styles par defaut de WooCommerce
 add_filter( 'woocommerce_enqueue_styles', '__return_empty_array' );
