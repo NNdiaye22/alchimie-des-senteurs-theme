@@ -2,7 +2,14 @@
 /**
  * Template Name: Front Page
  */
-?><!DOCTYPE html>
+
+// Helpers Customizer avec valeurs par défaut
+function ads_c( $key, $default = '' ) {
+    return wp_kses_post( get_theme_mod( $key, $default ) );
+}
+
+?>
+<!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
 <meta charset="<?php bloginfo('charset'); ?>">
@@ -16,7 +23,9 @@
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="<?php echo home_url('/'); ?>" class="logo">Alchimie des Senteurs</a>
+  <a href="<?php echo esc_url( home_url('/') ); ?>" class="logo">
+    <?php echo ads_c('ads_footer_brand', 'Alchimie des Senteurs'); ?>
+  </a>
   <ul class="nav-links">
     <li><a href="#collection">Collection</a></li>
     <li><a href="#philosophy">Philosophie</a></li>
@@ -25,16 +34,21 @@
   <button class="nav-cta">Découvrir</button>
 </nav>
 
-<!-- HERO SCROLL ZONE -->
+<!-- ═══ HERO SCROLL ZONE ═══ -->
 <div id="scroll-zone">
 <div id="sticky">
   <canvas id="c"></canvas>
+
   <div id="ov">
-    <div class="ov-tag" id="ot">Maison d'Encens · Dakar</div>
-    <div class="ov-title" id="oT">L'Encens<br><em>Vivant</em></div>
+    <div class="ov-tag" id="ot"><?php echo ads_c('ads_hero_tag', "Maison d'Encens · Dakar"); ?></div>
+    <div class="ov-title" id="oT">
+      <?php echo ads_c('ads_hero_title_l1', "L'Encens"); ?><br>
+      <em><?php echo ads_c('ads_hero_title_l2', 'Vivant'); ?></em>
+    </div>
     <div class="ov-line" id="ol"></div>
-    <div class="ov-sub" id="os">Oud · Arabesque · Musc · Andalous</div>
+    <div class="ov-sub" id="os"><?php echo ads_c('ads_hero_sub', 'Oud · Arabesque · Musc · Andalous'); ?></div>
   </div>
+
   <div class="info-block" id="info-left">
     <div class="info-label">Combustion</div>
     <div class="info-value">2h à 5h</div>
@@ -49,6 +63,7 @@
     <div class="info-label">Notes olfactives</div>
     <div class="info-value">Oud · Bois de Santal · Ambre</div>
   </div>
+
   <div class="phase-copy" id="pc1">
     <div class="ph-tag">I — L'Allumage</div>
     <div class="ph-title">L'instant<br>du premier souffle</div>
@@ -64,6 +79,7 @@
     <div class="ph-title">Ce qui reste<br>après le silence</div>
     <div class="ph-body">La fumée s'est dissipée, mais le souvenir olfactif persiste. C'est la magie du bon encens.</div>
   </div>
+
   <div id="cue">
     <p>Découvrir</p>
     <div class="cue-tick"></div>
@@ -71,7 +87,7 @@
 </div>
 </div>
 
-<!-- SECTION REVEAL -->
+<!-- ═══ SECTION REVEAL ═══ -->
 <section id="reveal">
   <div class="reveal-left">
     <h2>L'Encens<br><em>Arabesque</em></h2>
@@ -90,12 +106,12 @@
   </div>
 </section>
 
-<!-- COLLECTION -->
+<!-- ═══ COLLECTION ═══ -->
 <section id="collection">
   <div class="coll-header">
     <div>
-      <div class="coll-tag">Nos Encens</div>
-      <div class="coll-title">La Collection</div>
+      <div class="coll-tag"><?php echo ads_c('ads_collection_tag', 'Nos Encens'); ?></div>
+      <div class="coll-title"><?php echo ads_c('ads_collection_title', 'La Collection'); ?></div>
     </div>
     <a href="#" class="all-link">Tout voir</a>
   </div>
@@ -198,42 +214,56 @@
   </div>
 </section>
 
-<!-- PHILOSOPHY -->
+<!-- ═══ PHILOSOPHY ═══ -->
 <section id="philosophy">
   <div>
-    <div class="phi-tag">Notre Philosophie</div>
-    <div class="phi-title">L'encens comme<br><em>rituel quotidien</em></div>
-    <p class="phi-body">Chaque bâtonnet est un pont entre le présent et l'ancestral. Nous sélectionnons des matières premières d'une authenticité rare, pour que chaque moment d'allumage devienne un acte de présence.</p>
+    <div class="phi-tag"><?php echo ads_c('ads_phi_tag', 'Notre Philosophie'); ?></div>
+    <div class="phi-title"><?php echo ads_c('ads_phi_title', "L'encens comme<br><em>rituel quotidien</em>"); ?></div>
+    <p class="phi-body"><?php echo ads_c('ads_phi_body', "Chaque bâtonnet est un pont entre le présent et l'ancestral. Nous sélectionnons des matières premières d'une authenticité rare, pour que chaque moment d'allumage devienne un acte de présence."); ?></p>
   </div>
   <div class="phi-right">
-    <div class="phi-stat"><div class="phi-num">12</div><div class="phi-unit">Fragrances</div><div class="phi-desc">Une collection soigneusement éditée, chaque senteur ayant sa propre histoire.</div></div>
-    <div class="phi-stat"><div class="phi-num">5h</div><div class="phi-unit">Maximum</div><div class="phi-desc">La plus longue diffusion de notre gamme, pour habiller durablement votre espace.</div></div>
-    <div class="phi-stat"><div class="phi-num">100%</div><div class="phi-unit">Naturel</div><div class="phi-desc">Résines et bois sélectionnés sans additifs chimiques ni arômes artificiels.</div></div>
-    <div class="phi-stat"><div class="phi-num">Dakar</div><div class="phi-unit">Livraison</div><div class="phi-desc">Commandez via WhatsApp ou notre boutique, livré directement chez vous.</div></div>
+    <?php
+    $phi_defaults = array(
+        1 => array( 'num' => '12',    'unit' => 'Fragrances', 'desc' => 'Une collection soigneusement éditée, chaque senteur ayant sa propre histoire.' ),
+        2 => array( 'num' => '5h',    'unit' => 'Maximum',    'desc' => 'La plus longue diffusion de notre gamme, pour habiller durablement votre espace.' ),
+        3 => array( 'num' => '100%',  'unit' => 'Naturel',    'desc' => 'Résines et bois sélectionnés sans additifs chimiques ni arômes artificiels.' ),
+        4 => array( 'num' => 'Dakar', 'unit' => 'Livraison',  'desc' => 'Commandez via WhatsApp ou notre boutique, livré directement chez vous.' ),
+    );
+    for ( $i = 1; $i <= 4; $i++ ) :
+        $num  = ads_c( "ads_phi_stat_{$i}_num",  $phi_defaults[$i]['num'] );
+        $unit = ads_c( "ads_phi_stat_{$i}_unit", $phi_defaults[$i]['unit'] );
+        $desc = ads_c( "ads_phi_stat_{$i}_desc", $phi_defaults[$i]['desc'] );
+    ?>
+    <div class="phi-stat">
+      <div class="phi-num"><?php echo $num; ?></div>
+      <div class="phi-unit"><?php echo $unit; ?></div>
+      <div class="phi-desc"><?php echo $desc; ?></div>
+    </div>
+    <?php endfor; ?>
   </div>
 </section>
 
-<!-- NEWSLETTER -->
+<!-- ═══ NEWSLETTER ═══ -->
 <section id="nl">
-  <div class="nl-tag">Restez Informé</div>
-  <div class="nl-title">La Lettre des Senteurs</div>
-  <p class="nl-sub">Nouvelles collections, éditions limitées et conseils olfactifs directement dans votre boîte mail.</p>
+  <div class="nl-tag"><?php echo ads_c('ads_nl_tag', 'Restez Informé'); ?></div>
+  <div class="nl-title"><?php echo ads_c('ads_nl_title', 'La Lettre des Senteurs'); ?></div>
+  <p class="nl-sub"><?php echo ads_c('ads_nl_sub', 'Nouvelles collections, éditions limitées et conseils olfactifs directement dans votre boîte mail.'); ?></p>
   <form class="nl-form" onsubmit="return false;">
     <input type="email" placeholder="votre@email.com"/>
-    <button>S'abonner</button>
+    <button><?php echo ads_c('ads_nl_btn', "S'abonner"); ?></button>
   </form>
 </section>
 
-<!-- FOOTER -->
+<!-- ═══ FOOTER ═══ -->
 <footer>
   <div>
-    <div class="f-brand">Alchimie des Senteurs</div>
-    <div class="f-sub">Maison d'Encens · Dakar</div>
-    <p class="f-about">Depuis Dakar, nous apportons les fragrances les plus authentiques d'Orient dans vos foyers. Sélection, qualité, livraison.</p>
+    <div class="f-brand"><?php echo ads_c('ads_footer_brand', 'Alchimie des Senteurs'); ?></div>
+    <div class="f-sub"><?php echo ads_c('ads_footer_sub', "Maison d'Encens · Dakar"); ?></div>
+    <p class="f-about"><?php echo ads_c('ads_footer_about', "Depuis Dakar, nous apportons les fragrances les plus authentiques d'Orient dans vos foyers."); ?></p>
     <div class="f-soc">
-      <a href="https://wa.me/221776440125">WhatsApp</a>
-      <a href="#">Instagram</a>
-      <a href="#">Facebook</a>
+      <a href="<?php echo esc_url( ads_c('ads_footer_wa', 'https://wa.me/221776440125') ); ?>">WhatsApp</a>
+      <a href="<?php echo esc_url( ads_c('ads_footer_insta', '#') ); ?>">Instagram</a>
+      <a href="<?php echo esc_url( ads_c('ads_footer_fb', '#') ); ?>">Facebook</a>
     </div>
   </div>
   <div class="f-col">
@@ -257,7 +287,7 @@
   <div class="f-col">
     <h5>Aide</h5>
     <ul>
-      <li><a href="https://wa.me/221776440125">WhatsApp</a></li>
+      <li><a href="<?php echo esc_url( ads_c('ads_footer_wa', 'https://wa.me/221776440125') ); ?>">WhatsApp</a></li>
       <li><a href="#">Livraison</a></li>
       <li><a href="#">Retours</a></li>
       <li><a href="#">CGV</a></li>
@@ -265,11 +295,14 @@
   </div>
 </footer>
 <div class="f-bottom">
-  <p>© 2026 Alchimie des Senteurs · Dakar, Sénégal</p>
+  <p><?php echo ads_c('ads_footer_copy', '© 2026 Alchimie des Senteurs · Dakar, Sénégal'); ?></p>
   <div class="pay-row">
-    <span class="pay">Orange Money</span>
-    <span class="pay">Wave</span>
-    <span class="pay">Carte</span>
+    <?php
+    $pays = explode( ',', ads_c('ads_footer_pay', 'Orange Money,Wave,Carte') );
+    foreach ( $pays as $pay ) {
+        echo '<span class="pay">' . esc_html( trim($pay) ) . '</span>';
+    }
+    ?>
   </div>
 </div>
 
