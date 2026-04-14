@@ -2,97 +2,73 @@
 /**
  * Template Name: Contact
  * Template Post Type: page
- *
- * Page de contact — assigner via WP Admin > Pages > Attributs de page > Modele : Contact
- * Le formulaire peut etre remplace par un shortcode (CF7, WPForms, Fluent Forms...)
  */
 get_header();
 ?>
 
 <div class="contact-wrap">
 
-  <!-- ═══ EN-TETE ═══ -->
-  <div class="contact-hero">
+  <!-- HERO -->
+  <section class="contact-hero">
     <div class="contact-hero-inner">
       <div class="contact-tag">Nous Contacter</div>
-      <h1 class="contact-title">Une question ?<br><em>Parlons-en.</em></h1>
-      <p class="contact-sub">Notre équipe est disponible du lundi au samedi, de 9h à 18h.</p>
+      <h1 class="contact-title">Une question&nbsp;?<br><em>Parlons-en.</em></h1>
+      <p class="contact-sub">Notre équipe est disponible du lundi au samedi,&nbsp;de&nbsp;9h&nbsp;à&nbsp;18h.</p>
+    </div>
+  </section>
+
+  <!-- INFOS RAPIDES : 4 blocs en ligne -->
+  <div class="contact-quick">
+    <div class="cq-item">
+      <div class="cq-label">Adresse</div>
+      <div class="cq-value">Dakar, Sénégal</div>
+    </div>
+    <div class="cq-item">
+      <div class="cq-label">WhatsApp</div>
+      <a class="cq-value cq-link" href="https://wa.me/221776440125" target="_blank" rel="noopener">+221 77 644 01 25</a>
+    </div>
+    <div class="cq-item">
+      <div class="cq-label">Email</div>
+      <a class="cq-value cq-link" href="mailto:contact@alchimie-des-senteurs.sn">contact@alchimie-des-senteurs.sn</a>
+    </div>
+    <div class="cq-item">
+      <div class="cq-label">Horaires</div>
+      <div class="cq-value">Lun — Sam&nbsp;: 9h à 18h</div>
     </div>
   </div>
 
-  <!-- ═══ BLOC PRINCIPAL ═══ -->
-  <div class="contact-main">
+  <!-- FORMULAIRE -->
+  <section class="contact-form-section">
 
-    <!-- Colonne infos -->
-    <div class="contact-infos">
+    <div class="contact-form-intro">
+      <div class="cf-intro-tag">Formulaire</div>
+      <div class="cf-intro-title">Envoyez-nous<br><em>un message</em></div>
+      <p class="cf-intro-sub">Nous vous répondons sous 24h. Pour les commandes urgentes, préférez WhatsApp.</p>
 
-      <div class="ci-block">
-        <div class="ci-label">Adresse</div>
-        <div class="ci-value">Dakar, Sénégal</div>
+      <div class="ci-socials">
+        <?php $wa = get_theme_mod('ads_footer_wa','https://wa.me/221776440125'); if ($wa) : ?>
+          <a href="<?php echo esc_url($wa); ?>" target="_blank" rel="noopener">WhatsApp</a>
+        <?php endif; ?>
+        <?php $insta = get_theme_mod('ads_footer_insta',''); if ($insta && $insta !== '#') : ?>
+          <a href="<?php echo esc_url($insta); ?>" target="_blank" rel="noopener">Instagram</a>
+        <?php endif; ?>
+        <?php $fb = get_theme_mod('ads_footer_fb',''); if ($fb && $fb !== '#') : ?>
+          <a href="<?php echo esc_url($fb); ?>" target="_blank" rel="noopener">Facebook</a>
+        <?php endif; ?>
       </div>
+    </div>
 
-      <div class="ci-block">
-        <div class="ci-label">WhatsApp</div>
-        <a class="ci-value ci-link" href="https://wa.me/221776440125" target="_blank" rel="noopener">
-          +221 77 644 01 25
-        </a>
-      </div>
-
-      <div class="ci-block">
-        <div class="ci-label">Email</div>
-        <a class="ci-value ci-link" href="mailto:contact@alchimie-des-senteurs.sn">
-          contact@alchimie-des-senteurs.sn
-        </a>
-      </div>
-
-      <div class="ci-block">
-        <div class="ci-label">Horaires</div>
-        <div class="ci-value">Lun — Sam : 9h à 18h</div>
-      </div>
-
-      <div class="ci-block">
-        <div class="ci-label">Réseaux</div>
-        <div class="ci-socials">
-          <?php $wa = get_theme_mod('ads_footer_wa','https://wa.me/221776440125'); ?>
-          <?php if ($wa) : ?>
-            <a href="<?php echo esc_url($wa); ?>" target="_blank" rel="noopener">WhatsApp</a>
-          <?php endif; ?>
-          <?php $insta = get_theme_mod('ads_footer_insta',''); if ($insta && $insta !== '#') : ?>
-            <a href="<?php echo esc_url($insta); ?>" target="_blank" rel="noopener">Instagram</a>
-          <?php endif; ?>
-          <?php $fb = get_theme_mod('ads_footer_fb',''); if ($fb && $fb !== '#') : ?>
-            <a href="<?php echo esc_url($fb); ?>" target="_blank" rel="noopener">Facebook</a>
-          <?php endif; ?>
-        </div>
-      </div>
-
-    </div><!-- .contact-infos -->
-
-    <!-- Colonne formulaire -->
     <div class="contact-form-col">
-
       <?php
-      /*
-       * ZONE FORMULAIRE
-       * -------------------------------------------------------
-       * Si une extension de formulaire est installee (CF7, WPForms,
-       * Fluent Forms, Gravity Forms...), collez son shortcode
-       * dans le contenu de la page depuis WP Admin > Pages > Contact.
-       *
-       * Sinon, un formulaire HTML natif s'affiche par defaut ci-dessous.
-       * -------------------------------------------------------
-       */
       while ( have_posts() ) : the_post();
         $content = get_the_content();
       endwhile;
 
-      if ( ! empty(trim(strip_tags($content))) ) :
-        // L'editeur contient du contenu (shortcode CF7 etc.) -> on l'affiche
+      if ( ! empty( trim( strip_tags( $content ) ) ) ) :
         echo '<div class="contact-form-shortcode">';
         the_content();
         echo '</div>';
       else :
-        // Pas de contenu -> formulaire HTML natif de secours
       ?>
       <form class="contact-form" method="post" action="#" novalidate>
         <div class="cf-row cf-row-2">
@@ -110,7 +86,7 @@ get_header();
           <input class="cf-input" type="email" id="cf-email" name="email" placeholder="votre@email.com" required />
         </div>
         <div class="cf-field">
-          <label class="cf-label" for="cf-tel">Téléphone (optionnel)</label>
+          <label class="cf-label" for="cf-tel">Téléphone <span class="cf-opt">(optionnel)</span></label>
           <input class="cf-input" type="tel" id="cf-tel" name="telephone" placeholder="+221 77 000 00 00" />
         </div>
         <div class="cf-field">
@@ -130,10 +106,10 @@ get_header();
         <button type="submit" class="cf-submit">Envoyer le message</button>
       </form>
       <?php endif; ?>
+    </div>
 
-    </div><!-- .contact-form-col -->
-  </div><!-- .contact-main -->
+  </section>
 
-</div><!-- .contact-wrap -->
+</div>
 
 <?php get_footer(); ?>

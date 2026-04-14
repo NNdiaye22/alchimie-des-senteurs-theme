@@ -1,34 +1,45 @@
-/* ══════════════════════════════════════════════
+/* ====================================================
    PAGE CONTACT — contact.css
    Variables heritees de main.css
-══════════════════════════════════════════════ */
+==================================================== */
 
+/* ---- WRAPPER ---- */
 .contact-wrap {
-  padding-top: 8rem;
+  padding-top: 0; /* le hero commence juste sous le header fixe */
 }
 
-/* ── EN-TETE ── */
+/* ---- HERO ---- */
 .contact-hero {
   background: var(--ink);
-  padding: 7rem 6vw 6rem;
+  padding: 14rem 6vw 8rem;
+  position: relative;
+  overflow: hidden;
+}
+/* Decoration lineaire subtile en fond */
+.contact-hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 6vw; right: 6vw;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
 }
 .contact-hero-inner {
-  max-width: 680px;
+  max-width: 700px;
 }
 .contact-tag {
   font-size: 0.56rem;
-  letter-spacing: 0.65em;
+  letter-spacing: 0.7em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.35);
-  margin-bottom: 1.8rem;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 2rem;
 }
 .contact-title {
-  font-size: clamp(2.4rem, 5vw, 5rem);
+  font-size: clamp(2.8rem, 5.5vw, 5.5rem);
   font-weight: 300;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   line-height: 1.1;
   color: var(--white);
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 .contact-title em {
   font-style: italic;
@@ -36,132 +47,186 @@
 }
 .contact-sub {
   font-size: 0.86rem;
-  line-height: 1.9;
-  color: rgba(255,255,255,0.45);
-  max-width: 420px;
+  line-height: 2;
+  color: rgba(255,255,255,0.4);
+  max-width: 440px;
 }
 
-/* ── BLOC PRINCIPAL ── */
-.contact-main {
+/* ---- BANDE INFOS RAPIDES ---- */
+.contact-quick {
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 8vw;
-  padding: 7rem 6vw 8rem;
-  align-items: start;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--light);
 }
-
-/* Colonne infos */
-.contact-infos {
-  display: flex;
-  flex-direction: column;
-  gap: 2.8rem;
-  position: sticky;
-  top: 8rem;
+.cq-item {
+  padding: 3rem 4vw;
+  border-right: 1px solid var(--light);
 }
-.ci-block {}
-.ci-label {
-  font-size: 0.52rem;
-  letter-spacing: 0.55em;
+.cq-item:last-child { border-right: none; }
+.cq-label {
+  font-size: 0.5rem;
+  letter-spacing: 0.6em;
   text-transform: uppercase;
   color: var(--stone);
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.8rem;
 }
-.ci-value {
-  font-size: 0.92rem;
+.cq-value {
+  font-size: 0.9rem;
   font-weight: 300;
-  letter-spacing: 0.03em;
   color: var(--ink);
-  line-height: 1.6;
+  line-height: 1.5;
 }
-.ci-link {
+.cq-link {
   text-decoration: none;
   color: var(--ink);
-  transition: color 0.3s;
   border-bottom: 1px solid var(--mid);
   padding-bottom: 1px;
+  transition: color 0.3s, border-color 0.3s;
 }
-.ci-link:hover { color: var(--amber); border-color: var(--amber); }
+.cq-link:hover { color: var(--amber); border-color: var(--amber); }
 
+/* ---- SECTION FORMULAIRE ---- */
+.contact-form-section {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 0;
+  border-bottom: 1px solid var(--light);
+}
+
+/* Colonne intro gauche */
+.contact-form-intro {
+  padding: 6rem 5vw 6rem 6vw;
+  border-right: 1px solid var(--light);
+  position: sticky;
+  top: 6rem;
+  align-self: start;
+}
+.cf-intro-tag {
+  font-size: 0.52rem;
+  letter-spacing: 0.65em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 1.8rem;
+}
+.cf-intro-title {
+  font-size: clamp(1.8rem, 2.5vw, 2.8rem);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 1.5rem;
+}
+.cf-intro-title em {
+  font-style: italic;
+  color: var(--amber);
+}
+.cf-intro-sub {
+  font-size: 0.8rem;
+  line-height: 1.9;
+  color: var(--stone);
+  margin-bottom: 2.5rem;
+}
 .ci-socials {
   display: flex;
-  gap: 1.2rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 1rem;
 }
 .ci-socials a {
-  font-size: 0.58rem;
-  letter-spacing: 0.3em;
+  font-size: 0.56rem;
+  letter-spacing: 0.4em;
   text-transform: uppercase;
   color: var(--stone);
   text-decoration: none;
   transition: color 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.ci-socials a::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 1px;
+  background: var(--mid);
+  transition: width 0.3s, background 0.3s;
 }
 .ci-socials a:hover { color: var(--ink); }
+.ci-socials a:hover::before { width: 36px; background: var(--amber); }
 
-/* ── FORMULAIRE ── */
+/* Colonne formulaire droite */
+.contact-form-col {
+  padding: 6rem 6vw 6rem 5vw;
+  background: var(--off);
+}
+
+/* ---- FORMULAIRE ---- */
 .contact-form,
 .contact-form-shortcode {
   display: flex;
   flex-direction: column;
-  gap: 1.8rem;
+  gap: 2rem;
+  max-width: 580px;
 }
-
-.cf-row {
-  display: flex;
-  gap: 1.5rem;
-}
+.cf-row { display: flex; gap: 1.5rem; }
 .cf-row-2 > .cf-field { flex: 1; }
 
 .cf-field {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.7rem;
 }
-
 .cf-label {
-  font-size: 0.54rem;
+  font-size: 0.52rem;
   letter-spacing: 0.5em;
   text-transform: uppercase;
   color: var(--stone);
 }
-
+.cf-opt {
+  font-size: 0.48rem;
+  letter-spacing: 0.2em;
+  color: var(--mid);
+  text-transform: lowercase;
+}
 .cf-input {
   width: 100%;
-  padding: 0.9rem 1.1rem;
+  padding: 1rem 1.2rem;
   border: 1px solid var(--mid);
   background: var(--white);
   color: var(--ink);
   font-family: Georgia, serif;
   font-size: 0.88rem;
   outline: none;
-  transition: border-color 0.3s;
+  border-radius: 0;
   -webkit-appearance: none;
   appearance: none;
-  border-radius: 0;
+  transition: border-color 0.3s, background 0.3s;
 }
-.cf-input:focus { border-color: var(--ink); }
+.cf-input:focus {
+  border-color: var(--ink);
+  background: var(--white);
+}
 .cf-input::placeholder { color: var(--stone); }
 
 .cf-select {
   cursor: pointer;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239a9088' stroke-width='1.2' fill='none'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 1.1rem center;
-  padding-right: 2.5rem;
+  background-position: right 1.2rem center;
+  padding-right: 2.8rem;
 }
-
 .cf-textarea {
   resize: vertical;
-  min-height: 160px;
+  min-height: 180px;
   line-height: 1.8;
 }
-
 .cf-submit {
   align-self: flex-start;
-  padding: 1rem 3rem;
+  margin-top: 0.5rem;
+  padding: 1.1rem 3.5rem;
   background: var(--ink);
   color: var(--white);
-  font-size: 0.62rem;
-  letter-spacing: 0.45em;
+  font-size: 0.6rem;
+  letter-spacing: 0.5em;
   text-transform: uppercase;
   font-family: Georgia, serif;
   border: none;
@@ -170,118 +235,86 @@
 }
 .cf-submit:hover { background: var(--amber); }
 
-/* ── STYLES EXTENSIONS FORMULAIRE (CF7, WPForms, Fluent...) ──
-   Ces regles harmonisent les champs generes par les plugins
-   pour qu'ils respectent le style du theme.                   */
+/* ---- STYLES PLUGINS (CF7, WPForms, Fluent) ---- */
 .contact-form-shortcode input[type="text"],
 .contact-form-shortcode input[type="email"],
 .contact-form-shortcode input[type="tel"],
 .contact-form-shortcode select,
 .contact-form-shortcode textarea,
-.wpcf7 input[type="text"],
-.wpcf7 input[type="email"],
-.wpcf7 input[type="tel"],
-.wpcf7 select,
-.wpcf7 textarea,
-.wpforms-form input[type="text"],
-.wpforms-form input[type="email"],
-.wpforms-form input[type="tel"],
-.wpforms-form select,
-.wpforms-form textarea,
-.fluent-form input[type="text"],
-.fluent-form input[type="email"],
-.fluent-form input[type="tel"],
-.fluent-form select,
-.fluent-form textarea {
-  width: 100% !important;
-  padding: 0.9rem 1.1rem !important;
-  border: 1px solid var(--mid) !important;
-  background: var(--white) !important;
-  color: var(--ink) !important;
-  font-family: Georgia, serif !important;
-  font-size: 0.88rem !important;
-  outline: none !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  transition: border-color 0.3s !important;
+.wpcf7 input[type="text"],.wpcf7 input[type="email"],
+.wpcf7 input[type="tel"],.wpcf7 select,.wpcf7 textarea,
+.wpforms-form input[type="text"],.wpforms-form input[type="email"],
+.wpforms-form input[type="tel"],.wpforms-form select,.wpforms-form textarea,
+.fluent-form input[type="text"],.fluent-form input[type="email"],
+.fluent-form input[type="tel"],.fluent-form select,.fluent-form textarea {
+  width:100%!important;padding:1rem 1.2rem!important;
+  border:1px solid var(--mid)!important;background:var(--white)!important;
+  color:var(--ink)!important;font-family:Georgia,serif!important;
+  font-size:0.88rem!important;outline:none!important;
+  border-radius:0!important;box-shadow:none!important;
+  transition:border-color 0.3s!important;
 }
-.contact-form-shortcode input:focus,
-.contact-form-shortcode textarea:focus,
-.wpcf7 input:focus,
-.wpcf7 textarea:focus,
-.wpforms-form input:focus,
-.wpforms-form textarea:focus {
-  border-color: var(--ink) !important;
+.contact-form-shortcode input:focus,.contact-form-shortcode textarea:focus,
+.wpcf7 input:focus,.wpcf7 textarea:focus,
+.wpforms-form input:focus,.wpforms-form textarea:focus {
+  border-color:var(--ink)!important;
 }
-
-/* Bouton envoi plugins */
 .contact-form-shortcode input[type="submit"],
 .contact-form-shortcode button[type="submit"],
-.wpcf7 input[type="submit"],
-.wpforms-form button[type="submit"],
+.wpcf7 input[type="submit"],.wpforms-form button[type="submit"],
 .fluent-form button[type="submit"] {
-  padding: 1rem 3rem !important;
-  background: var(--ink) !important;
-  color: var(--white) !important;
-  font-size: 0.62rem !important;
-  letter-spacing: 0.45em !important;
-  text-transform: uppercase !important;
-  font-family: Georgia, serif !important;
-  border: none !important;
-  cursor: pointer !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  transition: background 0.35s !important;
+  padding:1.1rem 3.5rem!important;background:var(--ink)!important;
+  color:var(--white)!important;font-size:0.6rem!important;
+  letter-spacing:0.5em!important;text-transform:uppercase!important;
+  font-family:Georgia,serif!important;border:none!important;
+  cursor:pointer!important;border-radius:0!important;
+  box-shadow:none!important;transition:background 0.35s!important;
 }
 .contact-form-shortcode input[type="submit"]:hover,
 .contact-form-shortcode button[type="submit"]:hover,
-.wpcf7 input[type="submit"]:hover,
-.wpforms-form button[type="submit"]:hover,
-.fluent-form button[type="submit"]:hover {
-  background: var(--amber) !important;
+.wpcf7 input[type="submit"]:hover,.wpforms-form button[type="submit"]:hover,
+.fluent-form button[type="submit"]:hover { background:var(--amber)!important; }
+.contact-form-shortcode label,.wpcf7 label,
+.wpforms-form label,.fluent-form label {
+  font-size:0.52rem!important;letter-spacing:0.5em!important;
+  text-transform:uppercase!important;color:var(--stone)!important;
+  font-family:Georgia,serif!important;font-weight:normal!important;
 }
-
-/* Labels plugins */
-.contact-form-shortcode label,
-.wpcf7 label,
-.wpforms-form label,
-.fluent-form label {
-  font-size: 0.54rem !important;
-  letter-spacing: 0.5em !important;
-  text-transform: uppercase !important;
-  color: var(--stone) !important;
-  font-family: Georgia, serif !important;
-  font-weight: normal !important;
-}
-
-/* Messages confirmation / erreur */
 .wpcf7-response-output {
-  border: 1px solid var(--mid) !important;
-  border-radius: 0 !important;
-  padding: 0.8rem 1.2rem !important;
-  font-size: 0.78rem !important;
-  font-family: Georgia, serif !important;
-  margin-top: 1rem !important;
+  border:1px solid var(--mid)!important;border-radius:0!important;
+  padding:0.8rem 1.2rem!important;font-size:0.78rem!important;
+  font-family:Georgia,serif!important;margin-top:1rem!important;
 }
 
-/* ── RESPONSIVE ── */
-@media (max-width: 900px) {
-  .contact-main {
+/* ---- RESPONSIVE ---- */
+@media (max-width: 1024px) {
+  .contact-form-section {
     grid-template-columns: 1fr;
-    gap: 4rem;
   }
-  .contact-infos {
+  .contact-form-intro {
     position: static;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 2rem;
+    border-right: none;
+    border-bottom: 1px solid var(--light);
+    padding: 4rem 6vw;
   }
-  .ci-block { min-width: 160px; }
+  .ci-socials { flex-direction: row; gap: 2rem; }
+  .ci-socials a::before { display: none; }
+  .contact-form-col { padding: 4rem 6vw; background: var(--white); }
+}
+@media (max-width: 768px) {
+  .contact-quick {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .cq-item:nth-child(2) { border-right: none; }
+  .cq-item:nth-child(3) { border-top: 1px solid var(--light); }
+  .cq-item:nth-child(4) { border-top: 1px solid var(--light); border-right: none; }
 }
 @media (max-width: 600px) {
-  .contact-wrap { padding-top: 6rem; }
-  .contact-hero { padding: 5rem 6vw 4rem; }
-  .contact-title { font-size: 2rem; }
-  .cf-row { flex-direction: column; gap: 1.8rem; }
-  .cf-submit { width: 100%; text-align: center; }
+  .contact-hero { padding: 10rem 6vw 5rem; }
+  .contact-title { font-size: 2.2rem; }
+  .contact-quick { grid-template-columns: 1fr; }
+  .cq-item { border-right: none!important; border-top: 1px solid var(--light); }
+  .cq-item:first-child { border-top: none; }
+  .cf-row { flex-direction: column; gap: 2rem; }
+  .cf-submit { width: 100%; text-align: center; align-self: stretch; }
 }
