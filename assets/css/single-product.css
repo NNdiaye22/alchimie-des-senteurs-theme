@@ -1,0 +1,239 @@
+/* ══════════════════════════════════════════════
+   PAGE PRODUIT UNIQUE — single-product.css
+   Variables heritees de main.css
+══════════════════════════════════════════════ */
+
+/* Wrapper global */
+.sp-wrap {
+  padding-top: 8rem;
+  padding-bottom: 6rem;
+}
+
+/* Breadcrumb */
+.sp-breadcrumb {
+  padding: 0 6vw 3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+.sp-breadcrumb a,
+.sp-breadcrumb span {
+  font-size: 0.58rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--stone);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.sp-breadcrumb a:hover { color: var(--ink); }
+.sp-bc-current { color: var(--ink); }
+
+/* ── BLOC PRINCIPAL ── */
+.sp-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8vw;
+  padding: 0 6vw 6rem;
+  align-items: start;
+}
+
+/* Galerie */
+.sp-gallery { display: flex; flex-direction: column; gap: 1rem; }
+
+.sp-img-main {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  background: var(--light);
+  overflow: hidden;
+}
+.sp-img-main img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.sp-img-main:hover img { transform: scale(1.03); }
+
+.sp-badge {
+  position: absolute; top: 1rem; left: 1rem;
+  font-size: 0.5rem; letter-spacing: 0.35em; text-transform: uppercase;
+  padding: 0.3rem 0.7rem;
+}
+.sp-badge.badge-promo { background: var(--ink); color: var(--white); }
+.sp-badge.badge-out   { background: var(--mid); color: var(--stone); }
+
+.sp-thumbs {
+  display: flex; gap: 0.6rem; flex-wrap: wrap;
+}
+.sp-thumb {
+  width: 64px; height: 64px;
+  border: 1px solid var(--mid);
+  background: var(--light);
+  overflow: hidden; cursor: pointer;
+  padding: 0; transition: border-color 0.3s;
+}
+.sp-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sp-thumb.active,
+.sp-thumb:hover { border-color: var(--ink); }
+
+/* Colonne infos */
+.sp-fam {
+  font-size: 0.54rem; letter-spacing: 0.6em; text-transform: uppercase;
+  color: var(--stone); margin-bottom: 1rem;
+}
+.sp-title {
+  font-size: clamp(2rem, 3.5vw, 3.5rem);
+  font-weight: 300; letter-spacing: 0.04em;
+  color: var(--ink); line-height: 1.1;
+  margin-bottom: 2rem;
+}
+
+/* Prix */
+.sp-price-block {
+  display: flex; align-items: baseline; gap: 0.8rem;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--light);
+}
+.sp-price-old {
+  font-size: 0.9rem; color: var(--stone);
+  text-decoration: line-through;
+}
+.sp-price {
+  font-size: 1.4rem; font-weight: 400;
+  letter-spacing: 0.03em; color: var(--ink);
+}
+
+/* Description courte */
+.sp-short-desc {
+  font-size: 0.86rem; line-height: 2;
+  color: var(--stone);
+  margin-bottom: 2.5rem;
+}
+.sp-short-desc p { margin: 0; }
+
+/* Specs / Attributs */
+.sp-specs {
+  display: flex; flex-direction: column; gap: 0;
+  margin-bottom: 2.5rem;
+}
+.sp-spec-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--light);
+}
+.sp-spec-label {
+  font-size: 0.54rem; letter-spacing: 0.5em; text-transform: uppercase;
+  color: var(--stone);
+}
+.sp-spec-value {
+  font-size: 0.88rem; font-weight: 300;
+  letter-spacing: 0.04em; color: var(--ink);
+}
+
+/* Bouton add-to-cart WooCommerce */
+.sp-cart-wrap { margin-bottom: 2rem; }
+
+.sp-cart-wrap .quantity {
+  display: flex; align-items: center; gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.sp-cart-wrap .qty {
+  width: 56px; height: 44px; text-align: center;
+  border: 1px solid var(--mid);
+  background: var(--white); color: var(--ink);
+  font-family: Georgia, serif; font-size: 0.9rem;
+  outline: none; transition: border-color 0.3s;
+}
+.sp-cart-wrap .qty:focus { border-color: var(--ink); }
+
+.sp-cart-wrap .single_add_to_cart_button,
+.sp-cart-wrap button[type="submit"] {
+  width: 100%; padding: 1.1rem 2rem;
+  background: var(--ink); color: var(--white);
+  font-size: 0.62rem; letter-spacing: 0.45em; text-transform: uppercase;
+  font-family: Georgia, serif;
+  border: none; cursor: pointer;
+  transition: background 0.35s;
+}
+.sp-cart-wrap .single_add_to_cart_button:hover,
+.sp-cart-wrap button[type="submit"]:hover { background: var(--amber); }
+
+.sp-out-msg {
+  font-size: 0.7rem; letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--stone); padding: 1.1rem 0;
+  border-top: 1px solid var(--light);
+  border-bottom: 1px solid var(--light);
+}
+
+/* Meta */
+.sp-meta { display: flex; flex-direction: column; gap: 0.6rem; }
+.sp-meta-row {
+  display: flex; gap: 1rem; align-items: center;
+}
+.sp-meta-label {
+  font-size: 0.54rem; letter-spacing: 0.45em; text-transform: uppercase;
+  color: var(--stone); min-width: 90px;
+}
+.sp-meta-val {
+  font-size: 0.78rem; color: var(--ink);
+  text-decoration: none;
+}
+a.sp-meta-val:hover { color: var(--amber); }
+
+/* ── DESCRIPTION LONGUE ── */
+.sp-desc-section {
+  padding: 5rem 6vw;
+  border-top: 1px solid var(--light);
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 6vw;
+  align-items: start;
+}
+.sp-desc-title {
+  font-size: 0.54rem; letter-spacing: 0.6em; text-transform: uppercase;
+  color: var(--stone); padding-top: 0.3rem;
+}
+.sp-desc-body {
+  font-size: 0.88rem; line-height: 2.1;
+  color: var(--stone);
+}
+.sp-desc-body p { margin-bottom: 1.2rem; }
+.sp-desc-body h2,
+.sp-desc-body h3 {
+  font-size: 1.1rem; font-weight: 300;
+  letter-spacing: 0.06em; color: var(--ink);
+  margin: 2rem 0 0.8rem;
+}
+
+/* ── PRODUITS SIMILAIRES ── */
+.sp-related {
+  padding: 5rem 6vw;
+  background: var(--off);
+  border-top: 1px solid var(--mid);
+}
+.sp-related-title {
+  font-size: clamp(1.6rem, 2.5vw, 2.5rem);
+  font-weight: 300; letter-spacing: 0.05em;
+  color: var(--ink);
+  margin-bottom: 3rem;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .sp-main {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  .sp-desc-section {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+@media (max-width: 600px) {
+  .sp-wrap { padding-top: 6rem; }
+  .sp-title { font-size: 1.8rem; }
+  .sp-thumbs { gap: 0.4rem; }
+  .sp-thumb { width: 52px; height: 52px; }
+}
