@@ -15,6 +15,14 @@ function ads_enqueue_assets() {
         ADS_VERSION
     );
 
+    // CSS signature BUUR DIGITAL (toutes les pages)
+    wp_enqueue_style(
+        'ads-signature',
+        ADS_URI . '/assets/css/signature.css',
+        array( 'ads-main' ),
+        ADS_VERSION
+    );
+
     // CSS WooCommerce (boutique, panier, checkout, compte)
     if ( function_exists( 'is_woocommerce' ) && ( is_woocommerce() || is_cart() || is_checkout() || is_account_page() ) ) {
         wp_enqueue_style(
