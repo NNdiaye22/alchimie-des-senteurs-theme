@@ -10,8 +10,7 @@ function ads_s( $key, $default = '' ) {
     return wp_kses_post( get_theme_mod( $key, $default ) );
 }
 
-// Nombre total de produits publiés
-$total_products = wp_count_posts( 'product' )->publish ?? '';
+$total_products = absint( wp_count_posts('product')->publish );
 ?>
 
 <div class="shop-wrap">
@@ -28,33 +27,34 @@ $total_products = wp_count_posts( 'product' )->publish ?? '';
     </div>
     <?php if ( $total_products ) : ?>
     <div class="shop-hero-count">
-      <div class="count-num"><?php echo esc_html( $total_products ); ?></div>
-      <div class="count-label">Références</div>
+      <div class="shop-hero-count-num"><?php echo $total_products; ?></div>
+      <div class="shop-hero-count-label">Références</div>
     </div>
     <?php endif; ?>
   </div>
 
-  <!-- ═══ BARRE OUTILS ═══ -->
+  <!-- ═══ BARRE STICKY ═══ -->
   <div class="shop-toolbar">
     <div class="shop-tb-left">
-      <div class="shop-tb-results">
+      <div class="shop-tb-count">
         <?php
           global $wp_query;
-          $found = $wp_query->found_posts ?? 0;
-          echo '<strong>' . $found . '</strong> référence' . ( $found > 1 ? 's' : '' );
+          $found = $wp_query ? $wp_query->found_posts : 0;
+          echo '<strong>' . $found . '</strong>&nbsp;référence' . ( $found > 1 ? 's' : '' );
         ?>
       </div>
       <?php
-      // Filtres catégories dynamiques
-      $cats = get_terms( array( 'taxonomy' => 'product_cat', 'hide_empty' => true ) );
+      $cats = get_terms( array('taxonomy'=>'product_cat','hide_empty'=>true) );
       if ( $cats && ! is_wp_error( $cats ) ) : ?>
-      <div class="shop-filters">
-        <?php foreach ( $cats as $cat ) : ?>
-          <a href="<?php echo esc_url( get_term_link( $cat ) ); ?>" class="shop-filter-btn">
-            <?php echo esc_html( $cat->name ); ?>
-          </a>
-        <?php endforeach; ?>
-      </div>
+        <div class="shop-filters">
+          <?php foreach ( $cats as $cat ) :
+            $active = is_product_category( $cat->slug ) ? ' current-cat' : ''; ?>
+            <a href="<?php echo esc_url( get_term_link($cat) ); ?>"
+               class="shop-filter-btn<?php echo $active; ?>">
+              <?php echo esc_html( $cat->name ); ?>
+            </a>
+          <?php endforeach; ?>
+        </div>
       <?php endif; ?>
     </div>
     <div class="shop-tb-right">
@@ -68,64 +68,80 @@ $total_products = wp_count_posts( 'product' )->publish ?? '';
     <div class="shop-grid">
 
       <?php
-      $card_index = 0;
-      // Position du bandeau éditorial (après la 4e carte)
+      $idx             = 0;
       $editorial_after = 4;
 
       while ( have_posts() ) : the_post();
+
         global $product;
-        $product   = wc_get_product( get_the_ID() );
+        $product  = wc_get_product( get_the_ID() );
         if ( ! $product ) continue;
 
-        $img_id    = $product->get_image_id();
-        $img_url   = $img_id
-          ? wp_get_attachment_image_url( $img_id, 'woocommerce_single' )
-          : wc_placeholder_img_src();
-        $reg       = $product->get_regular_price();
-        $sale      = $product->get_sale_price();
-        $in_stock  = $product->is_in_stock();
-        $link      = get_permalink();
-        $terms     = get_the_terms( get_the_ID(), 'product_cat' );
-        $cat       = ( $terms && ! is_wp_error($terms) ) ? esc_html($terms[0]->name) : '';
-        $short     = $product->get_short_description();
-        if ( ! $short ) $short = wp_trim_words( $product->get_description(), 14 );
+        $img_id   = $product->get_image_id();
+        $img_url  = $img_id
+                    ? wp_get_attachment_image_url( $img_id, 'ads-product-featured' )
+                    : wc_placeholder_img_src();
+        $reg      = $product->get_regular_price();
+        $sale     = $product->get_sale_price();
+        $stock    = $product->is_in_stock();
+        $link     = get_permalink();
+        $terms    = get_the_terms( get_the_ID(), 'product_cat' );
+        $cat      = ( $terms && ! is_wp_error($terms) ) ? esc_html($terms[0]->name) : '';
+        $desc     = $product->get_short_description();
+        if ( ! $desc ) $desc = wp_trim_words( $product->get_description(), 14 );
 
-        $is_featured = ( $card_index === 0 );
-        $card_class  = 'shop-card' . ( $is_featured ? ' card-featured' : '' );
-        $num_label   = sprintf( '%02d', $card_index + 1 );
+        $featured   = ( $idx === 0 );
+        $card_class = 'shop-card' . ( $featured ? ' card-featured' : '' );
+        $num        = sprintf( '%02d', $idx + 1 );
+        $loading    = ( $idx < 3 ) ? 'eager' : 'lazy';
       ?>
 
-      <article class="<?php echo $card_class; ?>" onclick="window.location='<?php echo esc_url($link); ?>'">
+      <article class="<?php echo $card_class; ?>"
+               onclick="window.location='<?php echo esc_url($link); ?>'">
 
+        <!-- Image -->
         <div class="shop-card-img">
           <img src="<?php echo esc_url($img_url); ?>"
-               alt="<?php echo esc_attr(get_the_title()); ?>"
-               loading="<?php echo $card_index < 3 ? 'eager' : 'lazy'; ?>" />
-          <span class="shop-card-num"><?php echo $num_label; ?></span>
+               alt="<?php echo esc_attr( get_the_title() ); ?>"
+               loading="<?php echo $loading; ?>" />
+          <span class="shop-card-num"><?php echo $num; ?></span>
           <?php if ( $sale ) : ?>
             <span class="shop-badge shop-badge-promo">Promo</span>
-          <?php elseif ( ! $in_stock ) : ?>
+          <?php elseif ( ! $stock ) : ?>
             <span class="shop-badge shop-badge-out">Épuisé</span>
           <?php endif; ?>
           <div class="shop-card-overlay">
-            <a class="shop-card-quick" href="<?php echo esc_url($link); ?>">Découvrir</a>
+            <a class="shop-card-quick"
+               href="<?php echo esc_url($link); ?>"
+               onclick="event.stopPropagation()">
+              Découvrir
+            </a>
           </div>
         </div>
 
+        <!-- Corps -->
         <div class="shop-card-body">
-          <?php if ( $cat ) echo '<div class="shop-card-cat">'.$cat.'</div>'; ?>
+          <?php if ( $cat ) : ?>
+            <div class="shop-card-cat"><?php echo $cat; ?></div>
+          <?php endif; ?>
           <h2 class="shop-card-name"><?php the_title(); ?></h2>
-          <?php if ( $short ) echo '<p class="shop-card-desc">'.wp_strip_all_tags($short).'</p>'; ?>
+          <?php if ( $desc ) : ?>
+            <p class="shop-card-desc"><?php echo wp_strip_all_tags($desc); ?></p>
+          <?php endif; ?>
           <div class="shop-card-sep"></div>
           <div class="shop-card-foot">
-            <div class="shop-card-price">
-              <?php if ( $sale && $reg ) echo '<span class="shop-card-old">'.wc_price($reg).'</span>'; ?>
-              <span class="shop-card-current"><?php echo strip_tags($product->get_price_html()); ?></span>
+            <div class="shop-card-price-wrap">
+              <?php if ( $sale && $reg ) : ?>
+                <span class="shop-card-old"><?php echo wc_price($reg); ?></span>
+              <?php endif; ?>
+              <span class="shop-card-current">
+                <?php echo strip_tags( $product->get_price_html() ); ?>
+              </span>
             </div>
-            <?php if ( $in_stock ) : ?>
+            <?php if ( $stock ) : ?>
               <button class="shop-card-btn"
-                onclick="event.stopPropagation();window.location='<?php echo esc_url($link); ?>'">
-                Ajouter
+                onclick="event.stopPropagation(); window.location='<?php echo esc_url($link); ?>'">
+                Voir
               </button>
             <?php else : ?>
               <span class="shop-card-out">Indisponible</span>
@@ -136,35 +152,32 @@ $total_products = wp_count_posts( 'product' )->publish ?? '';
       </article>
 
       <?php
-        $card_index++;
-
-        // Insère le bandeau éditorial après la 4e carte
-        if ( $card_index === $editorial_after ) :
-          $editorial_text = ads_s('ads_shop_editorial', 'L’encens comme rituel.');
-          $editorial_label = ads_s('ads_shop_editorial_label', 'La philosophie');
+        $idx++;
+        // Case éditoriale après la 4e carte
+        if ( $idx === $editorial_after ) :
       ?>
       <div class="shop-editorial">
-        <div class="shop-editorial-label"><?php echo $editorial_label; ?></div>
-        <div class="shop-editorial-text"><?php echo $editorial_text; ?></div>
+        <div class="shop-editorial-label"><?php echo ads_s('ads_shop_editorial_label','La philosophie'); ?></div>
+        <div class="shop-editorial-text"><?php echo ads_s('ads_shop_editorial','« L’encens comme rituel. »'); ?></div>
       </div>
       <?php endif; ?>
 
       <?php endwhile; ?>
-
-    </div><!-- .shop-grid -->
+    </div>
 
     <?php else : ?>
-    <div class="shop-empty">
-      <p><?php echo ads_s('ads_shop_empty', 'Aucun produit disponible pour le moment.'); ?></p>
+    <div class="shop-grid">
+      <div class="shop-empty">
+        <p><?php echo ads_s('ads_shop_empty','Aucun produit disponible pour le moment.'); ?></p>
+      </div>
     </div>
     <?php endif; ?>
-  </div><!-- .shop-grid-wrap -->
+  </div>
 
   <!-- ═══ PAGINATION ═══ -->
   <div class="shop-pagination">
     <?php woocommerce_pagination(); ?>
   </div>
 
-</div><!-- .shop-wrap -->
-
+</div>
 <?php get_footer(); ?>

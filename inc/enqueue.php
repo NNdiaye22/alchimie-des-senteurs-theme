@@ -15,7 +15,7 @@ function ads_enqueue_assets() {
         ADS_VERSION
     );
 
-    // CSS signature BUUR DIGITAL (toutes les pages)
+    // CSS signature (toutes les pages)
     wp_enqueue_style(
         'ads-signature',
         ADS_URI . '/assets/css/signature.css',
@@ -23,7 +23,7 @@ function ads_enqueue_assets() {
         ADS_VERSION
     );
 
-    // CSS WooCommerce (boutique, panier, checkout, compte)
+    // CSS WooCommerce global (panier, checkout, compte)
     if ( function_exists( 'is_woocommerce' ) && ( is_woocommerce() || is_cart() || is_checkout() || is_account_page() ) ) {
         wp_enqueue_style(
             'ads-woocommerce',
@@ -33,7 +33,17 @@ function ads_enqueue_assets() {
         );
     }
 
-    // CSS page produit unique
+    // CSS page boutique (archive produits uniquement)
+    if ( function_exists( 'is_shop' ) && is_shop() ) {
+        wp_enqueue_style(
+            'ads-shop',
+            ADS_URI . '/assets/css/shop.css',
+            array( 'ads-main', 'ads-woocommerce' ),
+            ADS_VERSION
+        );
+    }
+
+    // CSS produit unique
     if ( function_exists( 'is_product' ) && is_product() ) {
         wp_enqueue_style(
             'ads-single-product',
@@ -53,7 +63,7 @@ function ads_enqueue_assets() {
         );
     }
 
-    // JS canvas animation (uniquement sur la homepage)
+    // JS canvas (homepage uniquement)
     if ( is_front_page() ) {
         wp_enqueue_script(
             'ads-canvas',
@@ -64,7 +74,7 @@ function ads_enqueue_assets() {
         );
     }
 
-    // JS principal (tous les templates)
+    // JS principal
     wp_enqueue_script(
         'ads-main',
         ADS_URI . '/assets/js/main.js',
@@ -73,13 +83,12 @@ function ads_enqueue_assets() {
         true
     );
 
-    // Passer des variables PHP vers JS
     wp_localize_script( 'ads-main', 'adsData', array(
         'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
         'nonce'     => wp_create_nonce( 'ads-nonce' ),
         'shopUrl'   => function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url(),
         'cartUrl'   => function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : home_url(),
-        'cartCount' => function_exists( 'WC' ) ? WC()->cart->get_cart_contents_count() : 0,
+        'cartCount' => function_exists( 'WC' ) && WC()->cart ? WC()->cart->get_cart_contents_count() : 0,
         'currency'  => function_exists( 'get_woocommerce_currency_symbol' ) ? get_woocommerce_currency_symbol() : 'XOF',
     ) );
 }
