@@ -53,6 +53,10 @@ function ads_c_f( $key, $default = '' ) {
   </div>
 </div>
 
+<div class="footer-signature">
+  <p>Thème créé par <span class="signature-name">BUUR DIGITAL</span></p>
+</div>
+
 <?php wp_footer(); ?>
 </body>
 </html>
