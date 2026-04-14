@@ -49,7 +49,7 @@ add_filter( 'loop_shop_columns', 'ads_woo_loop_columns' );
 add_filter( 'woocommerce_breadcrumb_defaults', function( $defaults ) {
     $defaults['delimiter']   = ' &rsaquo; ';
     $defaults['wrap_before'] = '<nav class="ads-breadcrumb">';
-    $defaults['wrap_after']  => '</nav>';
+    $defaults['wrap_after']  = '</nav>';
     return $defaults;
 } );
 
@@ -94,7 +94,6 @@ add_filter( 'woocommerce_add_to_cart_fragments', function( $fragments ) {
 // Retirer les onglets inutiles sur la page produit
 // -------------------------------------------------------
 add_filter( 'woocommerce_product_tabs', function( $tabs ) {
-    // Garder uniquement description et avis
     unset( $tabs['additional_information'] );
     return $tabs;
 }, 98 );
