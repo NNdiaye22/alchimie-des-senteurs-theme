@@ -370,7 +370,7 @@ section{padding:8rem 4rem;}
 /* ─── FOOTER ────────────────────────────────────────────────────────────────── */
 .site-footer{
   background:var(--ink);color:rgba(255,255,255,.5);
-  padding:5rem 4rem 3rem;
+  padding:5rem 4rem 0;
 }
 .footer-inner{
   display:grid;
@@ -418,7 +418,7 @@ section{padding:8rem 4rem;}
 .footer-col .nav-mobile-links a:hover{color:var(--white);}
 .footer-bottom{
   border-top:1px solid rgba(255,255,255,.08);
-  padding-top:2rem;
+  padding:2rem 0;
   display:flex;justify-content:space-between;align-items:center;
   font-size:.75rem;
 }
@@ -428,6 +428,23 @@ section{padding:8rem 4rem;}
   border-radius:.4rem;padding:.2rem .7rem;
   font-size:.7rem;letter-spacing:.1em;
   color:rgba(255,255,255,.4);
+}
+
+/* ─── SIGNATURE BUUR DIGITAL ────────────────────────────────────────────────── */
+.footer-signature{
+  border-top:1px solid rgba(255,255,255,.05);
+  padding:1.2rem 0 2.4rem;
+  text-align:center;
+}
+.footer-signature p{
+  font-size:.58rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.2);
+}
+.footer-signature .signature-name{
+  color:rgba(255,255,255,.35);
+  letter-spacing:.22em;
 }
 
 /* ─── PAGE / SINGLE ─────────────────────────────────────────────────────────── */
@@ -466,40 +483,31 @@ section{padding:8rem 4rem;}
     grid-template-columns:1fr;gap:3rem;padding:5rem 3rem;
   }
   .footer-inner{grid-template-columns:1fr 1fr;}
-  .phi-visual{display:none;} /* cache le cercle en tablette, texte seul */
+  .phi-visual{display:none;}
 }
 @media(max-width:768px){
-  /* Nav */
   nav{padding:1rem 1.6rem;}
   .nav-links,.nav-cta{display:none;}
   .nav-burger{display:flex;}
 
-  /* Sections */
   section{padding:5rem 1.6rem;}
 
-  /* Collection : 1 colonne sur petit mobile */
   .products-grid{grid-template-columns:1fr;}
 
-  /* Hero info blocks cachés sur mobile (trop petit) */
   .info-block{display:none;}
   .phase-copy{left:1.6rem;right:1.6rem;max-width:100%;}
 
-  /* Footer */
   .footer-inner{grid-template-columns:1fr;gap:2rem;}
   .footer-bottom{flex-direction:column;gap:1rem;text-align:center;}
-  .site-footer{padding:4rem 1.6rem 2rem;}
+  .site-footer{padding:4rem 1.6rem 0;}
 
-  /* Newsletter : input pleine largeur */
   .nl-form input{min-width:100%;}
 
-  /* Quote : padding réduit */
   .ads-quote{padding:5rem 1.6rem;}
 
-  /* Philosophie stats : 1 colonne */
   .phi-stats{grid-template-columns:1fr;gap:1.4rem;}
 }
 @media(max-width:480px){
-  /* Collection : 2 colonnes compactes sur grands phones */
   .products-grid{grid-template-columns:repeat(2,1fr);gap:1rem;}
   .card-body{padding:1rem;}
   .card-name{font-size:.88rem;}
