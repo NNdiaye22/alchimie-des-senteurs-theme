@@ -1,0 +1,502 @@
+/* ================================================================
+   CART.CSS — Page Panier
+   Alchimie des Senteurs
+================================================================ */
+
+/* ----------------------------------------------------------------
+   1. WRAPPER
+---------------------------------------------------------------- */
+.cart-wrap {
+  background: var(--white);
+  min-height: 100vh;
+}
+
+/* ----------------------------------------------------------------
+   2. HERO
+---------------------------------------------------------------- */
+.cart-hero {
+  position: relative;
+  background: var(--ink);
+  padding: 140px 10vw 6rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  overflow: hidden;
+}
+.cart-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 300px;
+  pointer-events: none;
+}
+.cart-hero::after {
+  content: '';
+  position: absolute;
+  top: 15%; bottom: 15%; right: 10vw;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--amber) 40%, var(--amber) 60%, transparent);
+  opacity: 0.2;
+}
+.cart-hero-inner { position: relative; z-index: 2; }
+.cart-hero-tag {
+  font-size: 0.5rem;
+  letter-spacing: 1em;
+  text-transform: uppercase;
+  color: var(--amber);
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+.cart-hero-tag::before {
+  content: '';
+  width: 28px; height: 1px;
+  background: var(--amber);
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+.cart-hero-title {
+  font-size: clamp(3rem, 5.5vw, 6rem);
+  font-weight: 300;
+  line-height: 1.0;
+  color: var(--white);
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+.cart-hero-title em {
+  display: block;
+  font-style: italic;
+  color: var(--amber);
+}
+.cart-hero-count {
+  position: relative;
+  z-index: 2;
+  text-align: right;
+}
+.cart-hero-count-num {
+  font-size: 5rem;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  color: rgba(255,255,255,0.07);
+  line-height: 1;
+  font-style: italic;
+}
+.cart-hero-count-label {
+  font-size: 0.46rem;
+  letter-spacing: 0.7em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  margin-top: 0.4rem;
+}
+
+/* ----------------------------------------------------------------
+   3. PANIER VIDE
+---------------------------------------------------------------- */
+.cart-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8rem 10vw;
+  text-align: center;
+  gap: 2rem;
+}
+.cart-empty-icon { color: var(--mid); }
+.cart-empty-text {
+  font-size: 0.75rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--stone);
+}
+
+/* ----------------------------------------------------------------
+   4. LAYOUT DEUX COLONNES
+---------------------------------------------------------------- */
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 0;
+  align-items: start;
+  border-top: 1px solid var(--mid);
+}
+
+/* ----------------------------------------------------------------
+   5. COLONNE ARTICLES
+---------------------------------------------------------------- */
+.cart-items-col {
+  padding: 5rem 6vw 6rem 10vw;
+  border-right: 1px solid var(--mid);
+}
+
+.cart-items-head {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 2rem;
+  padding-bottom: 1.6rem;
+  border-bottom: 1px solid var(--mid);
+  margin-bottom: 2.4rem;
+}
+.cart-items-head span {
+  font-size: 0.44rem;
+  letter-spacing: 0.7em;
+  text-transform: uppercase;
+  color: var(--stone);
+}
+.cart-items-head-qty,
+.cart-items-head-price { text-align: right; }
+
+/* --- Un article --- */
+.cart-item {
+  display: grid;
+  grid-template-columns: 100px 1fr auto auto;
+  gap: 2.4rem;
+  align-items: start;
+  padding: 2.4rem 0;
+  border-bottom: 1px solid var(--mid);
+  transition: background 0.2s;
+}
+.cart-item:last-of-type { border-bottom: none; }
+
+.cart-item-img {
+  flex-shrink: 0;
+  width: 100px;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  background: var(--off);
+}
+.cart-item-img img {
+  display: block;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+.cart-item:hover .cart-item-img img { transform: scale(1.04); }
+
+.cart-item-info { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.cart-item-cat {
+  font-size: 0.42rem;
+  letter-spacing: 0.65em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+.cart-item-name {
+  font-size: 1.05rem;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.cart-item-name a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s;
+}
+.cart-item-name a:hover { color: var(--amber); }
+.cart-item-desc {
+  font-size: 0.7rem;
+  line-height: 1.7;
+  color: var(--stone);
+  max-width: 340px;
+}
+.cart-item-remove {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.42rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--stone);
+  text-decoration: none;
+  margin-top: 0.8rem;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+.cart-item-remove:hover { color: #c0392b; }
+
+/* Quantité */
+.cart-item-qty {
+  display: flex;
+  align-items: center;
+  margin-top: 0.4rem;
+}
+.cart-item-qty .quantity {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--mid);
+}
+.cart-item-qty .qty {
+  width: 44px;
+  height: 44px;
+  text-align: center;
+  border: none;
+  border-left: 1px solid var(--mid);
+  border-right: 1px solid var(--mid);
+  font-size: 0.8rem;
+  font-family: 'Georgia', serif;
+  color: var(--ink);
+  background: var(--white);
+  outline: none;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+.cart-item-qty .qty::-webkit-inner-spin-button,
+.cart-item-qty .qty::-webkit-outer-spin-button { -webkit-appearance: none; }
+.cart-item-qty-solo {
+  font-size: 0.8rem;
+  color: var(--ink);
+  padding: 0 1rem;
+}
+
+/* Sous-total */
+.cart-item-subtotal {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  text-align: right;
+  margin-top: 0.4rem;
+  white-space: nowrap;
+}
+
+/* Actions */
+.cart-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  padding-top: 3rem;
+  flex-wrap: wrap;
+}
+
+/* ----------------------------------------------------------------
+   6. BOUTONS ARTICLES
+---------------------------------------------------------------- */
+.cart-btn-update {
+  font-size: 0.46rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  font-family: 'Georgia', serif;
+  padding: 0.75rem 2rem;
+  background: transparent;
+  border: 1px solid var(--mid);
+  color: var(--stone);
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.cart-btn-update:hover {
+  background: var(--ink);
+  color: var(--white);
+  border-color: var(--ink);
+}
+.cart-btn-continue {
+  font-size: 0.46rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--stone);
+  text-decoration: none;
+  transition: color 0.25s;
+}
+.cart-btn-continue:hover { color: var(--ink); }
+
+/* ----------------------------------------------------------------
+   7. COLONNE RÉCAPITULATIF
+---------------------------------------------------------------- */
+.cart-summary-col {
+  padding: 5rem 4vw 6rem;
+  position: sticky;
+  top: 80px;
+}
+.cart-summary {
+  background: var(--off);
+  padding: 3rem 2.8rem 3.5rem;
+  border: 1px solid var(--mid);
+}
+.cart-summary-title {
+  font-size: 0.5rem;
+  letter-spacing: 0.9em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 2.4rem;
+  padding-bottom: 1.6rem;
+  border-bottom: 1px solid var(--mid);
+}
+.cart-summary-totals {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-bottom: 2.4rem;
+}
+.cart-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  font-size: 0.78rem;
+  color: var(--stone);
+}
+.cart-summary-row small {
+  display: block;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-top: 0.15rem;
+  color: var(--amber);
+}
+.cart-summary-discount { color: #2ecc71; }
+.cart-summary-total {
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: var(--ink);
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--mid);
+  margin-top: 0.4rem;
+}
+
+/* Code promo */
+.cart-coupon {
+  margin-bottom: 2.4rem;
+  padding-bottom: 2.4rem;
+  border-bottom: 1px solid var(--mid);
+}
+.cart-coupon-label {
+  font-size: 0.44rem;
+  letter-spacing: 0.7em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 0.9rem;
+}
+.cart-coupon-row {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--mid);
+}
+.cart-coupon-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: var(--white);
+  font-size: 0.72rem;
+  font-family: 'Georgia', serif;
+  color: var(--ink);
+  outline: none;
+}
+.cart-coupon-input::placeholder { color: var(--mid); }
+.cart-coupon-btn {
+  padding: 0.75rem 1.2rem;
+  background: var(--ink);
+  color: var(--white);
+  border: none;
+  font-size: 0.44rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  font-family: 'Georgia', serif;
+  cursor: pointer;
+  transition: background 0.25s;
+  flex-shrink: 0;
+}
+.cart-coupon-btn:hover { background: var(--amber); }
+
+/* Bouton Commander */
+.cart-btn-checkout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1.2rem 2rem;
+  background: var(--ink);
+  color: var(--white);
+  text-decoration: none;
+  font-size: 0.52rem;
+  letter-spacing: 0.6em;
+  text-transform: uppercase;
+  font-family: 'Georgia', serif;
+  transition: background 0.3s;
+  margin-bottom: 2rem;
+}
+.cart-btn-checkout:hover { background: var(--amber); color: var(--white); }
+.cart-btn-arrow { font-size: 1rem; letter-spacing: 0; }
+
+/* Bouton Boutique (panier vide) */
+.cart-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.9rem 2.4rem;
+  background: var(--ink);
+  color: var(--white);
+  text-decoration: none;
+  font-size: 0.5rem;
+  letter-spacing: 0.6em;
+  text-transform: uppercase;
+  font-family: 'Georgia', serif;
+  transition: background 0.3s;
+}
+.cart-btn-primary:hover { background: var(--amber); }
+
+/* Moyens de paiement */
+.cart-payment-methods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+.cart-payment-badge {
+  font-size: 0.42rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.9rem;
+  border: 1px solid var(--mid);
+  color: var(--stone);
+  background: var(--white);
+}
+
+/* Infos livraison */
+.cart-delivery-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--mid);
+}
+.cart-delivery-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 0.65rem;
+  color: var(--stone);
+}
+.cart-delivery-row svg { flex-shrink: 0; color: var(--amber); }
+
+/* WooCommerce overrides dans le panier */
+.cart-wrap .woocommerce-shipping-calculator { font-size: 0.7rem; color: var(--stone); }
+.cart-wrap .shipping-calculator-button {
+  font-size: 0.48rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--amber);
+  text-decoration: none;
+}
+
+/* ----------------------------------------------------------------
+   8. RESPONSIVE
+---------------------------------------------------------------- */
+@media (max-width: 1100px) {
+  .cart-layout { grid-template-columns: 1fr 320px; }
+}
+@media (max-width: 860px) {
+  .cart-layout { grid-template-columns: 1fr; }
+  .cart-items-col { padding: 3rem 6vw; border-right: none; border-bottom: 1px solid var(--mid); }
+  .cart-summary-col { padding: 3rem 6vw 4rem; position: static; }
+  .cart-hero { padding: 120px 6vw 4rem; }
+  .cart-hero::after { display: none; }
+}
+@media (max-width: 600px) {
+  .cart-item { grid-template-columns: 80px 1fr; }
+  .cart-item-qty { grid-column: 2; }
+  .cart-item-subtotal { grid-column: 2; text-align: left; }
+  .cart-items-head { display: none; }
+  .cart-hero-title { font-size: 2.6rem; }
+  .cart-hero-count { display: none; }
+}
