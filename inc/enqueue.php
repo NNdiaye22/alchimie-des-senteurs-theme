@@ -35,6 +35,16 @@ function ads_enqueue_assets() {
         );
     }
 
+    // CSS page Contact
+    if ( is_page_template( 'page-contact.php' ) ) {
+        wp_enqueue_style(
+            'ads-contact',
+            ADS_URI . '/assets/css/contact.css',
+            array( 'ads-main' ),
+            ADS_VERSION
+        );
+    }
+
     // JS canvas animation (uniquement sur la homepage)
     if ( is_front_page() ) {
         wp_enqueue_script(
