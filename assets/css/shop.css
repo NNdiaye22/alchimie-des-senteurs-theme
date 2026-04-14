@@ -1,13 +1,10 @@
 /* ================================================================
-   SHOP.CSS  —  Page Boutique Premium
+   SHOP.CSS  —  Page Boutique + Pages Categorie
    Alchimie des Senteurs
-   Charge uniquement sur is_shop()
 ================================================================ */
 
 /* ----------------------------------------------------------------
    1. RESET WOOCOMMERCE NATIF
-   Ecrase tout ce que WooCommerce injecte par defaut sur la page
-   boutique pour repartir d'une ardoise vierge.
 ---------------------------------------------------------------- */
 .woocommerce-breadcrumb                  { display: none !important; }
 .woocommerce-products-header             { display: none !important; }
@@ -16,15 +13,15 @@
 .woocommerce-page ul.products            { display: none !important; }
 .ads-shop-header                         { display: none !important; }
 
-/* Boutons WooCommerce natifs (éventuels restes) */
+/* Boutons WooCommerce natifs */
 .woocommerce a.button,
 .woocommerce button.button,
 .woocommerce input.button,
 .woocommerce #respond input#submit,
 .woocommerce a.added_to_cart {
   display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
+  align-items: center !important;
+  justify-content: center !important;
   padding: 0.7rem 1.8rem !important;
   background: var(--ink) !important;
   color: var(--white) !important;
@@ -39,31 +36,9 @@
   transition: background 0.3s !important;
 }
 .woocommerce a.button:hover,
-.woocommerce button.button:hover,
-.woocommerce input.button:hover {
+.woocommerce button.button:hover {
   background: var(--amber) !important;
   color: var(--white) !important;
-}
-
-/* Select tri WooCommerce */
-.woocommerce-ordering select.orderby {
-  font-size: 0.52rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--stone);
-  border: none;
-  border-bottom: 1px solid var(--mid);
-  background: transparent;
-  padding: 0.3rem 2rem 0.3rem 0;
-  outline: none;
-  cursor: pointer;
-  font-family: 'Georgia', serif;
-  -webkit-appearance: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg width='8' height='5' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%239a9088'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0 center;
-  background-size: 7px;
 }
 
 /* ----------------------------------------------------------------
@@ -72,12 +47,11 @@
 .shop-wrap {
   background: var(--white);
   min-height: 100vh;
-  padding-top: 0;
 }
 
 /* ----------------------------------------------------------------
-   3. HERO  —  fond sombre, pleine largeur
-   padding-top: 100px tient compte de la nav fixe (~80px)
+   3. HERO  —  boutique ET categories
+   padding-top 120px pour passer sous la nav fixe (~80px)
 ---------------------------------------------------------------- */
 .shop-hero {
   position: relative;
@@ -89,7 +63,7 @@
   overflow: hidden;
 }
 
-/* Grain subtil en overlay */
+/* Grain de bruit */
 .shop-hero::before {
   content: '';
   position: absolute;
@@ -100,7 +74,7 @@
   pointer-events: none;
 }
 
-/* Ligne dorée verticale — déco droite */
+/* Ligne doree verticale */
 .shop-hero::after {
   content: '';
   position: absolute;
@@ -111,13 +85,56 @@
   opacity: 0.2;
 }
 
+/* Quand le hero a une image de fond */
+.cat-hero--img::before { opacity: 0; }
+.cat-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(26,23,20,0.85) 0%,
+    rgba(26,23,20,0.55) 50%,
+    rgba(26,23,20,0.3) 100%
+  );
+  z-index: 1;
+}
+.cat-hero--img .shop-hero-inner,
+.cat-hero--img .shop-hero-count { position: relative; z-index: 2; }
+
 .shop-hero-inner {
   position: relative;
   z-index: 2;
   max-width: 680px;
 }
 
-/* Tag ambré avec tiret */
+/* Fil d'Ariane */
+.cat-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 2rem;
+}
+.cat-bc-link {
+  font-size: 0.46rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  text-decoration: none;
+  transition: color 0.25s;
+}
+.cat-bc-link:hover { color: var(--amber); }
+.cat-bc-sep {
+  font-size: 0.46rem;
+  color: rgba(255,255,255,0.2);
+}
+.cat-bc-current {
+  font-size: 0.46rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+}
+
+/* Tag ambre */
 .shop-hero-tag {
   display: flex;
   align-items: center;
@@ -137,7 +154,7 @@
   opacity: 0.7;
 }
 
-/* Titre principal */
+/* Titre */
 .shop-hero-title {
   font-size: clamp(3.4rem, 6.5vw, 7rem);
   font-weight: 300;
@@ -152,17 +169,17 @@
   color: var(--amber);
 }
 
-/* Sous-titre — indentré */
+/* Sous-titre */
 .shop-hero-sub {
   font-size: 0.82rem;
   line-height: 2.0;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255,255,255,0.4);
   max-width: 400px;
   padding-left: 1.6rem;
-  border-left: 1px solid rgba(196, 135, 58, 0.35);
+  border-left: 1px solid rgba(196,135,58,0.35);
 }
 
-/* Compteur en bas à droite */
+/* Compteur */
 .shop-hero-count {
   position: absolute;
   bottom: 4rem;
@@ -174,7 +191,7 @@
   font-size: 5rem;
   font-weight: 300;
   letter-spacing: -0.04em;
-  color: rgba(255, 255, 255, 0.07);
+  color: rgba(255,255,255,0.07);
   line-height: 1;
   font-style: italic;
 }
@@ -182,13 +199,12 @@
   font-size: 0.46rem;
   letter-spacing: 0.7em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.2);
+  color: rgba(255,255,255,0.2);
   margin-top: 0.4rem;
 }
 
 /* ----------------------------------------------------------------
    4. BARRE STICKY
-   top = hauteur réelle nav scrolled (~64px)
 ---------------------------------------------------------------- */
 .shop-toolbar {
   position: sticky;
@@ -200,7 +216,7 @@
   gap: 1rem;
   padding: 0 10vw;
   height: 60px;
-  background: rgba(255, 255, 255, 0.96);
+  background: rgba(255,255,255,0.96);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--light);
@@ -222,13 +238,12 @@
 }
 .shop-tb-count strong { color: var(--ink); font-weight: 400; }
 
-/* Filtres dynamiques */
 .shop-filters {
   display: flex;
   align-items: center;
   gap: 0.3rem;
-  flex-wrap: nowrap;
 }
+
 .shop-filter-btn {
   font-size: 0.46rem;
   letter-spacing: 0.45em;
@@ -251,11 +266,7 @@
   border-color: var(--ink);
 }
 
-/* Tri à droite */
-.shop-tb-right .woocommerce-ordering {
-  margin: 0;
-  padding: 0;
-}
+.shop-tb-right .woocommerce-ordering { margin: 0; padding: 0; }
 .shop-tb-right .woocommerce-ordering select {
   font-size: 0.5rem;
   letter-spacing: 0.3em;
@@ -274,22 +285,17 @@
   background-repeat: no-repeat;
   background-position: right 0 center;
   background-size: 7px;
-  transition: border-color 0.22s;
 }
 .shop-tb-right .woocommerce-ordering select:hover { border-color: var(--ink); }
 
 /* ----------------------------------------------------------------
    5. GRILLE
 ---------------------------------------------------------------- */
-.shop-grid-wrap {
-  padding: 0;
-  background: var(--white);
-}
+.shop-grid-wrap { padding: 0; background: var(--white); }
 
 .shop-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  /* Bordures partagées = effet tableau de luxe */
   border-top: 1px solid var(--light);
   border-left: 1px solid var(--light);
 }
@@ -310,7 +316,6 @@
 }
 .shop-card:hover { background: var(--off); }
 
-/* --- Image --- */
 .shop-card-img {
   position: relative;
   flex-shrink: 0;
@@ -320,11 +325,9 @@
 }
 .shop-card-img img {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   object-fit: cover;
-  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
-              filter 0.9s ease;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), filter 0.9s ease;
   filter: brightness(0.96) saturate(0.88);
 }
 .shop-card:hover .shop-card-img img {
@@ -332,11 +335,9 @@
   filter: brightness(1.0) saturate(1.05);
 }
 
-/* Numéro décoratif */
 .shop-card-num {
   position: absolute;
-  bottom: 1.2rem;
-  left: 1.4rem;
+  bottom: 1.2rem; left: 1.4rem;
   font-size: 0.45rem;
   letter-spacing: 0.5em;
   text-transform: uppercase;
@@ -346,11 +347,9 @@
   z-index: 3;
 }
 
-/* Badge */
 .shop-badge {
   position: absolute;
-  top: 1.2rem;
-  right: 1.2rem;
+  top: 1.2rem; right: 1.2rem;
   font-size: 0.42rem;
   letter-spacing: 0.45em;
   text-transform: uppercase;
@@ -359,23 +358,13 @@
   pointer-events: none;
 }
 .shop-badge-promo { background: var(--amber); color: var(--white); }
-.shop-badge-out   {
-  background: rgba(26,23,20,0.55);
-  color: rgba(255,255,255,0.7);
-  backdrop-filter: blur(4px);
-}
+.shop-badge-out   { background: rgba(26,23,20,0.55); color: rgba(255,255,255,0.7); backdrop-filter: blur(4px); }
 
-/* Overlay cinématique */
 .shop-card-overlay {
   position: absolute;
   inset: 0;
   z-index: 5;
-  background: linear-gradient(
-    to top,
-    rgba(26,23,20,0.72) 0%,
-    rgba(26,23,20,0.1) 45%,
-    transparent 70%
-  );
+  background: linear-gradient(to top, rgba(26,23,20,0.72) 0%, rgba(26,23,20,0.1) 45%, transparent 70%);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -400,13 +389,11 @@
 }
 .shop-card:hover .shop-card-quick { transform: translateY(0); }
 
-/* --- Corps --- */
 .shop-card-body {
   padding: 2rem 2rem 2.4rem;
   display: flex;
   flex-direction: column;
   flex: 1;
-  gap: 0;
 }
 
 .shop-card-cat {
@@ -434,16 +421,13 @@
   margin-bottom: 1.6rem;
 }
 
-/* Ligne fine avant prix */
 .shop-card-sep {
-  width: 28px;
-  height: 1px;
+  width: 28px; height: 1px;
   background: var(--mid);
   margin-bottom: 1.4rem;
   flex-shrink: 0;
 }
 
-/* Pied de carte */
 .shop-card-foot {
   display: flex;
   align-items: center;
@@ -452,25 +436,10 @@
   flex-shrink: 0;
 }
 
-.shop-card-price-wrap {
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-}
-.shop-card-old {
-  font-size: 0.7rem;
-  color: var(--stone);
-  text-decoration: line-through;
-  letter-spacing: 0.04em;
-}
-.shop-card-current {
-  font-size: 0.9rem;
-  font-weight: 400;
-  letter-spacing: 0.05em;
-  color: var(--ink);
-}
+.shop-card-price-wrap { display: flex; align-items: baseline; gap: 0.6rem; }
+.shop-card-old  { font-size: 0.7rem; color: var(--stone); text-decoration: line-through; }
+.shop-card-current { font-size: 0.9rem; font-weight: 400; letter-spacing: 0.05em; color: var(--ink); }
 
-/* --- BOUTON "Ajouter" --- */
 .shop-card-btn {
   display: inline-flex;
   align-items: center;
@@ -494,7 +463,6 @@
   color: var(--white);
   border-color: var(--ink);
 }
-
 .shop-card-out {
   font-size: 0.44rem;
   letter-spacing: 0.45em;
@@ -504,7 +472,7 @@
 }
 
 /* ----------------------------------------------------------------
-   7. CARTE MISE EN AVANT (1ère carte = grande)
+   7. CARTE MISE EN AVANT (1ere, 2 colonnes)
 ---------------------------------------------------------------- */
 .shop-card.card-featured {
   grid-column: span 2;
@@ -525,12 +493,10 @@
   line-height: 1.1;
   margin-bottom: 0.8rem;
 }
-.shop-card.card-featured .shop-card-desc {
-  max-width: 320px;
-}
+.shop-card.card-featured .shop-card-desc { max-width: 320px; }
 
 /* ----------------------------------------------------------------
-   8. CASE ÉDITORIALE (fond sombre dans la grille)
+   8. CASE EDITORIALE
 ---------------------------------------------------------------- */
 .shop-editorial {
   border-right: 1px solid transparent;
@@ -581,21 +547,14 @@
   border-top: 1px solid var(--light);
 }
 .shop-pagination .woocommerce-pagination ul {
-  display: flex;
-  gap: 2px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  display: flex; gap: 2px;
+  list-style: none; padding: 0; margin: 0;
 }
 .shop-pagination .woocommerce-pagination li a,
 .shop-pagination .woocommerce-pagination li span {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  font-size: 0.56rem;
-  letter-spacing: 0.12em;
+  display: flex; align-items: center; justify-content: center;
+  width: 3rem; height: 3rem;
+  font-size: 0.56rem; letter-spacing: 0.12em;
   color: var(--stone);
   text-decoration: none;
   border: 1px solid var(--light);
@@ -605,9 +564,7 @@
 }
 .shop-pagination .woocommerce-pagination li a:hover,
 .shop-pagination .woocommerce-pagination li span.current {
-  background: var(--ink);
-  color: var(--white);
-  border-color: var(--ink);
+  background: var(--ink); color: var(--white); border-color: var(--ink);
 }
 
 /* ----------------------------------------------------------------
@@ -624,14 +581,8 @@
   .shop-toolbar { padding: 0 6vw; top: 56px; }
   .shop-filters { display: none; }
   .shop-grid { grid-template-columns: repeat(2, 1fr); }
-  .shop-card.card-featured {
-    grid-column: 1 / -1;
-    flex-direction: column;
-  }
-  .shop-card.card-featured .shop-card-img {
-    width: 100%;
-    min-height: 320px;
-  }
+  .shop-card.card-featured { grid-column: 1 / -1; flex-direction: column; }
+  .shop-card.card-featured .shop-card-img { width: 100%; min-height: 320px; }
   .shop-card.card-featured .shop-card-body { padding: 2rem; }
   .shop-card.card-featured .shop-card-name { font-size: 1.4rem; }
 }
@@ -639,7 +590,6 @@
 @media (max-width: 600px) {
   .shop-hero { padding: 90px 5vw 4rem; min-height: 55vh; }
   .shop-hero-title { font-size: 2.8rem; }
-  .shop-hero-sub { font-size: 0.76rem; }
   .shop-grid { grid-template-columns: 1fr; }
   .shop-card.card-featured { grid-column: 1; }
   .shop-editorial { display: none; }
