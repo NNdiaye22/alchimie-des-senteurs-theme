@@ -16,22 +16,28 @@ remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 )
 add_filter( 'woocommerce_show_page_title', '__return_false' );
 
 // -------------------------------------------------------
-// FORCER notre template pour les pages de categories
-// WooCommerce peut parfois ignorer taxonomy-product_cat.php
-// dans le dossier /woocommerce/ du theme — ce hook le force.
+// FORCER nos templates via template_include
 // -------------------------------------------------------
 add_filter( 'template_include', function( $template ) {
+
+    // Pages categories
     if ( is_tax( 'product_cat' ) ) {
         $custom = get_template_directory() . '/woocommerce/taxonomy-product_cat.php';
-        if ( file_exists( $custom ) ) {
-            return $custom;
-        }
+        if ( file_exists( $custom ) ) return $custom;
     }
+
+    // Page panier
+    if ( is_cart() ) {
+        $custom = get_template_directory() . '/page-cart.php';
+        if ( file_exists( $custom ) ) return $custom;
+    }
+
     return $template;
+
 }, 99 );
 
 // -------------------------------------------------------
-// Nombre de produits par page sur les archives
+// Nombre de produits par page
 // -------------------------------------------------------
 add_filter( 'loop_shop_per_page', function() {
     return absint( get_theme_mod( 'ads_collection_nb', 6 ) );
@@ -43,7 +49,7 @@ add_filter( 'loop_shop_per_page', function() {
 add_filter( 'woocommerce_enqueue_styles', '__return_empty_array' );
 
 // -------------------------------------------------------
-// AJAX : Ajouter au panier depuis les cards
+// AJAX : Ajouter au panier
 // -------------------------------------------------------
 add_action( 'wp_ajax_ads_add_to_cart',        'ads_ajax_add_to_cart' );
 add_action( 'wp_ajax_nopriv_ads_add_to_cart', 'ads_ajax_add_to_cart' );
@@ -65,7 +71,7 @@ function ads_ajax_add_to_cart() {
 }
 
 // -------------------------------------------------------
-// Taille des images produit
+// Taille des images
 // -------------------------------------------------------
 add_filter( 'woocommerce_get_image_size_gallery_thumbnail', function( $size ) {
     return array( 'width' => 150, 'height' => 150, 'crop' => 1 );
