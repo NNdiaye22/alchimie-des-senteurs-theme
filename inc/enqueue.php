@@ -96,3 +96,17 @@ add_action( 'wp_enqueue_scripts', 'ads_enqueue_assets' );
 
 // Desactiver les styles par defaut de WooCommerce
 add_filter( 'woocommerce_enqueue_styles', '__return_empty_array' );
+
+// -------------------------------------------------------
+// Customizer : JS de preview live (couleurs + textes)
+// -------------------------------------------------------
+function ads_enqueue_customizer_preview() {
+    wp_enqueue_script(
+        'ads-customizer-preview',
+        ADS_URI . '/inc/customizer-colors.js',
+        array( 'customize-preview', 'jquery' ),
+        ADS_VERSION,
+        true
+    );
+}
+add_action( 'customize_preview_init', 'ads_enqueue_customizer_preview' );
