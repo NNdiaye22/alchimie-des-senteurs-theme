@@ -1,38 +1,13 @@
 <?php
 /**
- * Template Name: Front Page
+ * Template : Page d'accueil
+ * Utilise get_header() pour la nav WP (Apparence > Menus)
  */
-
-// Helpers Customizer avec valeurs par défaut
 function ads_c( $key, $default = '' ) {
     return wp_kses_post( get_theme_mod( $key, $default ) );
 }
-
 ?>
-<!DOCTYPE html>
-<html <?php language_attributes(); ?>>
-<head>
-<meta charset="<?php bloginfo('charset'); ?>">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<?php wp_head(); ?>
-</head>
-<body <?php body_class(); ?>>
-<?php wp_body_open(); ?>
-
-<div id="pbar"></div>
-
-<!-- NAV -->
-<nav id="nav">
-  <a href="<?php echo esc_url( home_url('/') ); ?>" class="logo">
-    <?php echo ads_c('ads_footer_brand', 'Alchimie des Senteurs'); ?>
-  </a>
-  <ul class="nav-links">
-    <li><a href="#collection">Collection</a></li>
-    <li><a href="#philosophy">Philosophie</a></li>
-    <li><a href="#nl">Contact</a></li>
-  </ul>
-  <button class="nav-cta">Découvrir</button>
-</nav>
+<?php get_header(); ?>
 
 <!-- ═══ HERO SCROLL ZONE ═══ -->
 <div id="scroll-zone">
@@ -81,19 +56,23 @@ function ads_c( $key, $default = '' ) {
   </div>
 
   <div id="cue">
-    <p>Découvrir</p>
-    <div class="cue-tick"></div>
+    <?php if ( get_theme_mod('ads_hero_cta_show', '1') ) : ?>
+    <a href="<?php echo esc_url( get_theme_mod('ads_hero_cta_url', '#collection') ); ?>" class="cue-cta">
+      <p><?php echo ads_c('ads_hero_cta_text', 'Découvrir'); ?></p>
+      <div class="cue-tick"></div>
+    </a>
+    <?php endif; ?>
   </div>
 </div>
 </div>
 
-<!-- ═══ SECTION REVEAL ═══ -->
+<!-- ═══ REVEAL ═══ -->
 <section id="reveal">
   <div class="reveal-left">
     <h2>L'Encens<br><em>Arabesque</em></h2>
-    <p>Notre encens le plus emblématique. Façonné à partir de résines précieuses et de bois de santal sélectionnés à la source, il offre une expérience sensorielle d'une rare profondeur.</p>
+    <p>Notre encens le plus emblématique. Façonné à partir de résines précieuses et de bois de santal sélectionnés à la source.</p>
     <div class="cta-row">
-      <button class="btn-dark">Acheter — 2 300 XOF</button>
+      <button class="btn-dark" onclick="window.location='https://alchimiedessenteurs.com/products/encens-arabesque-gm-2h-30'">Acheter — 2 300 XOF</button>
       <button class="btn-text">En savoir plus</button>
     </div>
   </div>
@@ -107,13 +86,16 @@ function ads_c( $key, $default = '' ) {
 </section>
 
 <!-- ═══ COLLECTION ═══ -->
+<?php if ( get_theme_mod('ads_collection_show', '1') ) : ?>
 <section id="collection">
   <div class="coll-header">
     <div>
       <div class="coll-tag"><?php echo ads_c('ads_collection_tag', 'Nos Encens'); ?></div>
       <div class="coll-title"><?php echo ads_c('ads_collection_title', 'La Collection'); ?></div>
     </div>
-    <a href="#" class="all-link">Tout voir</a>
+    <a href="<?php echo esc_url( get_theme_mod('ads_collection_cta_url', '#') ); ?>" class="all-link">
+      <?php echo ads_c('ads_collection_cta_text', 'Tout voir'); ?>
+    </a>
   </div>
   <div class="products-grid">
     <div class="product-card" onclick="window.open('https://alchimiedessenteurs.com/products/encens-arabesque-gm-2h-30','_blank')">
@@ -213,21 +195,23 @@ function ads_c( $key, $default = '' ) {
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ═══ PHILOSOPHY ═══ -->
+<?php if ( get_theme_mod('ads_phi_show', '1') ) : ?>
 <section id="philosophy">
   <div>
     <div class="phi-tag"><?php echo ads_c('ads_phi_tag', 'Notre Philosophie'); ?></div>
     <div class="phi-title"><?php echo ads_c('ads_phi_title', "L'encens comme<br><em>rituel quotidien</em>"); ?></div>
-    <p class="phi-body"><?php echo ads_c('ads_phi_body', "Chaque bâtonnet est un pont entre le présent et l'ancestral. Nous sélectionnons des matières premières d'une authenticité rare, pour que chaque moment d'allumage devienne un acte de présence."); ?></p>
+    <p class="phi-body"><?php echo ads_c('ads_phi_body', "Chaque bâtonnet est un pont entre le présent et l'ancestral."); ?></p>
   </div>
   <div class="phi-right">
     <?php
     $phi_defaults = array(
-        1 => array( 'num' => '12',    'unit' => 'Fragrances', 'desc' => 'Une collection soigneusement éditée, chaque senteur ayant sa propre histoire.' ),
-        2 => array( 'num' => '5h',    'unit' => 'Maximum',    'desc' => 'La plus longue diffusion de notre gamme, pour habiller durablement votre espace.' ),
-        3 => array( 'num' => '100%',  'unit' => 'Naturel',    'desc' => 'Résines et bois sélectionnés sans additifs chimiques ni arômes artificiels.' ),
-        4 => array( 'num' => 'Dakar', 'unit' => 'Livraison',  'desc' => 'Commandez via WhatsApp ou notre boutique, livré directement chez vous.' ),
+        1 => array( 'num' => '12',    'unit' => 'Fragrances', 'desc' => 'Une collection soigneusement éditée.' ),
+        2 => array( 'num' => '5h',    'unit' => 'Maximum',    'desc' => 'La plus longue diffusion de notre gamme.' ),
+        3 => array( 'num' => '100%',  'unit' => 'Naturel',    'desc' => 'Résines et bois sans additifs chimiques.' ),
+        4 => array( 'num' => 'Dakar', 'unit' => 'Livraison',  'desc' => 'Livré directement chez vous.' ),
     );
     for ( $i = 1; $i <= 4; $i++ ) :
         $num  = ads_c( "ads_phi_stat_{$i}_num",  $phi_defaults[$i]['num'] );
@@ -242,17 +226,20 @@ function ads_c( $key, $default = '' ) {
     <?php endfor; ?>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ═══ NEWSLETTER ═══ -->
+<?php if ( get_theme_mod('ads_nl_show', '1') ) : ?>
 <section id="nl">
   <div class="nl-tag"><?php echo ads_c('ads_nl_tag', 'Restez Informé'); ?></div>
   <div class="nl-title"><?php echo ads_c('ads_nl_title', 'La Lettre des Senteurs'); ?></div>
-  <p class="nl-sub"><?php echo ads_c('ads_nl_sub', 'Nouvelles collections, éditions limitées et conseils olfactifs directement dans votre boîte mail.'); ?></p>
+  <p class="nl-sub"><?php echo ads_c('ads_nl_sub', 'Nouvelles collections, éditions limitées et conseils olfactifs.'); ?></p>
   <form class="nl-form" onsubmit="return false;">
     <input type="email" placeholder="votre@email.com"/>
     <button><?php echo ads_c('ads_nl_btn', "S'abonner"); ?></button>
   </form>
 </section>
+<?php endif; ?>
 
 <!-- ═══ FOOTER ═══ -->
 <footer>
@@ -261,48 +248,25 @@ function ads_c( $key, $default = '' ) {
     <div class="f-sub"><?php echo ads_c('ads_footer_sub', "Maison d'Encens · Dakar"); ?></div>
     <p class="f-about"><?php echo ads_c('ads_footer_about', "Depuis Dakar, nous apportons les fragrances les plus authentiques d'Orient dans vos foyers."); ?></p>
     <div class="f-soc">
-      <a href="<?php echo esc_url( ads_c('ads_footer_wa', 'https://wa.me/221776440125') ); ?>">WhatsApp</a>
-      <a href="<?php echo esc_url( ads_c('ads_footer_insta', '#') ); ?>">Instagram</a>
-      <a href="<?php echo esc_url( ads_c('ads_footer_fb', '#') ); ?>">Facebook</a>
+      <a href="<?php echo esc_url( get_theme_mod('ads_footer_wa', 'https://wa.me/221776440125') ); ?>">WhatsApp</a>
+      <a href="<?php echo esc_url( get_theme_mod('ads_footer_insta', '#') ); ?>">Instagram</a>
+      <a href="<?php echo esc_url( get_theme_mod('ads_footer_fb', '#') ); ?>">Facebook</a>
     </div>
   </div>
-  <div class="f-col">
-    <h5>Collection</h5>
-    <ul>
-      <li><a href="#">Arabesque</a></li>
-      <li><a href="#">Oud Original</a></li>
-      <li><a href="#">Musc</a></li>
-      <li><a href="#">Andalous</a></li>
-      <li><a href="#">Cônes</a></li>
-    </ul>
+  <div class="f-col"><h5>Collection</h5>
+    <?php wp_nav_menu( array( 'theme_location' => 'footer_1', 'container' => false, 'fallback_cb' => false ) ); ?>
   </div>
-  <div class="f-col">
-    <h5>Boutique</h5>
-    <ul>
-      <li><a href="#">Nouveautés</a></li>
-      <li><a href="#">Promotions</a></li>
-      <li><a href="#">Packs cadeaux</a></li>
-    </ul>
+  <div class="f-col"><h5>Boutique</h5>
+    <?php wp_nav_menu( array( 'theme_location' => 'footer_2', 'container' => false, 'fallback_cb' => false ) ); ?>
   </div>
-  <div class="f-col">
-    <h5>Aide</h5>
-    <ul>
-      <li><a href="<?php echo esc_url( ads_c('ads_footer_wa', 'https://wa.me/221776440125') ); ?>">WhatsApp</a></li>
-      <li><a href="#">Livraison</a></li>
-      <li><a href="#">Retours</a></li>
-      <li><a href="#">CGV</a></li>
-    </ul>
+  <div class="f-col"><h5>Aide</h5>
+    <?php wp_nav_menu( array( 'theme_location' => 'footer_3', 'container' => false, 'fallback_cb' => false ) ); ?>
   </div>
 </footer>
 <div class="f-bottom">
   <p><?php echo ads_c('ads_footer_copy', '© 2026 Alchimie des Senteurs · Dakar, Sénégal'); ?></p>
   <div class="pay-row">
-    <?php
-    $pays = explode( ',', ads_c('ads_footer_pay', 'Orange Money,Wave,Carte') );
-    foreach ( $pays as $pay ) {
-        echo '<span class="pay">' . esc_html( trim($pay) ) . '</span>';
-    }
-    ?>
+    <?php foreach ( explode(',', ads_c('ads_footer_pay','Orange Money,Wave,Carte') ) as $pay ) echo '<span class="pay">'.esc_html(trim($pay)).'</span>'; ?>
   </div>
 </div>
 
