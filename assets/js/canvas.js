@@ -16,7 +16,7 @@ resize();
 window.addEventListener('resize', resize);
 
 let scrollP = 0, targetSP = 0;
-const sc = document.getElementById('scene');
+const sc = document.getElementById('scroll-zone');
 
 function rawP() {
   return Math.min(Math.max(window.scrollY/(sc.offsetHeight - H), 0), 1);
@@ -27,10 +27,10 @@ window.addEventListener('scroll',()=>{
   document.getElementById('nav').classList.toggle('scrolled', window.scrollY>80);
 },{passive:true});
 
-// ─── LERP (smooth like Apple) ────────────────────────────────────────────────────────────────────────
+// ─── LERP (smooth like Apple) ────────────────────────────────────────────────────────────────────────────────────
 function lerp(a,b,t){return a+(b-a)*t;}
 
-// ─── IMAGES (séquence vidéo simulée) ──────────────────────────────────────────────────────────
+// ─── IMAGES (séquence vidéo simulée) ──────────────────────────────────────────────────────────────────────────────────────
 const TOTAL = 60;
 const imgs  = [];
 let   loaded = 0;
@@ -45,9 +45,8 @@ for(let i=1;i<=TOTAL;i++){
   imgs.push(im);
 }
 
-// ─── COULEURS fond selon progression ───────────────────────────────────────────────────────
+// ─── COULEURS fond selon progression ────────────────────────────────────────────────────────────────────────
 function bgColor(p){
-  // 0 → blanc, 0.3→0.7 → encre, 1 → ambre doux
   if(p < 0.3){
     const t = p/0.3;
     return lerpColor([248,246,243],[26,23,20],t);
@@ -62,7 +61,7 @@ function lerpColor(a,b,t){
   return a.map((v,i)=>Math.round(v+(b[i]-v)*t));
 }
 
-// ─── PARTICULES ───────────────────────────────────────────────────────────────────────────
+// ─── PARTICULES ───────────────────────────────────────────────────────────────────────────────────────────
 const N = 60;
 const pts = Array.from({length:N},()=>({ x:Math.random()*1400, y:Math.random()*900,
   vx:(Math.random()-.5)*.4, vy:(Math.random()-.5)*.4,
@@ -78,7 +77,6 @@ function drawParticles(alpha){
     ctx.fillStyle=`rgba(196,135,58,${alpha*0.6})`;
     ctx.fill();
   });
-  // connect nearby
   for(let i=0;i<N;i++){
     for(let j=i+1;j<N;j++){
       const dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y;
@@ -95,7 +93,7 @@ function drawParticles(alpha){
   }
 }
 
-// ─── TEXTE OVERLAY ──────────────────────────────────────────────────────────────────────
+// ─── TEXTE OVERLAY ──────────────────────────────────────────────────────────────────────────────────────────
 const SCENES = [
   { p:[0,   .18], title:'L\'Art du Parfum',     sub:'UNE MAISON SENSORIELLE' },
   { p:[.20, .38], title:'Encens Ancestral',      sub:'R\u00c9SINES PR\u00c9CIEUSES' },
@@ -108,7 +106,6 @@ function drawText(p){
   const sc2 = SCENES.find(s=> p>=s.p[0] && p<=s.p[1]);
   if(!sc2) return;
   const local = (p-sc2.p[0])/(sc2.p[1]-sc2.p[0]);
-  // fade in 0→0.25, hold, fade out 0.75→1
   let alpha;
   if(local<.25)       alpha = local/.25;
   else if(local<.75)  alpha = 1;
@@ -120,14 +117,12 @@ function drawText(p){
 
   ctx.save();
   ctx.textAlign = 'center';
-  // Sous-titre
   ctx.font = `300 ${clamp(10,14,W/100)}px Helvetica Neue, sans-serif`;
   ctx.letterSpacing = '0.2em';
   ctx.fillStyle = isLight
     ? `rgba(154,144,136,${alpha})`
     : `rgba(196,135,58,${alpha})`;
   ctx.fillText(sc2.sub, W/2, H/2 - clamp(30,55,H/15));
-  // Titre
   ctx.font = `200 ${clamp(36,72,W/18)}px Helvetica Neue, sans-serif`;
   ctx.fillStyle = textColor;
   ctx.fillText(sc2.title, W/2, H/2 + clamp(10,20,H/50));
@@ -135,17 +130,15 @@ function drawText(p){
 }
 function clamp(mn,mx,v){return Math.min(mx,Math.max(mn,v));}
 
-// ─── RENDU PRINCIPAL ───────────────────────────────────────────────────────────────────────
+// ─── RENDU PRINCIPAL ───────────────────────────────────────────────────────────────────────────────────────────────
 function draw(){
   scrollP = lerp(scrollP, targetSP, .08);
   const p = scrollP;
 
-  // Fond
   const [r,g,b] = bgColor(p);
   ctx.fillStyle = `rgb(${r},${g},${b})`;
   ctx.fillRect(0,0,W,H);
 
-  // Image de séquence
   if(loaded > 0){
     const idx = Math.min(Math.floor(p*(TOTAL-1)), TOTAL-1);
     const img = imgs[idx];
@@ -159,14 +152,11 @@ function draw(){
     }
   }
 
-  // Particules (visibles surtout entre 0.15 et 0.85)
   const partAlpha = p < .15 ? p/.15 : p > .85 ? (1-p)/.15 : 1;
   drawParticles(partAlpha * .7);
 
-  // Texte
   drawText(p);
 
-  // Vignette
   const vig = ctx.createRadialGradient(W/2,H/2,H*.2,W/2,H/2,H*.85);
   vig.addColorStop(0,'rgba(0,0,0,0)');
   vig.addColorStop(1,`rgba(0,0,0,${0.35*p})`);
