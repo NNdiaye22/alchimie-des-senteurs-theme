@@ -14,10 +14,10 @@ function ads_card_badge( $product ) {
     if ( ! $product ) return null;
 
     if ( $product->is_type('variable') ) {
-        $any_sale     = false;
-        $any_low      = false;
+        $any_sale      = false;
+        $any_low       = false;
         $any_backorder = false;
-        $all_out      = true;
+        $all_out       = true;
 
         foreach ( $product->get_available_variations() as $v ) {
             $vobj    = wc_get_product( $v['variation_id'] );
@@ -27,8 +27,8 @@ function ads_card_badge( $product ) {
             $on_sale = $v['display_regular_price'] > $v['display_price'];
 
             if ( $v['is_in_stock'] || $v_back ) $all_out = false;
-            if ( $on_sale )  $any_sale     = true;
-            if ( $v_low )    $any_low      = true;
+            if ( $on_sale )  $any_sale      = true;
+            if ( $v_low )    $any_low       = true;
             if ( $v_back && ! $v['is_in_stock'] ) $any_backorder = true;
         }
 
@@ -55,7 +55,7 @@ function ads_card_badge( $product ) {
 ?>
 <?php get_header(); ?>
 
-<!-- ═══ HERO SCROLL ZONE ═══ -->
+<!-- HERO SCROLL ZONE -->
 <div id="scroll-zone">
 <div id="sticky">
   <canvas id="c"></canvas>
@@ -92,19 +92,19 @@ function ads_card_badge( $product ) {
   </div>
 
   <div class="phase-copy" id="pc1">
-    <div class="ph-tag"><?php echo ads_c('ads_phase_1_tag', 'I — L'Allumage'); ?></div>
-    <div class="ph-title"><?php echo ads_c('ads_phase_1_title', "L'instant du premier souffle"); ?></div>
-    <div class="ph-body"><?php echo ads_c('ads_phase_1_body', 'La braise s'éveille. Un fil de fumée s'élève, portant avec lui des siècles de tradition olfactive orientale.'); ?></div>
+    <div class="ph-tag"><?php echo ads_c('ads_phase_1_tag', 'I -- Allumage'); ?></div>
+    <div class="ph-title"><?php echo ads_c('ads_phase_1_title', 'Le premier souffle'); ?></div>
+    <div class="ph-body"><?php echo ads_c('ads_phase_1_body', 'La braise s&rsquo;éveille. Un fil de fumée s&rsquo;élève, portant avec lui des siècles de tradition olfactive orientale.'); ?></div>
   </div>
   <div class="phase-copy right" id="pc2">
-    <div class="ph-tag"><?php echo ads_c('ads_phase_2_tag', 'II — La Consumation'); ?></div>
+    <div class="ph-tag"><?php echo ads_c('ads_phase_2_tag', 'II -- La Consumation'); ?></div>
     <div class="ph-title"><?php echo ads_c('ads_phase_2_title', 'Le temps qui parfume'); ?></div>
-    <div class="ph-body" style="margin-left:auto;"><?php echo ads_c('ads_phase_2_body', 'Au fil des heures, le bâtonnet révèle ses couches olfactives. Du cœur épicé aux notes boisées de fond.'); ?></div>
+    <div class="ph-body" style="margin-left:auto;"><?php echo ads_c('ads_phase_2_body', 'Au fil des heures, le bâtonnet révèle ses couches olfactives. Du coeur épicé aux notes boisées de fond.'); ?></div>
   </div>
   <div class="phase-copy" id="pc3">
-    <div class="ph-tag"><?php echo ads_c('ads_phase_3_tag', 'III — L'Empreinte'); ?></div>
+    <div class="ph-tag"><?php echo ads_c('ads_phase_3_tag', 'III -- Empreinte'); ?></div>
     <div class="ph-title"><?php echo ads_c('ads_phase_3_title', 'Ce qui reste après le silence'); ?></div>
-    <div class="ph-body"><?php echo ads_c('ads_phase_3_body', 'La fumée s'est dissipée, mais le souvenir olfactif persiste. C'est la magie du bon encens.'); ?></div>
+    <div class="ph-body"><?php echo ads_c('ads_phase_3_body', 'La fumée s&rsquo;est dissipée, mais le souvenir olfactif persiste. C&rsquo;est la magie du bon encens.'); ?></div>
   </div>
 
   <div id="cue">
@@ -118,7 +118,7 @@ function ads_card_badge( $product ) {
 </div>
 </div>
 
-<!-- ═══ REVEAL ═══ -->
+<!-- REVEAL -->
 <section id="reveal">
   <div class="reveal-left">
     <h2>
@@ -135,7 +135,7 @@ function ads_card_badge( $product ) {
         $btn2_text = ads_c('ads_reveal_btn2_text', 'En savoir plus');
       ?>
       <button class="btn-dark" onclick="window.location='<?php echo esc_url($btn1_url); ?>'">
-        <?php echo $btn1_text; ?> — <?php echo $btn1_prix; ?>
+        <?php echo $btn1_text; ?> -- <?php echo $btn1_prix; ?>
       </button>
       <button class="btn-text" onclick="window.location='<?php echo esc_url($btn2_url); ?>'">
         <?php echo $btn2_text; ?>
@@ -162,7 +162,7 @@ function ads_card_badge( $product ) {
   </div>
 </section>
 
-<!-- ═══ COLLECTION WOOCOMMERCE ═══ -->
+<!-- COLLECTION WOOCOMMERCE -->
 <?php if ( get_theme_mod('ads_collection_show', '1') && function_exists('WC') ) : ?>
 <section id="collection">
   <div class="coll-header">
@@ -207,16 +207,16 @@ function ads_card_badge( $product ) {
         <?php endif; ?>
       </div>
       <div class="card-body">
-        <?php if ( $fam ) echo '<div class="card-fam">'.$fam.'</div>'; ?>
+        <?php if ( $fam ) echo '<div class="card-fam">' . $fam . '</div>'; ?>
         <div class="card-name"><?php the_title(); ?></div>
-        <?php if ( $desc ) echo '<div class="card-desc">'.wp_strip_all_tags($desc).'</div>'; ?>
+        <?php if ( $desc ) echo '<div class="card-desc">' . wp_strip_all_tags($desc) . '</div>'; ?>
         <div class="card-foot">
           <div>
             <?php
             $reg = $product->get_regular_price();
             $sal = $product->get_sale_price();
-            if ( $sal && $reg ) echo '<span class="card-old">'.wc_price($reg).'</span>';
-            echo '<span class="card-price">'.strip_tags($product->get_price_html()).'</span>';
+            if ( $sal && $reg ) echo '<span class="card-old">' . wc_price($reg) . '</span>';
+            echo '<span class="card-price">' . strip_tags($product->get_price_html()) . '</span>';
             ?>
           </div>
           <?php if ( $in_stock || $product->backorders_allowed() ) : ?>
@@ -233,7 +233,7 @@ function ads_card_badge( $product ) {
 </section>
 <?php endif; ?>
 
-<!-- ═══ PHILOSOPHY ═══ -->
+<!-- PHILOSOPHY -->
 <?php if ( get_theme_mod('ads_phi_show', '1') ) : ?>
 <section id="philosophy">
   <div>
@@ -264,7 +264,7 @@ function ads_card_badge( $product ) {
 </section>
 <?php endif; ?>
 
-<!-- ═══ NEWSLETTER ═══ -->
+<!-- NEWSLETTER -->
 <?php if ( get_theme_mod('ads_nl_show', '1') ) : ?>
 <section id="nl">
   <div class="nl-tag"><?php echo ads_c('ads_nl_tag', 'Restez Informé'); ?></div>
