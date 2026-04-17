@@ -60,8 +60,10 @@
   font-size: 0.5rem; letter-spacing: 0.35em; text-transform: uppercase;
   padding: 0.3rem 0.7rem;
 }
-.sp-badge.badge-promo { background: var(--ink); color: var(--white); }
-.sp-badge.badge-out   { background: var(--mid); color: var(--stone); }
+.sp-badge.badge-promo     { background: var(--amber); color: var(--white); }
+.sp-badge.badge-low       { background: var(--stone); color: var(--white); }
+.sp-badge.badge-backorder { background: var(--stone); color: var(--white); }
+.sp-badge.badge-out       { background: var(--mid);   color: var(--stone); }
 
 .sp-thumbs {
   display: flex; gap: 0.6rem; flex-wrap: wrap;
