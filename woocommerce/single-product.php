@@ -35,10 +35,16 @@ while ( have_posts() ) :
     $variations_js = [];
     if ( $is_variable ) {
         foreach ( $product->get_available_variations() as $v ) {
+            // Prix propre : decode les entites HTML (&nbsp; etc.) apres suppression des balises
+            $price_clean = html_entity_decode(
+                strip_tags( wc_price( $v['display_price'] ) ),
+                ENT_QUOTES | ENT_HTML5,
+                'UTF-8'
+            );
             $variations_js[] = [
                 'variation_id' => $v['variation_id'],
                 'attributes'   => $v['attributes'],
-                'price_html'   => strip_tags( wc_price( $v['display_price'] ) ),
+                'price_html'   => $price_clean,
                 'is_in_stock'  => $v['is_in_stock'],
                 'image'        => ! empty($v['image']['url']) ? $v['image']['url'] : '',
             ];
@@ -118,7 +124,6 @@ while ( have_posts() ) :
       <?php if ( ! empty($attributes) ) : ?>
       <div class="sp-specs">
         <?php foreach ( $attributes as $attr ) :
-          // Masquer les attributs utilises comme variations
           if ( $is_variable && $attr->get_variation() ) continue;
           $label = wc_attribute_label( $attr->get_name() );
           $raw_options = $attr->get_options();
@@ -145,7 +150,6 @@ while ( have_posts() ) :
       <?php if ( $is_variable && ! empty($variations_js) ) : ?>
 
         <?php
-        // Recuperer les attributs de variation
         $variation_attrs = [];
         foreach ( $attributes as $attr ) {
             if ( ! $attr->get_variation() ) continue;
@@ -194,7 +198,6 @@ while ( have_posts() ) :
           </div>
           <?php endforeach; ?>
 
-          <!-- Champs hidden pour WooCommerce -->
           <input type="hidden" name="variation_id" id="ads-variation-id" value="" />
           <input type="hidden" name="product_id"   value="<?php echo esc_attr(get_the_ID()); ?>" />
           <input type="hidden" name="quantity"     value="1" />
@@ -202,12 +205,10 @@ while ( have_posts() ) :
           <input type="hidden" name="<?php echo esc_attr($vattr['key']); ?>" id="hidden-<?php echo esc_attr($vattr['key']); ?>" value="" />
           <?php endforeach; ?>
 
-          <!-- Message indisponible -->
           <div class="ads-var-unavailable" id="ads-var-unavailable" style="display:none;">
             Cette combinaison n&rsquo;est pas disponible.
           </div>
 
-          <!-- Bouton panier -->
           <div class="sp-cart-wrap">
             <button type="submit" class="sp-add-btn" id="ads-add-btn" disabled>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
@@ -227,27 +228,22 @@ while ( have_posts() ) :
           var unavailMsg   = document.getElementById('ads-var-unavailable');
           var mainImg      = document.getElementById('sp-main-img');
 
-          // Clic sur un pill
           document.querySelectorAll('.ads-pill').forEach(function(pill){
             pill.addEventListener('click', function(){
               var key = this.dataset.attrKey;
               var val = this.dataset.value;
 
-              // Deselectionner les autres pills du meme groupe
               document.querySelectorAll('.ads-pill[data-attr-key="'+key+'"]').forEach(function(p){
                 p.classList.remove('active');
               });
               this.classList.add('active');
 
-              // Mettre a jour la selection
               selectedAttrs[key] = val;
               document.getElementById('hidden-'+key).value = val;
 
-              // Afficher le nom choisi
               var chosen = document.getElementById('chosen-'+key);
               if (chosen) chosen.textContent = this.textContent.trim();
 
-              // Verifier la variation correspondante
               matchVariation();
             });
           });
@@ -255,10 +251,9 @@ while ( have_posts() ) :
           function matchVariation() {
             var matched = null;
             for (var i = 0; i < variations.length; i++) {
-              var v   = variations[i];
-              var ok  = true;
+              var v  = variations[i];
+              var ok = true;
               for (var k in v.attributes) {
-                // Une valeur vide cote variation = elle accepte tout
                 if (v.attributes[k] !== '' && v.attributes[k] !== selectedAttrs[k]) {
                   ok = false; break;
                 }
@@ -268,60 +263,42 @@ while ( have_posts() ) :
 
             unavailMsg.style.display = 'none';
             if (!matched) {
-              // Pas encore toutes les attrs selectionnees
               var allSelected = true;
               document.querySelectorAll('.ads-var-group').forEach(function(g){
                 if (!selectedAttrs[g.dataset.attrKey]) allSelected = false;
               });
-              if (allSelected) {
-                unavailMsg.style.display = 'block';
-              }
+              if (allSelected) unavailMsg.style.display = 'block';
               addBtn.disabled = true;
               document.getElementById('ads-variation-id').value = '';
               return;
             }
 
-            // Mettre a jour le prix
+            // Mise a jour du prix — innerHTML pour afficher le texte decodé correctement
             if (matched.price_html && priceDisplay) {
-              priceDisplay.textContent = matched.price_html;
+              priceDisplay.innerHTML = matched.price_html;
             }
 
-            // Mettre a jour l'image si la variation en a une
             if (matched.image && mainImg) {
               mainImg.src = matched.image;
             }
 
-            // Activer / desactiver le bouton
             document.getElementById('ads-variation-id').value = matched.variation_id;
             addBtn.disabled = !matched.is_in_stock;
             if (!matched.is_in_stock) {
-              unavailMsg.textContent = 'Cette option est &eacute;puis&eacute;e.';
+              unavailMsg.textContent = 'Cette option est épuisée.';
               unavailMsg.style.display = 'block';
             }
           }
 
-          // Soumission — ajout au panier WooCommerce natif
           form.addEventListener('submit', function(e){
             e.preventDefault();
-            var varId   = document.getElementById('ads-variation-id').value;
-            var prodId  = <?php echo get_the_ID(); ?>;
+            var varId  = document.getElementById('ads-variation-id').value;
+            var prodId = <?php echo get_the_ID(); ?>;
             if (!varId) return;
 
             addBtn.disabled = true;
             addBtn.classList.add('loading');
 
-            var data = new URLSearchParams({
-              action:       'woocommerce_add_to_cart_action',
-              product_id:   prodId,
-              variation_id: varId,
-              quantity:     1,
-            });
-            // Ajouter les attributs selectionnes
-            for (var k in selectedAttrs) {
-              data.append(k, selectedAttrs[k]);
-            }
-
-            // Utiliser le mecanisme natif WooCommerce (redirect vers le panier)
             var cartUrl = '<?php echo esc_url( wc_get_cart_url() ); ?>';
             fetch('<?php echo esc_url( admin_url('admin-ajax.php') ); ?>', {
               method: 'POST',
@@ -333,12 +310,11 @@ while ( have_posts() ) :
               addBtn.classList.remove('loading');
               if (res.success) {
                 addBtn.classList.add('added');
-                addBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Ajout&eacute; !';
-                // Mettre a jour le compteur panier dans le header
+                addBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Ajouté !';
                 var counter = document.querySelector('.cart-count');
                 if (counter) counter.textContent = res.data.count;
                 setTimeout(function(){
-                  addBtn.disabled  = false;
+                  addBtn.disabled = false;
                   addBtn.classList.remove('added');
                   addBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg> Ajouter au panier';
                 }, 2500);
@@ -357,7 +333,6 @@ while ( have_posts() ) :
         </script>
 
       <?php else : ?>
-        <!-- Produit simple -->
         <div class="sp-cart-wrap">
           <?php if ( $in_stock ) :
             woocommerce_template_single_add_to_cart();
