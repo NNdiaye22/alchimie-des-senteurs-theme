@@ -13,7 +13,6 @@ while ( have_posts() ) :
     $product = wc_get_product( get_the_ID() );
     if ( ! $product ) continue;
 
-    // --- Donnees produit ---
     $img_id      = $product->get_image_id();
     $img_url     = $img_id ? wp_get_attachment_image_url( $img_id, 'large' ) : wc_placeholder_img_src('large');
     $gallery_ids = $product->get_gallery_image_ids();
@@ -27,17 +26,29 @@ while ( have_posts() ) :
 
     $short_desc  = $product->get_short_description();
     $long_desc   = $product->get_description();
-
-    // Attributs (pour specs)
     $attributes  = $product->get_attributes();
 
-    // Produits de la meme categorie (upsells visuels)
     $cat_id      = ( $terms && ! is_wp_error($terms) ) ? $terms[0]->term_id : 0;
+
+    // --- Donnees variations (pour boutons pill) ---
+    $is_variable   = $product->is_type('variable');
+    $variations_js = [];
+    if ( $is_variable ) {
+        foreach ( $product->get_available_variations() as $v ) {
+            $variations_js[] = [
+                'variation_id' => $v['variation_id'],
+                'attributes'   => $v['attributes'],
+                'price_html'   => strip_tags( wc_price( $v['display_price'] ) ),
+                'is_in_stock'  => $v['is_in_stock'],
+                'image'        => ! empty($v['image']['url']) ? $v['image']['url'] : '',
+            ];
+        }
+    }
 ?>
 
 <div class="sp-wrap">
 
-  <!-- ═══ BREADCRUMB ═══ -->
+  <!-- BREADCRUMB -->
   <nav class="sp-breadcrumb">
     <a href="<?php echo esc_url(home_url('/')); ?>">Accueil</a>
     <span>&rsaquo;</span>
@@ -50,7 +61,7 @@ while ( have_posts() ) :
     <span class="sp-bc-current"><?php the_title(); ?></span>
   </nav>
 
-  <!-- ═══ BLOC PRINCIPAL ═══ -->
+  <!-- BLOC PRINCIPAL -->
   <div class="sp-main">
 
     <!-- Colonne image -->
@@ -60,7 +71,7 @@ while ( have_posts() ) :
         <?php if ( $sale_price ) : ?>
           <div class="sp-badge badge-promo">Promo</div>
         <?php elseif ( ! $in_stock ) : ?>
-          <div class="sp-badge badge-out">Épuisé</div>
+          <div class="sp-badge badge-out">&Eacute;puis&eacute;</div>
         <?php endif; ?>
       </div>
 
@@ -95,7 +106,7 @@ while ( have_posts() ) :
         <?php if ( $sale_price && $reg_price ) : ?>
           <span class="sp-price-old"><?php echo wc_price($reg_price); ?></span>
         <?php endif; ?>
-        <span class="sp-price"><?php echo strip_tags($product->get_price_html()); ?></span>
+        <span class="sp-price" id="sp-price-display"><?php echo strip_tags($product->get_price_html()); ?></span>
       </div>
 
       <!-- Description courte -->
@@ -103,13 +114,21 @@ while ( have_posts() ) :
         <div class="sp-short-desc"><?php echo wp_kses_post($short_desc); ?></div>
       <?php endif; ?>
 
-      <!-- Attributs / Specs -->
+      <!-- Attributs / Specs (non-variation uniquement) -->
       <?php if ( ! empty($attributes) ) : ?>
       <div class="sp-specs">
         <?php foreach ( $attributes as $attr ) :
+          // Masquer les attributs utilises comme variations
+          if ( $is_variable && $attr->get_variation() ) continue;
           $label = wc_attribute_label( $attr->get_name() );
-          $values = array_map('esc_html', $attr->get_terms() ? wp_list_pluck($attr->get_terms(), 'name') : explode(',', $attr->get_options()[0] ?? ''));
-          $val_str = implode(' · ', array_filter($values));
+          $raw_options = $attr->get_options();
+          if ( $attr->is_taxonomy() ) {
+              $terms_attr = wc_get_product_terms( get_the_ID(), $attr->get_name(), array('fields'=>'names') );
+              $values = array_map('esc_html', $terms_attr);
+          } else {
+              $values = array_map('esc_html', $raw_options);
+          }
+          $val_str = implode(' &middot; ', array_filter($values));
           if ( ! $val_str ) continue;
         ?>
         <div class="sp-spec-row">
@@ -120,29 +139,245 @@ while ( have_posts() ) :
       </div>
       <?php endif; ?>
 
-      <!-- Bouton panier -->
-      <div class="sp-cart-wrap">
-        <?php if ( $in_stock ) : ?>
-          <?php
-          // Formulaire add-to-cart WooCommerce natif (gere variable, simple, etc.)
-          woocommerce_template_single_add_to_cart();
-          ?>
-        <?php else : ?>
-          <div class="sp-out-msg">Épuisé — revenez bientôt</div>
-        <?php endif; ?>
-      </div>
+      <!-- ============================================
+           FORMULAIRE VARIATION (produit variable)
+           ============================================ -->
+      <?php if ( $is_variable && ! empty($variations_js) ) : ?>
+
+        <?php
+        // Recuperer les attributs de variation
+        $variation_attrs = [];
+        foreach ( $attributes as $attr ) {
+            if ( ! $attr->get_variation() ) continue;
+            $attr_name = $attr->get_name();
+            $label     = wc_attribute_label( $attr_name );
+            if ( $attr->is_taxonomy() ) {
+                $opts = wc_get_product_terms( get_the_ID(), $attr_name, ['fields'=>'all'] );
+                $options = [];
+                foreach ( $opts as $t ) {
+                    $options[] = ['slug' => $t->slug, 'name' => $t->name];
+                }
+            } else {
+                $options = [];
+                foreach ( $attr->get_options() as $o ) {
+                    $options[] = ['slug' => sanitize_title($o), 'name' => $o];
+                }
+            }
+            $variation_attrs[] = [
+                'key'     => 'attribute_' . sanitize_title($attr_name),
+                'label'   => $label,
+                'options' => $options,
+            ];
+        }
+        ?>
+
+        <form class="ads-variation-form" id="ads-variation-form"
+              data-product-id="<?php echo esc_attr(get_the_ID()); ?>"
+              data-nonce="<?php echo wp_create_nonce('woocommerce-process_checkout'); ?>">
+
+          <?php foreach ( $variation_attrs as $vattr ) : ?>
+          <div class="ads-var-group" data-attr-key="<?php echo esc_attr($vattr['key']); ?>">
+            <div class="ads-var-label">
+              <?php echo esc_html($vattr['label']); ?>
+              <span class="ads-var-chosen" id="chosen-<?php echo esc_attr($vattr['key']); ?>"></span>
+            </div>
+            <div class="ads-var-pills">
+              <?php foreach ( $vattr['options'] as $opt ) : ?>
+              <button type="button"
+                      class="ads-pill"
+                      data-attr-key="<?php echo esc_attr($vattr['key']); ?>"
+                      data-value="<?php echo esc_attr($opt['slug']); ?>">
+                <?php echo esc_html($opt['name']); ?>
+              </button>
+              <?php endforeach; ?>
+            </div>
+          </div>
+          <?php endforeach; ?>
+
+          <!-- Champs hidden pour WooCommerce -->
+          <input type="hidden" name="variation_id" id="ads-variation-id" value="" />
+          <input type="hidden" name="product_id"   value="<?php echo esc_attr(get_the_ID()); ?>" />
+          <input type="hidden" name="quantity"     value="1" />
+          <?php foreach ( $variation_attrs as $vattr ) : ?>
+          <input type="hidden" name="<?php echo esc_attr($vattr['key']); ?>" id="hidden-<?php echo esc_attr($vattr['key']); ?>" value="" />
+          <?php endforeach; ?>
+
+          <!-- Message indisponible -->
+          <div class="ads-var-unavailable" id="ads-var-unavailable" style="display:none;">
+            Cette combinaison n&rsquo;est pas disponible.
+          </div>
+
+          <!-- Bouton panier -->
+          <div class="sp-cart-wrap">
+            <button type="submit" class="sp-add-btn" id="ads-add-btn" disabled>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+              Ajouter au panier
+            </button>
+          </div>
+
+        </form>
+
+        <script>
+        (function(){
+          var variations   = <?php echo wp_json_encode($variations_js); ?>;
+          var selectedAttrs = {};
+          var form         = document.getElementById('ads-variation-form');
+          var addBtn       = document.getElementById('ads-add-btn');
+          var priceDisplay = document.getElementById('sp-price-display');
+          var unavailMsg   = document.getElementById('ads-var-unavailable');
+          var mainImg      = document.getElementById('sp-main-img');
+
+          // Clic sur un pill
+          document.querySelectorAll('.ads-pill').forEach(function(pill){
+            pill.addEventListener('click', function(){
+              var key = this.dataset.attrKey;
+              var val = this.dataset.value;
+
+              // Deselectionner les autres pills du meme groupe
+              document.querySelectorAll('.ads-pill[data-attr-key="'+key+'"]').forEach(function(p){
+                p.classList.remove('active');
+              });
+              this.classList.add('active');
+
+              // Mettre a jour la selection
+              selectedAttrs[key] = val;
+              document.getElementById('hidden-'+key).value = val;
+
+              // Afficher le nom choisi
+              var chosen = document.getElementById('chosen-'+key);
+              if (chosen) chosen.textContent = this.textContent.trim();
+
+              // Verifier la variation correspondante
+              matchVariation();
+            });
+          });
+
+          function matchVariation() {
+            var matched = null;
+            for (var i = 0; i < variations.length; i++) {
+              var v   = variations[i];
+              var ok  = true;
+              for (var k in v.attributes) {
+                // Une valeur vide cote variation = elle accepte tout
+                if (v.attributes[k] !== '' && v.attributes[k] !== selectedAttrs[k]) {
+                  ok = false; break;
+                }
+              }
+              if (ok) { matched = v; break; }
+            }
+
+            unavailMsg.style.display = 'none';
+            if (!matched) {
+              // Pas encore toutes les attrs selectionnees
+              var allSelected = true;
+              document.querySelectorAll('.ads-var-group').forEach(function(g){
+                if (!selectedAttrs[g.dataset.attrKey]) allSelected = false;
+              });
+              if (allSelected) {
+                unavailMsg.style.display = 'block';
+              }
+              addBtn.disabled = true;
+              document.getElementById('ads-variation-id').value = '';
+              return;
+            }
+
+            // Mettre a jour le prix
+            if (matched.price_html && priceDisplay) {
+              priceDisplay.textContent = matched.price_html;
+            }
+
+            // Mettre a jour l'image si la variation en a une
+            if (matched.image && mainImg) {
+              mainImg.src = matched.image;
+            }
+
+            // Activer / desactiver le bouton
+            document.getElementById('ads-variation-id').value = matched.variation_id;
+            addBtn.disabled = !matched.is_in_stock;
+            if (!matched.is_in_stock) {
+              unavailMsg.textContent = 'Cette option est &eacute;puis&eacute;e.';
+              unavailMsg.style.display = 'block';
+            }
+          }
+
+          // Soumission — ajout au panier WooCommerce natif
+          form.addEventListener('submit', function(e){
+            e.preventDefault();
+            var varId   = document.getElementById('ads-variation-id').value;
+            var prodId  = <?php echo get_the_ID(); ?>;
+            if (!varId) return;
+
+            addBtn.disabled = true;
+            addBtn.classList.add('loading');
+
+            var data = new URLSearchParams({
+              action:       'woocommerce_add_to_cart_action',
+              product_id:   prodId,
+              variation_id: varId,
+              quantity:     1,
+            });
+            // Ajouter les attributs selectionnes
+            for (var k in selectedAttrs) {
+              data.append(k, selectedAttrs[k]);
+            }
+
+            // Utiliser le mecanisme natif WooCommerce (redirect vers le panier)
+            var cartUrl = '<?php echo esc_url( wc_get_cart_url() ); ?>';
+            fetch('<?php echo esc_url( admin_url('admin-ajax.php') ); ?>', {
+              method: 'POST',
+              headers: {'Content-Type':'application/x-www-form-urlencoded'},
+              body: 'action=ads_add_variation_to_cart&nonce='+encodeURIComponent('<?php echo wp_create_nonce("ads-nonce"); ?>')+'&product_id='+prodId+'&variation_id='+varId+'&quantity=1'
+            })
+            .then(function(r){ return r.json(); })
+            .then(function(res){
+              addBtn.classList.remove('loading');
+              if (res.success) {
+                addBtn.classList.add('added');
+                addBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Ajout&eacute; !';
+                // Mettre a jour le compteur panier dans le header
+                var counter = document.querySelector('.cart-count');
+                if (counter) counter.textContent = res.data.count;
+                setTimeout(function(){
+                  addBtn.disabled  = false;
+                  addBtn.classList.remove('added');
+                  addBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg> Ajouter au panier';
+                }, 2500);
+              } else {
+                addBtn.disabled = false;
+                window.location.href = cartUrl;
+              }
+            })
+            .catch(function(){
+              addBtn.classList.remove('loading');
+              addBtn.disabled = false;
+              window.location.href = cartUrl;
+            });
+          });
+        })();
+        </script>
+
+      <?php else : ?>
+        <!-- Produit simple -->
+        <div class="sp-cart-wrap">
+          <?php if ( $in_stock ) :
+            woocommerce_template_single_add_to_cart();
+          else : ?>
+            <div class="sp-out-msg">&Eacute;puis&eacute; &mdash; revenez bient&ocirc;t</div>
+          <?php endif; ?>
+        </div>
+      <?php endif; ?>
 
       <!-- Meta -->
       <div class="sp-meta">
         <?php if ( $fam && $terms ) : ?>
           <div class="sp-meta-row">
-            <span class="sp-meta-label">Catégorie</span>
+            <span class="sp-meta-label">Cat&eacute;gorie</span>
             <a href="<?php echo esc_url(get_term_link($terms[0])); ?>" class="sp-meta-val"><?php echo $fam; ?></a>
           </div>
         <?php endif; ?>
         <?php $sku = $product->get_sku(); if ($sku) : ?>
           <div class="sp-meta-row">
-            <span class="sp-meta-label">Référence</span>
+            <span class="sp-meta-label">R&eacute;f&eacute;rence</span>
             <span class="sp-meta-val"><?php echo esc_html($sku); ?></span>
           </div>
         <?php endif; ?>
@@ -151,7 +386,7 @@ while ( have_posts() ) :
     </div><!-- .sp-info -->
   </div><!-- .sp-main -->
 
-  <!-- ═══ DESCRIPTION LONGUE ═══ -->
+  <!-- DESCRIPTION LONGUE -->
   <?php if ( $long_desc ) : ?>
   <div class="sp-desc-section">
     <div class="sp-desc-title">Description</div>
@@ -159,21 +394,21 @@ while ( have_posts() ) :
   </div>
   <?php endif; ?>
 
-  <!-- ═══ PRODUITS SIMILAIRES ═══ -->
+  <!-- PRODUITS SIMILAIRES -->
   <?php
-  $related_args = array(
+  $related_args = [
     'post_type'      => 'product',
     'posts_per_page' => 3,
     'post_status'    => 'publish',
-    'post__not_in'   => array(get_the_ID()),
+    'post__not_in'   => [ get_the_ID() ],
     'orderby'        => 'rand',
-  );
+  ];
   if ( $cat_id ) {
-    $related_args['tax_query'] = array(array(
+    $related_args['tax_query'] = [[
       'taxonomy' => 'product_cat',
       'field'    => 'term_id',
       'terms'    => $cat_id,
-    ));
+    ]];
   }
   $related = new WP_Query($related_args);
   ?>
