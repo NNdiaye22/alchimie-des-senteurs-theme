@@ -18,6 +18,14 @@ require_once ADS_DIR . '/inc/customizer.php';
 require_once ADS_DIR . '/inc/woocommerce.php';
 
 // -------------------------------------------------------
+// Prix "À partir de" pour les produits variables
+// -------------------------------------------------------
+add_filter( 'woocommerce_variable_price_html', function( $price, $product ) {
+    $min = wc_price( $product->get_variation_price( 'min', true ) );
+    return sprintf( 'À partir de %s', $min );
+}, 10, 2 );
+
+// -------------------------------------------------------
 // Helper badge produit (simple + variable)
 // Retourne array('id'=>string,'label'=>string) ou null
 // -------------------------------------------------------
