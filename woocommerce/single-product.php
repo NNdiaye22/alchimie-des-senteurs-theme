@@ -35,19 +35,60 @@ while ( have_posts() ) :
     $variations_js = [];
     if ( $is_variable ) {
         foreach ( $product->get_available_variations() as $v ) {
-            // Prix propre : decode les entites HTML (&nbsp; etc.) apres suppression des balises
-            $price_clean = html_entity_decode(
-                strip_tags( wc_price( $v['display_price'] ) ),
+            $clean = function( $amount ) {
+                return html_entity_decode(
+                    strip_tags( wc_price( $amount ) ),
+                    ENT_QUOTES | ENT_HTML5,
+                    'UTF-8'
+                );
+            };
+            $has_sale    = $v['display_regular_price'] > $v['display_price'];
+            $variations_js[] = [
+                'variation_id'  => $v['variation_id'],
+                'attributes'    => $v['attributes'],
+                'price'         => $clean( $v['display_price'] ),
+                'regular_price' => $has_sale ? $clean( $v['display_regular_price'] ) : '',
+                'is_on_sale'    => $has_sale,
+                'is_in_stock'   => $v['is_in_stock'],
+                'image'         => ! empty($v['image']['url']) ? $v['image']['url'] : '',
+            ];
+        }
+    }
+
+    // Prix initial affiche (produit variable : plage min–max propre)
+    if ( $is_variable ) {
+        $prices      = $product->get_variation_prices( true );
+        $min_price   = ! empty($prices['price']) ? min( $prices['price'] ) : 0;
+        $max_price   = ! empty($prices['price']) ? max( $prices['price'] ) : 0;
+        $min_reg     = ! empty($prices['regular_price']) ? min( $prices['regular_price'] ) : 0;
+        $has_any_sale = ( $min_price < $min_reg );
+
+        $fmt = function( $amount ) {
+            return html_entity_decode(
+                strip_tags( wc_price( $amount ) ),
                 ENT_QUOTES | ENT_HTML5,
                 'UTF-8'
             );
-            $variations_js[] = [
-                'variation_id' => $v['variation_id'],
-                'attributes'   => $v['attributes'],
-                'price_html'   => $price_clean,
-                'is_in_stock'  => $v['is_in_stock'],
-                'image'        => ! empty($v['image']['url']) ? $v['image']['url'] : '',
-            ];
+        };
+
+        // Affichage initial : si tous meme prix afficher un seul, sinon plage
+        if ( $min_price === $max_price ) {
+            $initial_price_html = '<span class="sp-price-current">' . $fmt($min_price) . '</span>';
+            if ( $has_any_sale ) {
+                $initial_price_html = '<span class="sp-price-old">' . $fmt($min_reg) . '</span>' . $initial_price_html;
+            }
+        } else {
+            $initial_price_html = '<span class="sp-price-current">' . $fmt($min_price) . '</span>'
+                                . '<span class="sp-price-sep"> &ndash; </span>'
+                                . '<span class="sp-price-current">' . $fmt($max_price) . '</span>';
+        }
+    } else {
+        // Produit simple
+        if ( $sale_price && $reg_price ) {
+            $initial_price_html = '<span class="sp-price-old">' . html_entity_decode( strip_tags( wc_price($reg_price) ), ENT_QUOTES|ENT_HTML5, 'UTF-8' ) . '</span>'
+                                . '<span class="sp-price-current">' . html_entity_decode( strip_tags( wc_price($sale_price) ), ENT_QUOTES|ENT_HTML5, 'UTF-8' ) . '</span>';
+        } else {
+            $initial_price_html = '<span class="sp-price-current">' . html_entity_decode( strip_tags( wc_price($reg_price ?: $product->get_price()) ), ENT_QUOTES|ENT_HTML5, 'UTF-8' ) . '</span>';
         }
     }
 ?>
@@ -74,7 +115,7 @@ while ( have_posts() ) :
     <div class="sp-gallery">
       <div class="sp-img-main">
         <img id="sp-main-img" src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" />
-        <?php if ( $sale_price ) : ?>
+        <?php if ( $sale_price && ! $is_variable ) : ?>
           <div class="sp-badge badge-promo">Promo</div>
         <?php elseif ( ! $in_stock ) : ?>
           <div class="sp-badge badge-out">&Eacute;puis&eacute;</div>
@@ -108,11 +149,8 @@ while ( have_posts() ) :
       <h1 class="sp-title"><?php the_title(); ?></h1>
 
       <!-- Prix -->
-      <div class="sp-price-block">
-        <?php if ( $sale_price && $reg_price ) : ?>
-          <span class="sp-price-old"><?php echo wc_price($reg_price); ?></span>
-        <?php endif; ?>
-        <span class="sp-price" id="sp-price-display"><?php echo strip_tags($product->get_price_html()); ?></span>
+      <div class="sp-price-block" id="sp-price-block">
+        <?php echo $initial_price_html; ?>
       </div>
 
       <!-- Description courte -->
@@ -220,30 +258,27 @@ while ( have_posts() ) :
 
         <script>
         (function(){
-          var variations   = <?php echo wp_json_encode($variations_js); ?>;
+          var variations    = <?php echo wp_json_encode($variations_js); ?>;
           var selectedAttrs = {};
-          var form         = document.getElementById('ads-variation-form');
-          var addBtn       = document.getElementById('ads-add-btn');
-          var priceDisplay = document.getElementById('sp-price-display');
-          var unavailMsg   = document.getElementById('ads-var-unavailable');
-          var mainImg      = document.getElementById('sp-main-img');
+          var form          = document.getElementById('ads-variation-form');
+          var addBtn        = document.getElementById('ads-add-btn');
+          var priceBlock    = document.getElementById('sp-price-block');
+          var unavailMsg    = document.getElementById('ads-var-unavailable');
+          var mainImg       = document.getElementById('sp-main-img');
+          var badge         = document.querySelector('.sp-badge');
 
           document.querySelectorAll('.ads-pill').forEach(function(pill){
             pill.addEventListener('click', function(){
               var key = this.dataset.attrKey;
               var val = this.dataset.value;
-
               document.querySelectorAll('.ads-pill[data-attr-key="'+key+'"]').forEach(function(p){
                 p.classList.remove('active');
               });
               this.classList.add('active');
-
               selectedAttrs[key] = val;
               document.getElementById('hidden-'+key).value = val;
-
               var chosen = document.getElementById('chosen-'+key);
               if (chosen) chosen.textContent = this.textContent.trim();
-
               matchVariation();
             });
           });
@@ -273,14 +308,21 @@ while ( have_posts() ) :
               return;
             }
 
-            // Mise a jour du prix — innerHTML pour afficher le texte decodé correctement
-            if (matched.price_html && priceDisplay) {
-              priceDisplay.innerHTML = matched.price_html;
+            // Mise a jour du bloc prix avec gestion prix barre
+            if (priceBlock) {
+              var html = '';
+              if (matched.is_on_sale && matched.regular_price) {
+                html += '<span class="sp-price-old">' + matched.regular_price + '</span>';
+                // Badge promo dynamique
+                if (badge) { badge.style.display = 'block'; }
+              } else {
+                if (badge) { badge.style.display = 'none'; }
+              }
+              html += '<span class="sp-price-current">' + matched.price + '</span>';
+              priceBlock.innerHTML = html;
             }
 
-            if (matched.image && mainImg) {
-              mainImg.src = matched.image;
-            }
+            if (matched.image && mainImg) mainImg.src = matched.image;
 
             document.getElementById('ads-variation-id').value = matched.variation_id;
             addBtn.disabled = !matched.is_in_stock;
