@@ -15,6 +15,14 @@ function ads_enqueue_assets() {
         ADS_VERSION
     );
 
+    // CSS footer (toutes les pages — footer.php est global)
+    wp_enqueue_style(
+        'ads-footer',
+        ADS_URI . '/assets/css/footer.css',
+        array( 'ads-main' ),
+        ADS_VERSION
+    );
+
     // CSS signature (toutes les pages)
     wp_enqueue_style(
         'ads-signature',
