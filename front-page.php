@@ -5,6 +5,53 @@
 function ads_c( $key, $default = '' ) {
     return wp_kses_post( get_theme_mod( $key, $default ) );
 }
+
+/**
+ * Calcule le badge a afficher pour une carte produit (simple ou variable)
+ * Retourne array( 'id' => string, 'label' => string ) ou null
+ */
+function ads_card_badge( $product ) {
+    if ( ! $product ) return null;
+
+    if ( $product->is_type('variable') ) {
+        $any_sale     = false;
+        $any_low      = false;
+        $any_backorder = false;
+        $all_out      = true;
+
+        foreach ( $product->get_available_variations() as $v ) {
+            $vobj    = wc_get_product( $v['variation_id'] );
+            $v_stock = $vobj ? $vobj->get_stock_quantity() : null;
+            $v_back  = $vobj ? $vobj->backorders_allowed() : false;
+            $v_low   = ( $v['is_in_stock'] && $v_stock !== null && $v_stock > 0 && $v_stock <= 5 );
+            $on_sale = $v['display_regular_price'] > $v['display_price'];
+
+            if ( $v['is_in_stock'] || $v_back ) $all_out = false;
+            if ( $on_sale )  $any_sale     = true;
+            if ( $v_low )    $any_low      = true;
+            if ( $v_back && ! $v['is_in_stock'] ) $any_backorder = true;
+        }
+
+        if ( $all_out )        return array( 'id' => 'out',       'label' => '&Eacute;puis&eacute;' );
+        if ( $any_backorder )  return array( 'id' => 'backorder', 'label' => 'Bient&ocirc;t dispo' );
+        if ( $any_low )        return array( 'id' => 'low',       'label' => 'Stock limit&eacute;' );
+        if ( $any_sale )       return array( 'id' => 'promo',     'label' => 'Promo' );
+        return null;
+    }
+
+    // Produit simple
+    $in_stock   = $product->is_in_stock();
+    $backorders = $product->backorders_allowed();
+    $stock_qty  = $product->get_stock_quantity();
+    $low_stock  = ( $in_stock && $stock_qty !== null && $stock_qty > 0 && $stock_qty <= 5 );
+    $sale_price = $product->get_sale_price();
+
+    if ( ! $in_stock && $backorders ) return array( 'id' => 'backorder', 'label' => 'Bient&ocirc;t dispo' );
+    if ( ! $in_stock )                return array( 'id' => 'out',       'label' => '&Eacute;puis&eacute;' );
+    if ( $low_stock )                 return array( 'id' => 'low',       'label' => 'Plus que ' . (int)$stock_qty . ' en stock' );
+    if ( $sale_price )                return array( 'id' => 'promo',     'label' => 'Promo' );
+    return null;
+}
 ?>
 <?php get_header(); ?>
 
@@ -45,9 +92,9 @@ function ads_c( $key, $default = '' ) {
   </div>
 
   <div class="phase-copy" id="pc1">
-    <div class="ph-tag"><?php echo ads_c('ads_phase_1_tag', 'I — L’Allumage'); ?></div>
+    <div class="ph-tag"><?php echo ads_c('ads_phase_1_tag', 'I — L'Allumage'); ?></div>
     <div class="ph-title"><?php echo ads_c('ads_phase_1_title', "L'instant du premier souffle"); ?></div>
-    <div class="ph-body"><?php echo ads_c('ads_phase_1_body', 'La braise s’éveille. Un fil de fumée s’élève, portant avec lui des siècles de tradition olfactive orientale.'); ?></div>
+    <div class="ph-body"><?php echo ads_c('ads_phase_1_body', 'La braise s'éveille. Un fil de fumée s'élève, portant avec lui des siècles de tradition olfactive orientale.'); ?></div>
   </div>
   <div class="phase-copy right" id="pc2">
     <div class="ph-tag"><?php echo ads_c('ads_phase_2_tag', 'II — La Consumation'); ?></div>
@@ -55,9 +102,9 @@ function ads_c( $key, $default = '' ) {
     <div class="ph-body" style="margin-left:auto;"><?php echo ads_c('ads_phase_2_body', 'Au fil des heures, le bâtonnet révèle ses couches olfactives. Du cœur épicé aux notes boisées de fond.'); ?></div>
   </div>
   <div class="phase-copy" id="pc3">
-    <div class="ph-tag"><?php echo ads_c('ads_phase_3_tag', 'III — L’Empreinte'); ?></div>
+    <div class="ph-tag"><?php echo ads_c('ads_phase_3_tag', 'III — L'Empreinte'); ?></div>
     <div class="ph-title"><?php echo ads_c('ads_phase_3_title', 'Ce qui reste après le silence'); ?></div>
-    <div class="ph-body"><?php echo ads_c('ads_phase_3_body', 'La fumée s’est dissipée, mais le souvenir olfactif persiste. C’est la magie du bon encens.'); ?></div>
+    <div class="ph-body"><?php echo ads_c('ads_phase_3_body', 'La fumée s'est dissipée, mais le souvenir olfactif persiste. C'est la magie du bon encens.'); ?></div>
   </div>
 
   <div id="cue">
@@ -141,25 +188,22 @@ function ads_c( $key, $default = '' ) {
   <div class="products-grid">
     <?php while ( $products->have_posts() ) : $products->the_post();
       global $product;
-      $product   = wc_get_product( get_the_ID() );
+      $product  = wc_get_product( get_the_ID() );
       if ( ! $product ) continue;
-      $img_url   = ( $product->get_image_id() ) ? wp_get_attachment_image_url( $product->get_image_id(), 'ads-product-card' ) : wc_placeholder_img_src();
-      $reg_price = $product->get_regular_price();
-      $sale_price= $product->get_sale_price();
-      $in_stock  = $product->is_in_stock();
-      $link      = get_permalink();
-      $terms     = get_the_terms( get_the_ID(), 'product_cat' );
-      $fam       = ( $terms && ! is_wp_error($terms) ) ? esc_html($terms[0]->name) : '';
-      $desc      = $product->get_short_description();
+      $img_url  = $product->get_image_id() ? wp_get_attachment_image_url( $product->get_image_id(), 'ads-product-card' ) : wc_placeholder_img_src();
+      $in_stock = $product->is_in_stock();
+      $link     = get_permalink();
+      $terms    = get_the_terms( get_the_ID(), 'product_cat' );
+      $fam      = ( $terms && ! is_wp_error($terms) ) ? esc_html($terms[0]->name) : '';
+      $desc     = $product->get_short_description();
       if ( ! $desc ) $desc = wp_trim_words( $product->get_description(), 15 );
+      $badge    = ads_card_badge( $product );
     ?>
     <div class="product-card" onclick="window.location='<?php echo esc_url($link); ?>'">
       <div class="card-img-wrap">
         <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" loading="lazy"/>
-        <?php if ( $sale_price ) : ?>
-          <div class="card-badge badge-promo">Promo</div>
-        <?php elseif ( ! $in_stock ) : ?>
-          <div class="card-badge badge-out">Épuisé</div>
+        <?php if ( $badge ) : ?>
+          <div class="card-badge badge-<?php echo esc_attr($badge['id']); ?>"><?php echo $badge['label']; ?></div>
         <?php endif; ?>
       </div>
       <div class="card-body">
@@ -168,13 +212,17 @@ function ads_c( $key, $default = '' ) {
         <?php if ( $desc ) echo '<div class="card-desc">'.wp_strip_all_tags($desc).'</div>'; ?>
         <div class="card-foot">
           <div>
-            <?php if ( $sale_price && $reg_price ) echo '<span class="card-old">'.wc_price($reg_price).'</span>'; ?>
-            <span class="card-price"><?php echo strip_tags($product->get_price_html()); ?></span>
+            <?php
+            $reg = $product->get_regular_price();
+            $sal = $product->get_sale_price();
+            if ( $sal && $reg ) echo '<span class="card-old">'.wc_price($reg).'</span>';
+            echo '<span class="card-price">'.strip_tags($product->get_price_html()).'</span>';
+            ?>
           </div>
-          <?php if ( $in_stock ) : ?>
-            <button class="card-add" onclick="event.stopPropagation();window.location='<?php echo esc_url($link); ?>'">Ajouter</button>
+          <?php if ( $in_stock || $product->backorders_allowed() ) : ?>
+            <button class="card-add" onclick="event.stopPropagation();window.location='<?php echo esc_url($link); ?>'">Voir</button>
           <?php else : ?>
-            <span class="card-out-txt">Épuisé</span>
+            <span class="card-out-txt">&Eacute;puis&eacute;</span>
           <?php endif; ?>
         </div>
       </div>
