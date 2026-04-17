@@ -1,7 +1,6 @@
 <?php
 /**
  * Template archive produits — Page Boutique (/shop)
- * Version premium — Alchimie des Senteurs
  */
 defined( 'ABSPATH' ) || exit;
 get_header();
@@ -15,32 +14,32 @@ $total_products = absint( wp_count_posts('product')->publish );
 
 <div class="shop-wrap">
 
-  <!-- ═══ HERO ═══ -->
+  <!-- HERO -->
   <div class="shop-hero">
     <div class="shop-hero-inner">
-      <div class="shop-hero-tag"><?php echo ads_s('ads_shop_tag', 'Notre Sélection'); ?></div>
+      <div class="shop-hero-tag"><?php echo ads_s('ads_shop_tag', 'Notre Selection'); ?></div>
       <h1 class="shop-hero-title">
         <?php echo ads_s('ads_shop_title_l1', 'La Boutique'); ?><br>
         <em><?php echo ads_s('ads_shop_title_l2', 'Alchimie'); ?></em>
       </h1>
-      <p class="shop-hero-sub"><?php echo ads_s('ads_shop_sub', 'Encens, résines et accessoires sélectionnés pour leur authenticité et leur intensité olfactive.'); ?></p>
+      <p class="shop-hero-sub"><?php echo ads_s('ads_shop_sub', 'Encens, resines et accessoires selectionnes pour leur authenticite et leur intensite olfactive.'); ?></p>
     </div>
     <?php if ( $total_products ) : ?>
     <div class="shop-hero-count">
       <div class="shop-hero-count-num"><?php echo $total_products; ?></div>
-      <div class="shop-hero-count-label">Références</div>
+      <div class="shop-hero-count-label">References</div>
     </div>
     <?php endif; ?>
   </div>
 
-  <!-- ═══ BARRE STICKY ═══ -->
+  <!-- BARRE STICKY -->
   <div class="shop-toolbar">
     <div class="shop-tb-left">
       <div class="shop-tb-count">
         <?php
           global $wp_query;
           $found = $wp_query ? $wp_query->found_posts : 0;
-          echo '<strong>' . $found . '</strong>&nbsp;référence' . ( $found > 1 ? 's' : '' );
+          echo '<strong>' . $found . '</strong>&nbsp;reference' . ( $found > 1 ? 's' : '' );
         ?>
       </div>
       <?php
@@ -62,7 +61,7 @@ $total_products = absint( wp_count_posts('product')->publish );
     </div>
   </div>
 
-  <!-- ═══ GRILLE PRODUITS ═══ -->
+  <!-- GRILLE PRODUITS -->
   <div class="shop-grid-wrap">
     <?php if ( woocommerce_product_loop() ) : ?>
     <div class="shop-grid">
@@ -75,7 +74,7 @@ $total_products = absint( wp_count_posts('product')->publish );
 
         global $product;
         $product  = wc_get_product( get_the_ID() );
-        if ( ! $product ) continue;
+        if ( ! $product ) { $idx++; continue; }
 
         $img_id   = $product->get_image_id();
         $img_url  = $img_id
@@ -86,10 +85,11 @@ $total_products = absint( wp_count_posts('product')->publish );
         $stock    = $product->is_in_stock();
         $link     = get_permalink();
         $terms    = get_the_terms( get_the_ID(), 'product_cat' );
-        $cat      = ( $terms && ! is_wp_error($terms) ) ? esc_html($terms[0]->name) : '';
+        $cat_name = ( $terms && ! is_wp_error($terms) ) ? esc_html($terms[0]->name) : '';
         $desc     = $product->get_short_description();
         if ( ! $desc ) $desc = wp_trim_words( $product->get_description(), 14 );
 
+        $badge      = ads_card_badge( $product );
         $featured   = ( $idx === 0 );
         $card_class = 'shop-card' . ( $featured ? ' card-featured' : '' );
         $num        = sprintf( '%02d', $idx + 1 );
@@ -99,48 +99,36 @@ $total_products = absint( wp_count_posts('product')->publish );
       <article class="<?php echo $card_class; ?>"
                onclick="window.location='<?php echo esc_url($link); ?>'">
 
-        <!-- Image -->
         <div class="shop-card-img">
           <img src="<?php echo esc_url($img_url); ?>"
                alt="<?php echo esc_attr( get_the_title() ); ?>"
                loading="<?php echo $loading; ?>" />
           <span class="shop-card-num"><?php echo $num; ?></span>
-          <?php if ( $sale ) : ?>
-            <span class="shop-badge shop-badge-promo">Promo</span>
-          <?php elseif ( ! $stock ) : ?>
-            <span class="shop-badge shop-badge-out">Épuisé</span>
+          <?php if ( $badge ) : ?>
+            <span class="shop-badge shop-badge-<?php echo esc_attr($badge['id']); ?>"><?php echo $badge['label']; ?></span>
           <?php endif; ?>
           <div class="shop-card-overlay">
             <a class="shop-card-quick"
                href="<?php echo esc_url($link); ?>"
                onclick="event.stopPropagation()">
-              Découvrir
+              Decouvrir
             </a>
           </div>
         </div>
 
-        <!-- Corps -->
         <div class="shop-card-body">
-          <?php if ( $cat ) : ?>
-            <div class="shop-card-cat"><?php echo $cat; ?></div>
-          <?php endif; ?>
+          <?php if ( $cat_name ) echo '<div class="shop-card-cat">' . $cat_name . '</div>'; ?>
           <h2 class="shop-card-name"><?php the_title(); ?></h2>
-          <?php if ( $desc ) : ?>
-            <p class="shop-card-desc"><?php echo wp_strip_all_tags($desc); ?></p>
-          <?php endif; ?>
+          <?php if ( $desc ) echo '<p class="shop-card-desc">' . wp_strip_all_tags($desc) . '</p>'; ?>
           <div class="shop-card-sep"></div>
           <div class="shop-card-foot">
             <div class="shop-card-price-wrap">
-              <?php if ( $sale && $reg ) : ?>
-                <span class="shop-card-old"><?php echo wc_price($reg); ?></span>
-              <?php endif; ?>
-              <span class="shop-card-current">
-                <?php echo strip_tags( $product->get_price_html() ); ?>
-              </span>
+              <?php if ( $sale && $reg ) echo '<span class="shop-card-old">' . wc_price($reg) . '</span>'; ?>
+              <span class="shop-card-current"><?php echo strip_tags( $product->get_price_html() ); ?></span>
             </div>
-            <?php if ( $stock ) : ?>
+            <?php if ( $stock || $product->backorders_allowed() ) : ?>
               <button class="shop-card-btn"
-                onclick="event.stopPropagation(); window.location='<?php echo esc_url($link); ?>'">
+                onclick="event.stopPropagation();window.location='<?php echo esc_url($link); ?>'">
                 Voir
               </button>
             <?php else : ?>
@@ -153,12 +141,11 @@ $total_products = absint( wp_count_posts('product')->publish );
 
       <?php
         $idx++;
-        // Case éditoriale après la 4e carte
         if ( $idx === $editorial_after ) :
       ?>
       <div class="shop-editorial">
         <div class="shop-editorial-label"><?php echo ads_s('ads_shop_editorial_label','La philosophie'); ?></div>
-        <div class="shop-editorial-text"><?php echo ads_s('ads_shop_editorial','« L’encens comme rituel. »'); ?></div>
+        <div class="shop-editorial-text"><?php echo ads_s('ads_shop_editorial','&laquo; L&rsquo;encens comme rituel. &raquo;'); ?></div>
       </div>
       <?php endif; ?>
 
@@ -174,7 +161,7 @@ $total_products = absint( wp_count_posts('product')->publish );
     <?php endif; ?>
   </div>
 
-  <!-- ═══ PAGINATION ═══ -->
+  <!-- PAGINATION -->
   <div class="shop-pagination">
     <?php woocommerce_pagination(); ?>
   </div>
