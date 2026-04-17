@@ -52,7 +52,7 @@ function ads_c_f( $key, $default = '' ) {
     ?>
   </div>
 
-  <p class="f-signature">Thème par <span class="f-signature-brand">BUUR DIGITAL</span></p>
+  <p class="f-signature">Site créé par <span class="f-signature-brand">BUUR DIGITAL</span></p>
 </div>
 
 <?php wp_footer(); ?>

@@ -96,7 +96,7 @@ footer {
 
 /* ── Barre basse ── */
 .f-bottom {
-  background: var(--light);
+  background: var(--off);
   border-top: 1px solid var(--mid);
   padding: 1.6rem 6vw;
   display: flex;
@@ -129,13 +129,13 @@ footer {
   color: var(--stone);
   padding: 0.22rem 0.65rem;
   border: 1px solid var(--mid);
-  background: var(--white);
+  background: transparent;
 }
 
 /* Signature agence */
 .f-signature {
   font-size: 0.56rem;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
   color: var(--stone);
   margin: 0;
@@ -143,6 +143,7 @@ footer {
 
 .f-signature-brand {
   color: var(--amber);
+  letter-spacing: 0.35em;
   font-style: normal;
 }
 
