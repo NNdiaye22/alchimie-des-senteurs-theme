@@ -5,53 +5,6 @@
 function ads_c( $key, $default = '' ) {
     return wp_kses_post( get_theme_mod( $key, $default ) );
 }
-
-/**
- * Calcule le badge a afficher pour une carte produit (simple ou variable)
- * Retourne array( 'id' => string, 'label' => string ) ou null
- */
-function ads_card_badge( $product ) {
-    if ( ! $product ) return null;
-
-    if ( $product->is_type('variable') ) {
-        $any_sale      = false;
-        $any_low       = false;
-        $any_backorder = false;
-        $all_out       = true;
-
-        foreach ( $product->get_available_variations() as $v ) {
-            $vobj    = wc_get_product( $v['variation_id'] );
-            $v_stock = $vobj ? $vobj->get_stock_quantity() : null;
-            $v_back  = $vobj ? $vobj->backorders_allowed() : false;
-            $v_low   = ( $v['is_in_stock'] && $v_stock !== null && $v_stock > 0 && $v_stock <= 5 );
-            $on_sale = $v['display_regular_price'] > $v['display_price'];
-
-            if ( $v['is_in_stock'] || $v_back ) $all_out = false;
-            if ( $on_sale )  $any_sale      = true;
-            if ( $v_low )    $any_low       = true;
-            if ( $v_back && ! $v['is_in_stock'] ) $any_backorder = true;
-        }
-
-        if ( $all_out )        return array( 'id' => 'out',       'label' => '&Eacute;puis&eacute;' );
-        if ( $any_backorder )  return array( 'id' => 'backorder', 'label' => 'Bient&ocirc;t dispo' );
-        if ( $any_low )        return array( 'id' => 'low',       'label' => 'Stock limit&eacute;' );
-        if ( $any_sale )       return array( 'id' => 'promo',     'label' => 'Promo' );
-        return null;
-    }
-
-    // Produit simple
-    $in_stock   = $product->is_in_stock();
-    $backorders = $product->backorders_allowed();
-    $stock_qty  = $product->get_stock_quantity();
-    $low_stock  = ( $in_stock && $stock_qty !== null && $stock_qty > 0 && $stock_qty <= 5 );
-    $sale_price = $product->get_sale_price();
-
-    if ( ! $in_stock && $backorders ) return array( 'id' => 'backorder', 'label' => 'Bient&ocirc;t dispo' );
-    if ( ! $in_stock )                return array( 'id' => 'out',       'label' => '&Eacute;puis&eacute;' );
-    if ( $low_stock )                 return array( 'id' => 'low',       'label' => 'Plus que ' . (int)$stock_qty . ' en stock' );
-    if ( $sale_price )                return array( 'id' => 'promo',     'label' => 'Promo' );
-    return null;
-}
 ?>
 <?php get_header(); ?>
 
