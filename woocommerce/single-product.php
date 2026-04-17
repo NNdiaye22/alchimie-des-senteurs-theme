@@ -33,15 +33,28 @@ while ( have_posts() ) :
 
     $cat_id      = ( $terms && ! is_wp_error($terms) ) ? $terms[0]->term_id : 0;
 
-    // --- Donnees variations (pour boutons pill) ---
+    // --- Donnees variations ---
     $is_variable   = $product->is_type('variable');
     $variations_js = [];
+
+    // Flags pour badge initial produit variable
+    $any_on_sale    = false;
+    $any_low_stock  = false;
+    $any_backorder  = false;
+    $all_out        = true;
+
     if ( $is_variable ) {
         foreach ( $product->get_available_variations() as $v ) {
-            $vobj     = wc_get_product( $v['variation_id'] );
-            $v_stock  = $vobj ? $vobj->get_stock_quantity() : null;
-            $v_back   = $vobj ? $vobj->backorders_allowed() : false;
-            $v_low    = ( $v['is_in_stock'] && $v_stock !== null && $v_stock > 0 && $v_stock <= 5 );
+            $vobj    = wc_get_product( $v['variation_id'] );
+            $v_stock = $vobj ? $vobj->get_stock_quantity() : null;
+            $v_back  = $vobj ? $vobj->backorders_allowed() : false;
+            $v_low   = ( $v['is_in_stock'] && $v_stock !== null && $v_stock > 0 && $v_stock <= 5 );
+            $has_sale = $v['display_regular_price'] > $v['display_price'];
+
+            if ( $v['is_in_stock'] || $v_back ) $all_out = false;
+            if ( $has_sale )  $any_on_sale   = true;
+            if ( $v_low )     $any_low_stock = true;
+            if ( $v_back && ! $v['is_in_stock'] ) $any_backorder = true;
 
             $clean = function( $amount ) {
                 return html_entity_decode(
@@ -50,7 +63,6 @@ while ( have_posts() ) :
                     'UTF-8'
                 );
             };
-            $has_sale = $v['display_regular_price'] > $v['display_price'];
             $variations_js[] = [
                 'variation_id'  => $v['variation_id'],
                 'attributes'    => $v['attributes'],
@@ -66,23 +78,20 @@ while ( have_posts() ) :
         }
     }
 
-    // Prix initial affiche
+    // --- Prix initial ---
     if ( $is_variable ) {
         $prices     = $product->get_variation_prices( true );
-        $min_price  = ! empty($prices['price'])          ? min( $prices['price'] )          : 0;
-        $max_price  = ! empty($prices['price'])          ? max( $prices['price'] )          : 0;
-        $min_reg    = ! empty($prices['regular_price'])  ? min( $prices['regular_price'] )  : 0;
-        $has_any_sale = ( $min_price < $min_reg );
+        $min_price  = ! empty($prices['price'])         ? min( $prices['price'] )         : 0;
+        $max_price  = ! empty($prices['price'])         ? max( $prices['price'] )         : 0;
+        $min_reg    = ! empty($prices['regular_price']) ? min( $prices['regular_price'] ) : 0;
 
         $fmt = function( $amount ) {
             return html_entity_decode( strip_tags( wc_price( $amount ) ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
         };
-
         if ( $min_price === $max_price ) {
-            $initial_price_html = '<span class="sp-price-current">' . $fmt($min_price) . '</span>';
-            if ( $has_any_sale ) {
-                $initial_price_html = '<span class="sp-price-old">' . $fmt($min_reg) . '</span>' . $initial_price_html;
-            }
+            $initial_price_html = ( $min_price < $min_reg )
+                ? '<span class="sp-price-old">' . $fmt($min_reg) . '</span><span class="sp-price-current">' . $fmt($min_price) . '</span>'
+                : '<span class="sp-price-current">' . $fmt($min_price) . '</span>';
         } else {
             $initial_price_html = '<span class="sp-price-current">' . $fmt($min_price) . '</span>'
                                 . '<span class="sp-price-sep"> &ndash; </span>'
@@ -98,32 +107,25 @@ while ( have_posts() ) :
         }
     }
 
-    // Badge initial (produit simple ou variable sans selection)
-    // Pour variable : tous les badges sont masques par defaut, JS les gere
+    // --- Badge initial ---
+    // Produit simple
     if ( ! $is_variable ) {
-        if ( ! $in_stock && $backorders ) {
-            $initial_badge = '<div class="sp-badge badge-backorder">Bient&ocirc;t disponible</div>';
-        } elseif ( ! $in_stock ) {
-            $initial_badge = '<div class="sp-badge badge-out">&Eacute;puis&eacute;</div>';
-        } elseif ( $low_stock ) {
-            $initial_badge = '<div class="sp-badge badge-low">Plus que ' . (int)$stock_qty . ' en stock</div>';
-        } elseif ( $sale_price ) {
-            $initial_badge = '<div class="sp-badge badge-promo">Promo</div>';
-        } else {
-            $initial_badge = '';
-        }
+        if ( ! $in_stock && $backorders )      $initial_badge_id = 'backorder';
+        elseif ( ! $in_stock )                 $initial_badge_id = 'out';
+        elseif ( $low_stock )                  $initial_badge_id = 'low';
+        elseif ( $sale_price )                 $initial_badge_id = 'promo';
+        else                                   $initial_badge_id = '';
     } else {
-        // Variable : on rend tous les badges caches, JS les active
-        $initial_badge = '
-            <div class="sp-badge badge-promo"     id="badge-promo"     style="display:none">Promo</div>
-            <div class="sp-badge badge-out"       id="badge-out"       style="display:none">&Eacute;puis&eacute;</div>
-            <div class="sp-badge badge-low"       id="badge-low"       style="display:none"></div>
-            <div class="sp-badge badge-backorder" id="badge-backorder" style="display:none">Bient&ocirc;t disponible</div>
-        ';
-        // Afficher badge initial si toutes les variations sont en promo
-        if ( $has_any_sale ?? false ) {
-            // laisser JS decider apres selection
-        }
+        // Produit variable : priorite badge initial
+        // 1. Tous epuises sans backorder
+        if ( $all_out )                        $initial_badge_id = 'out';
+        // 2. Au moins une variation en backorder
+        elseif ( $any_backorder )              $initial_badge_id = 'backorder';
+        // 3. Au moins une variation stock faible
+        elseif ( $any_low_stock )              $initial_badge_id = 'low';
+        // 4. Au moins une variation en promo
+        elseif ( $any_on_sale )                $initial_badge_id = 'promo';
+        else                                   $initial_badge_id = '';
     }
 ?>
 
@@ -149,7 +151,24 @@ while ( have_posts() ) :
     <div class="sp-gallery">
       <div class="sp-img-main">
         <img id="sp-main-img" src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" />
-        <?php echo $initial_badge; ?>
+
+        <?php
+        // Tous les badges toujours dans le DOM, visibilite geree par PHP (initial) puis JS (apres selection)
+        $badges = [
+            'promo'     => 'Promo',
+            'out'       => '&Eacute;puis&eacute;',
+            'low'       => ( $is_variable ? '' : ( $low_stock ? 'Plus que ' . (int)$stock_qty . ' en stock' : '' ) ),
+            'backorder' => 'Bient&ocirc;t disponible',
+        ];
+        foreach ( $badges as $bid => $blabel ) :
+            $visible = ( $initial_badge_id === $bid );
+            $style   = $visible ? '' : ' style="display:none"';
+        ?>
+        <div class="sp-badge badge-<?php echo $bid; ?>" id="badge-<?php echo $bid; ?>"<?php echo $style; ?>>
+          <?php echo $blabel; ?>
+        </div>
+        <?php endforeach; ?>
+
       </div>
 
       <?php if ( ! empty($gallery_ids) ) : ?>
@@ -212,9 +231,7 @@ while ( have_posts() ) :
       </div>
       <?php endif; ?>
 
-      <!-- ============================================
-           FORMULAIRE VARIATION (produit variable)
-           ============================================ -->
+      <!-- FORMULAIRE VARIATION -->
       <?php if ( $is_variable && ! empty($variations_js) ) : ?>
 
         <?php
@@ -226,14 +243,10 @@ while ( have_posts() ) :
             if ( $attr->is_taxonomy() ) {
                 $opts = wc_get_product_terms( get_the_ID(), $attr_name, ['fields'=>'all'] );
                 $options = [];
-                foreach ( $opts as $t ) {
-                    $options[] = ['slug' => $t->slug, 'name' => $t->name];
-                }
+                foreach ( $opts as $t ) $options[] = ['slug' => $t->slug, 'name' => $t->name];
             } else {
                 $options = [];
-                foreach ( $attr->get_options() as $o ) {
-                    $options[] = ['slug' => sanitize_title($o), 'name' => $o];
-                }
+                foreach ( $attr->get_options() as $o ) $options[] = ['slug' => sanitize_title($o), 'name' => $o];
             }
             $variation_attrs[] = [
                 'key'     => 'attribute_' . sanitize_title($attr_name),
@@ -244,8 +257,7 @@ while ( have_posts() ) :
         ?>
 
         <form class="ads-variation-form" id="ads-variation-form"
-              data-product-id="<?php echo esc_attr(get_the_ID()); ?>"
-              data-nonce="<?php echo wp_create_nonce('woocommerce-process_checkout'); ?>">
+              data-product-id="<?php echo esc_attr(get_the_ID()); ?>">
 
           <?php foreach ( $variation_attrs as $vattr ) : ?>
           <div class="ads-var-group" data-attr-key="<?php echo esc_attr($vattr['key']); ?>">
@@ -255,8 +267,7 @@ while ( have_posts() ) :
             </div>
             <div class="ads-var-pills">
               <?php foreach ( $vattr['options'] as $opt ) : ?>
-              <button type="button"
-                      class="ads-pill"
+              <button type="button" class="ads-pill"
                       data-attr-key="<?php echo esc_attr($vattr['key']); ?>"
                       data-value="<?php echo esc_attr($opt['slug']); ?>">
                 <?php echo esc_html($opt['name']); ?>
@@ -289,6 +300,11 @@ while ( have_posts() ) :
         <script>
         (function(){
           var variations    = <?php echo wp_json_encode($variations_js); ?>;
+          var anyOnSale     = <?php echo $any_on_sale   ? 'true' : 'false'; ?>;
+          var anyLowStock   = <?php echo $any_low_stock ? 'true' : 'false'; ?>;
+          var anyBackorder  = <?php echo $any_backorder ? 'true' : 'false'; ?>;
+          var allOut        = <?php echo $all_out       ? 'true' : 'false'; ?>;
+
           var selectedAttrs = {};
           var form          = document.getElementById('ads-variation-form');
           var addBtn        = document.getElementById('ads-add-btn');
@@ -296,7 +312,6 @@ while ( have_posts() ) :
           var unavailMsg    = document.getElementById('ads-var-unavailable');
           var mainImg       = document.getElementById('sp-main-img');
 
-          // References badges
           var badgePromo     = document.getElementById('badge-promo');
           var badgeOut       = document.getElementById('badge-out');
           var badgeLow       = document.getElementById('badge-low');
@@ -307,11 +322,20 @@ while ( have_posts() ) :
               if (b) b.style.display = 'none';
             });
           }
-
           function showBadge(el, text) {
             if (!el) return;
-            if (text) el.textContent = text;
+            if (text !== undefined) el.textContent = text;
             el.style.display = 'block';
+          }
+
+          // Badge par defaut (avant toute selection) — deja gere en PHP
+          // mais on reinitialise si l'utilisateur reset ses choix
+          function resetBadge() {
+            hideAllBadges();
+            if      (allOut)        showBadge(badgeOut);
+            else if (anyBackorder)  showBadge(badgeBackorder);
+            else if (anyLowStock)   showBadge(badgeLow, 'Stock limité');
+            else if (anyOnSale)     showBadge(badgePromo);
           }
 
           document.querySelectorAll('.ads-pill').forEach(function(pill){
@@ -330,34 +354,37 @@ while ( have_posts() ) :
             });
           });
 
+          function allAttrsSelected() {
+            var ok = true;
+            document.querySelectorAll('.ads-var-group').forEach(function(g){
+              if (!selectedAttrs[g.dataset.attrKey]) ok = false;
+            });
+            return ok;
+          }
+
           function matchVariation() {
             var matched = null;
             for (var i = 0; i < variations.length; i++) {
-              var v  = variations[i];
-              var ok = true;
+              var v = variations[i], ok = true;
               for (var k in v.attributes) {
-                if (v.attributes[k] !== '' && v.attributes[k] !== selectedAttrs[k]) {
-                  ok = false; break;
-                }
+                if (v.attributes[k] !== '' && v.attributes[k] !== selectedAttrs[k]) { ok = false; break; }
               }
               if (ok) { matched = v; break; }
             }
 
             unavailMsg.style.display = 'none';
-            hideAllBadges();
 
             if (!matched) {
-              var allSelected = true;
-              document.querySelectorAll('.ads-var-group').forEach(function(g){
-                if (!selectedAttrs[g.dataset.attrKey]) allSelected = false;
-              });
-              if (allSelected) unavailMsg.style.display = 'block';
+              // Pas toutes les attrs selectionnees : revenir au badge global
+              resetBadge();
+              if (allAttrsSelected()) unavailMsg.style.display = 'block';
               addBtn.disabled = true;
               document.getElementById('ads-variation-id').value = '';
               return;
             }
 
-            // --- Badges selon etat de la variation ---
+            // Badge specifique a la variation choisie
+            hideAllBadges();
             if (!matched.is_in_stock && matched.backorders) {
               showBadge(badgeBackorder);
             } else if (!matched.is_in_stock) {
@@ -367,14 +394,13 @@ while ( have_posts() ) :
             } else if (matched.is_on_sale) {
               showBadge(badgePromo);
             }
+            // Pas de badge si variation normale en stock sans promo
 
-            // --- Prix avec ou sans barre ---
+            // Prix
             if (priceBlock) {
-              var html = '';
-              if (matched.is_on_sale && matched.regular_price) {
-                html += '<span class="sp-price-old">' + matched.regular_price + '</span>';
-              }
-              html += '<span class="sp-price-current">' + matched.price + '</span>';
+              var html = matched.is_on_sale && matched.regular_price
+                ? '<span class="sp-price-old">' + matched.regular_price + '</span><span class="sp-price-current">' + matched.price + '</span>'
+                : '<span class="sp-price-current">' + matched.price + '</span>';
               priceBlock.innerHTML = html;
             }
 
@@ -393,10 +419,8 @@ while ( have_posts() ) :
             var varId  = document.getElementById('ads-variation-id').value;
             var prodId = <?php echo get_the_ID(); ?>;
             if (!varId) return;
-
             addBtn.disabled = true;
             addBtn.classList.add('loading');
-
             var cartUrl = '<?php echo esc_url( wc_get_cart_url() ); ?>';
             fetch('<?php echo esc_url( admin_url('admin-ajax.php') ); ?>', {
               method: 'POST',
