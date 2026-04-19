@@ -323,63 +323,21 @@ while ( have_posts() ) :
             else if (anyOnSale)     showBadge(badgePromo);
           }
 
-          // Retourne true si la variation v correspond aux attrs donnes
-          function varMatches(v, attrs) {
-            for (var k in attrs) {
-              if (attrs[k] && v.attributes[k] !== '' && v.attributes[k] !== attrs[k]) return false;
-            }
-            return true;
-          }
-
-          // Grisage intelligent + selection automatique
-          // Retourne true si une selection automatique a eu lieu (pour relancer matchVariation)
+          // Grise uniquement les pills dont TOUTES les variations sont epuisees (sans backorder)
           function updatePillsAvailability() {
-            var autoSelected = false;
             document.querySelectorAll('.ads-var-group').forEach(function(group) {
               var groupKey = group.dataset.attrKey;
-              var pills    = group.querySelectorAll('.ads-pill');
-
-              // Attrs des autres groupes seulement
-              var otherAttrs = {};
-              for (var k in selectedAttrs) {
-                if (k !== groupKey) otherAttrs[k] = selectedAttrs[k];
-              }
-
-              var availableVals = [];
-              pills.forEach(function(pill) {
-                var val       = pill.dataset.value;
-                var testAttrs = Object.assign({}, otherAttrs);
-                testAttrs[groupKey] = val;
-                var hasMatch  = variations.some(function(v) { return varMatches(v, testAttrs); });
-                pill.classList.toggle('is-disabled', !hasMatch);
-                pill.disabled = !hasMatch;
-                if (hasMatch) availableVals.push({ pill: pill, val: val });
+              group.querySelectorAll('.ads-pill').forEach(function(pill) {
+                var val = pill.dataset.value;
+                // Cherche au moins une variation avec cette valeur qui est en stock ou backorder
+                var hasStock = variations.some(function(v) {
+                  if (v.attributes[groupKey] !== '' && v.attributes[groupKey] !== val) return false;
+                  return v.is_in_stock || v.backorders;
+                });
+                pill.classList.toggle('is-disabled', !hasStock);
+                pill.disabled = !hasStock;
               });
-
-              // Si la valeur active est devenue incompatible, la deselectionner
-              if (selectedAttrs[groupKey]) {
-                var activePill = group.querySelector('.ads-pill.active');
-                if (activePill && activePill.classList.contains('is-disabled')) {
-                  activePill.classList.remove('active');
-                  delete selectedAttrs[groupKey];
-                  document.getElementById('hidden-' + groupKey).value = '';
-                  var chosen = document.getElementById('chosen-' + groupKey);
-                  if (chosen) chosen.textContent = '';
-                }
-              }
-
-              // Selection automatique si une seule option disponible et rien de selectionne
-              if (!selectedAttrs[groupKey] && availableVals.length === 1) {
-                var onlyPill = availableVals[0].pill;
-                onlyPill.classList.add('active');
-                selectedAttrs[groupKey] = availableVals[0].val;
-                document.getElementById('hidden-' + groupKey).value = availableVals[0].val;
-                var chosen2 = document.getElementById('chosen-' + groupKey);
-                if (chosen2) chosen2.textContent = onlyPill.textContent.trim();
-                autoSelected = true;
-              }
             });
-            return autoSelected;
           }
 
           document.querySelectorAll('.ads-pill').forEach(function(pill){
@@ -394,10 +352,6 @@ while ( have_posts() ) :
               document.getElementById('hidden-'+key).value = val;
               var chosen = document.getElementById('chosen-'+key);
               if (chosen) chosen.textContent = this.textContent.trim();
-              // Relancer updatePillsAvailability jusqu'a stabilisation
-              var i = 0;
-              while (updatePillsAvailability() && i++ < 5) {}
-              updatePillsAvailability();
               matchVariation();
             });
           });
@@ -413,8 +367,11 @@ while ( have_posts() ) :
           function matchVariation() {
             var matched = null;
             for (var i = 0; i < variations.length; i++) {
-              var v = variations[i];
-              if (varMatches(v, selectedAttrs)) { matched = v; break; }
+              var v = variations[i], ok = true;
+              for (var k in v.attributes) {
+                if (v.attributes[k] !== '' && v.attributes[k] !== selectedAttrs[k]) { ok = false; break; }
+              }
+              if (ok) { matched = v; break; }
             }
 
             unavailMsg.style.display = 'none';
@@ -455,11 +412,7 @@ while ( have_posts() ) :
             }
           }
 
-          // Init
-          var i = 0;
-          while (updatePillsAvailability() && i++ < 5) {}
           updatePillsAvailability();
-          matchVariation();
 
           form.addEventListener('submit', function(e){
             e.preventDefault();
