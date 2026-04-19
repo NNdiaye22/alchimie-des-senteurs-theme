@@ -108,7 +108,6 @@ while ( have_posts() ) :
     }
 
     // --- Badge initial ---
-    // Produit simple
     if ( ! $is_variable ) {
         if ( ! $in_stock && $backorders )      $initial_badge_id = 'backorder';
         elseif ( ! $in_stock )                 $initial_badge_id = 'out';
@@ -116,14 +115,9 @@ while ( have_posts() ) :
         elseif ( $sale_price )                 $initial_badge_id = 'promo';
         else                                   $initial_badge_id = '';
     } else {
-        // Produit variable : priorite badge initial
-        // 1. Tous epuises sans backorder
         if ( $all_out )                        $initial_badge_id = 'out';
-        // 2. Au moins une variation en backorder
         elseif ( $any_backorder )              $initial_badge_id = 'backorder';
-        // 3. Au moins une variation stock faible
         elseif ( $any_low_stock )              $initial_badge_id = 'low';
-        // 4. Au moins une variation en promo
         elseif ( $any_on_sale )                $initial_badge_id = 'promo';
         else                                   $initial_badge_id = '';
     }
@@ -153,7 +147,6 @@ while ( have_posts() ) :
         <img id="sp-main-img" src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" />
 
         <?php
-        // Tous les badges toujours dans le DOM, visibilite geree par PHP (initial) puis JS (apres selection)
         $badges = [
             'promo'     => 'Promo',
             'out'       => '&Eacute;puis&eacute;',
@@ -327,15 +320,41 @@ while ( have_posts() ) :
             if (text !== undefined) el.textContent = text;
             el.style.display = 'block';
           }
-
-          // Badge par defaut (avant toute selection) — deja gere en PHP
-          // mais on reinitialise si l'utilisateur reset ses choix
           function resetBadge() {
             hideAllBadges();
             if      (allOut)        showBadge(badgeOut);
             else if (anyBackorder)  showBadge(badgeBackorder);
             else if (anyLowStock)   showBadge(badgeLow, 'Stock limité');
             else if (anyOnSale)     showBadge(badgePromo);
+          }
+
+          // ── GRISAGE DES PILLS INCOMPATIBLES ──────────────────────────────
+          // Pour chaque pill, vérifie si au moins une variation existe
+          // avec la valeur de cette pill ET les autres attrs déjà sélectionnés.
+          function updatePillsAvailability() {
+            document.querySelectorAll('.ads-pill').forEach(function(pill) {
+              var key = pill.dataset.attrKey;
+              var val = pill.dataset.value;
+
+              // Simule une sélection hypothétique : attrs courants + cette pill
+              var testAttrs = Object.assign({}, selectedAttrs);
+              testAttrs[key] = val;
+
+              // Cherche une variation compatible
+              var compatible = variations.some(function(v) {
+                return Object.keys(v.attributes).every(function(k) {
+                  return v.attributes[k] === '' || v.attributes[k] === testAttrs[k] || !testAttrs[k];
+                });
+              });
+
+              if (compatible) {
+                pill.classList.remove('unavailable');
+                pill.disabled = false;
+              } else {
+                pill.classList.add('unavailable');
+                pill.disabled = true;
+              }
+            });
           }
 
           document.querySelectorAll('.ads-pill').forEach(function(pill){
@@ -350,9 +369,13 @@ while ( have_posts() ) :
               document.getElementById('hidden-'+key).value = val;
               var chosen = document.getElementById('chosen-'+key);
               if (chosen) chosen.textContent = this.textContent.trim();
+              updatePillsAvailability();
               matchVariation();
             });
           });
+
+          // Initialiser le grisage au chargement
+          updatePillsAvailability();
 
           function allAttrsSelected() {
             var ok = true;
@@ -375,7 +398,6 @@ while ( have_posts() ) :
             unavailMsg.style.display = 'none';
 
             if (!matched) {
-              // Pas toutes les attrs selectionnees : revenir au badge global
               resetBadge();
               if (allAttrsSelected()) unavailMsg.style.display = 'block';
               addBtn.disabled = true;
@@ -383,7 +405,6 @@ while ( have_posts() ) :
               return;
             }
 
-            // Badge specifique a la variation choisie
             hideAllBadges();
             if (!matched.is_in_stock && matched.backorders) {
               showBadge(badgeBackorder);
@@ -394,9 +415,7 @@ while ( have_posts() ) :
             } else if (matched.is_on_sale) {
               showBadge(badgePromo);
             }
-            // Pas de badge si variation normale en stock sans promo
 
-            // Prix
             if (priceBlock) {
               var html = matched.is_on_sale && matched.regular_price
                 ? '<span class="sp-price-old">' + matched.regular_price + '</span><span class="sp-price-current">' + matched.price + '</span>'
