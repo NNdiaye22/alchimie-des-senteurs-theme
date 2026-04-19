@@ -336,6 +336,25 @@ while ( have_posts() ) :
             else if (anyOnSale)     showBadge(badgePromo);
           }
 
+          function updatePillsAvailability() {
+            document.querySelectorAll('.ads-pill').forEach(function(pill){
+              var key = pill.dataset.attrKey;
+              var val = pill.dataset.value;
+              var testAttrs = Object.assign({}, selectedAttrs);
+              testAttrs[key] = val;
+              var hasMatch = variations.some(function(v){
+                for (var attrKey in testAttrs) {
+                  if (testAttrs[attrKey] && v.attributes[attrKey] !== '' && v.attributes[attrKey] !== testAttrs[attrKey]) {
+                    return false;
+                  }
+                }
+                return true;
+              });
+              pill.classList.toggle('is-disabled', !hasMatch);
+              pill.disabled = !hasMatch;
+            });
+          }
+
           document.querySelectorAll('.ads-pill').forEach(function(pill){
             pill.addEventListener('click', function(){
               var key = this.dataset.attrKey;
@@ -348,6 +367,7 @@ while ( have_posts() ) :
               document.getElementById('hidden-'+key).value = val;
               var chosen = document.getElementById('chosen-'+key);
               if (chosen) chosen.textContent = this.textContent.trim();
+              updatePillsAvailability();
               matchVariation();
             });
           });
@@ -407,6 +427,8 @@ while ( have_posts() ) :
               unavailMsg.style.display = 'block';
             }
           }
+
+          updatePillsAvailability();
 
           form.addEventListener('submit', function(e){
             e.preventDefault();
