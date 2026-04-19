@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // ── Accordéon sous-menus mobile ───────────────────────────────────────────
   if (navMobile) {
-    const parents = navMobile.querySelectorAll('.menu-item-has-children');
+    const parents = Array.from(navMobile.querySelectorAll('.menu-item-has-children'));
 
     parents.forEach(function (item) {
       const trigger = item.querySelector(':scope > a');
@@ -56,18 +56,23 @@ document.addEventListener('DOMContentLoaded', function () {
         if (window.innerWidth > 768) return;
         e.preventDefault();
 
-        const isOpen = item.classList.contains('is-open');
+        // On lit l'état AVANT de tout modifier
+        var willOpen = !item.classList.contains('is-open');
 
+        // Ferme tous les parents
         parents.forEach(function (other) {
-          if (other !== item) other.classList.remove('is-open');
+          other.classList.remove('is-open');
         });
 
-        item.classList.toggle('is-open', !isOpen);
+        // Ouvre l'item cliqué si ce n'était pas déjà ouvert
+        if (willOpen) {
+          item.classList.add('is-open');
+        }
       });
     });
   }
 
-  // ── Compteur panier AJAX WooCommerce ─────────────────────────────────────
+  // ── Compteur panier AJAX WooCommerce ──────────────────────────────────────
   document.body.addEventListener('added_to_cart', function () {
     if (typeof adsData === 'undefined') return;
     fetch(adsData.ajaxUrl + '?action=woocommerce_get_refreshed_fragments', {
