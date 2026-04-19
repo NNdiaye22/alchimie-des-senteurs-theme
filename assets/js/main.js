@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const navMobile = document.getElementById('navMobile');
   const closeBtn  = document.getElementById('navMobileClose');
 
-  // Créer l'overlay dynamiquement
   const overlay = document.createElement('div');
   overlay.className = 'nav-overlay';
   document.body.appendChild(overlay);
@@ -37,13 +36,36 @@ document.addEventListener('DOMContentLoaded', function () {
     document.body.style.overflow = '';
   }
 
-  if (burger)   burger.addEventListener('click', openMenu);
+  if (burger) burger.addEventListener('click', openMenu);
   if (closeBtn) closeBtn.addEventListener('click', closeMenu);
   overlay.addEventListener('click', closeMenu);
 
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') closeMenu();
   });
+
+  // ── Accordéon sous-menus mobile ───────────────────────────────────────────
+  if (navMobile) {
+    const parents = navMobile.querySelectorAll('.menu-item-has-children');
+
+    parents.forEach(function (item) {
+      const trigger = item.querySelector(':scope > a');
+      if (!trigger) return;
+
+      trigger.addEventListener('click', function (e) {
+        if (window.innerWidth > 768) return;
+        e.preventDefault();
+
+        const isOpen = item.classList.contains('is-open');
+
+        parents.forEach(function (other) {
+          if (other !== item) other.classList.remove('is-open');
+        });
+
+        item.classList.toggle('is-open', !isOpen);
+      });
+    });
+  }
 
   // ── Compteur panier AJAX WooCommerce ─────────────────────────────────────
   document.body.addEventListener('added_to_cart', function () {
