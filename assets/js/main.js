@@ -6,7 +6,6 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   });
 });
 
-// ─── UI WordPress / WooCommerce ───────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function () {
 
   // ── Menu mobile : volet depuis la droite ──────────────────────────────────
@@ -39,12 +38,11 @@ document.addEventListener('DOMContentLoaded', function () {
   if (burger) burger.addEventListener('click', openMenu);
   if (closeBtn) closeBtn.addEventListener('click', closeMenu);
   overlay.addEventListener('click', closeMenu);
-
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') closeMenu();
   });
 
-  // ── Accordéon sous-menus mobile ───────────────────────────────────────────
+  // ── Accordéon sous-menus mobile (par niveau) ───────────────────────────────
   if (navMobile) {
     const parents = Array.from(navMobile.querySelectorAll('.menu-item-has-children'));
 
@@ -56,18 +54,17 @@ document.addEventListener('DOMContentLoaded', function () {
         if (window.innerWidth > 768) return;
         e.preventDefault();
 
-        // On lit l'état AVANT de tout modifier
         var willOpen = !item.classList.contains('is-open');
 
-        // Ferme tous les parents
-        parents.forEach(function (other) {
-          other.classList.remove('is-open');
-        });
-
-        // Ouvre l'item cliqué si ce n'était pas déjà ouvert
-        if (willOpen) {
-          item.classList.add('is-open');
+        // Ferme uniquement les frères du même niveau (pas les parents/ancêtres)
+        var parentList = item.parentElement;
+        if (parentList) {
+          Array.from(parentList.querySelectorAll(':scope > .menu-item-has-children')).forEach(function (sibling) {
+            if (sibling !== item) sibling.classList.remove('is-open');
+          });
         }
+
+        item.classList.toggle('is-open', willOpen);
       });
     });
   }
@@ -75,9 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // ── Compteur panier AJAX WooCommerce ──────────────────────────────────────
   document.body.addEventListener('added_to_cart', function () {
     if (typeof adsData === 'undefined') return;
-    fetch(adsData.ajaxUrl + '?action=woocommerce_get_refreshed_fragments', {
-      credentials: 'same-origin',
-    })
+    fetch(adsData.ajaxUrl + '?action=woocommerce_get_refreshed_fragments', { credentials: 'same-origin' })
       .then(function (r) { return r.json(); })
       .then(function (data) {
         if (data && typeof data.cart_count !== 'undefined') {
