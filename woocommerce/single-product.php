@@ -108,7 +108,6 @@ while ( have_posts() ) :
     }
 
     // --- Badge initial ---
-    // Produit simple
     if ( ! $is_variable ) {
         if ( ! $in_stock && $backorders )      $initial_badge_id = 'backorder';
         elseif ( ! $in_stock )                 $initial_badge_id = 'out';
@@ -116,14 +115,9 @@ while ( have_posts() ) :
         elseif ( $sale_price )                 $initial_badge_id = 'promo';
         else                                   $initial_badge_id = '';
     } else {
-        // Produit variable : priorite badge initial
-        // 1. Tous epuises sans backorder
         if ( $all_out )                        $initial_badge_id = 'out';
-        // 2. Au moins une variation en backorder
         elseif ( $any_backorder )              $initial_badge_id = 'backorder';
-        // 3. Au moins une variation stock faible
         elseif ( $any_low_stock )              $initial_badge_id = 'low';
-        // 4. Au moins une variation en promo
         elseif ( $any_on_sale )                $initial_badge_id = 'promo';
         else                                   $initial_badge_id = '';
     }
@@ -153,7 +147,6 @@ while ( have_posts() ) :
         <img id="sp-main-img" src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" />
 
         <?php
-        // Tous les badges toujours dans le DOM, visibilite geree par PHP (initial) puis JS (apres selection)
         $badges = [
             'promo'     => 'Promo',
             'out'       => '&Eacute;puis&eacute;',
@@ -327,7 +320,6 @@ while ( have_posts() ) :
             if (text !== undefined) el.textContent = text;
             el.style.display = 'block';
           }
-
           function resetBadge() {
             hideAllBadges();
             if      (allOut)        showBadge(badgeOut);
@@ -336,22 +328,59 @@ while ( have_posts() ) :
             else if (anyOnSale)     showBadge(badgePromo);
           }
 
+          // Grise les pills incompatibles avec la selection courante des AUTRES groupes
+          // et selectionne automatiquement si une seule option est disponible
           function updatePillsAvailability() {
-            document.querySelectorAll('.ads-pill').forEach(function(pill){
-              var key = pill.dataset.attrKey;
-              var val = pill.dataset.value;
-              var testAttrs = Object.assign({}, selectedAttrs);
-              testAttrs[key] = val;
-              var hasMatch = variations.some(function(v){
-                for (var attrKey in testAttrs) {
-                  if (testAttrs[attrKey] && v.attributes[attrKey] !== '' && v.attributes[attrKey] !== testAttrs[attrKey]) {
-                    return false;
+            document.querySelectorAll('.ads-var-group').forEach(function(group) {
+              var groupKey = group.dataset.attrKey;
+              var pills = group.querySelectorAll('.ads-pill');
+
+              // Construire les attrs des autres groupes seulement
+              var otherAttrs = {};
+              for (var k in selectedAttrs) {
+                if (k !== groupKey) otherAttrs[k] = selectedAttrs[k];
+              }
+
+              // Determiner quelles valeurs sont compatibles avec les autres groupes
+              var availableVals = [];
+              pills.forEach(function(pill) {
+                var val = pill.dataset.value;
+                var testAttrs = Object.assign({}, otherAttrs);
+                testAttrs[groupKey] = val;
+                var hasMatch = variations.some(function(v) {
+                  for (var attrKey in testAttrs) {
+                    if (testAttrs[attrKey] && v.attributes[attrKey] !== '' && v.attributes[attrKey] !== testAttrs[attrKey]) {
+                      return false;
+                    }
                   }
-                }
-                return true;
+                  return true;
+                });
+                pill.classList.toggle('is-disabled', !hasMatch);
+                pill.disabled = !hasMatch;
+                if (hasMatch) availableVals.push({ pill: pill, val: val });
               });
-              pill.classList.toggle('is-disabled', !hasMatch);
-              pill.disabled = !hasMatch;
+
+              // Si la valeur selectionnee est grisee, la deselectionner
+              if (selectedAttrs[groupKey]) {
+                var currentPill = group.querySelector('.ads-pill.active');
+                if (currentPill && currentPill.classList.contains('is-disabled')) {
+                  currentPill.classList.remove('active');
+                  delete selectedAttrs[groupKey];
+                  document.getElementById('hidden-' + groupKey).value = '';
+                  var chosen = document.getElementById('chosen-' + groupKey);
+                  if (chosen) chosen.textContent = '';
+                }
+              }
+
+              // Selection automatique si une seule option disponible et rien de selectionne
+              if (!selectedAttrs[groupKey] && availableVals.length === 1) {
+                var onlyPill = availableVals[0].pill;
+                onlyPill.classList.add('active');
+                selectedAttrs[groupKey] = availableVals[0].val;
+                document.getElementById('hidden-' + groupKey).value = availableVals[0].val;
+                var chosen = document.getElementById('chosen-' + groupKey);
+                if (chosen) chosen.textContent = onlyPill.textContent.trim();
+              }
             });
           }
 
@@ -429,6 +458,7 @@ while ( have_posts() ) :
           }
 
           updatePillsAvailability();
+          matchVariation();
 
           form.addEventListener('submit', function(e){
             e.preventDefault();
