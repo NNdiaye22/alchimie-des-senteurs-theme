@@ -20,6 +20,11 @@ add_filter( 'woocommerce_show_page_title', '__return_false' );
 // -------------------------------------------------------
 add_filter( 'template_include', function( $template ) {
 
+    if ( is_singular( 'product' ) ) {
+        $custom = get_template_directory() . '/woocommerce/single-product.php';
+        if ( file_exists( $custom ) ) return $custom;
+    }
+
     if ( is_tax( 'product_cat' ) ) {
         $custom = get_template_directory() . '/woocommerce/taxonomy-product_cat.php';
         if ( file_exists( $custom ) ) return $custom;
@@ -169,7 +174,7 @@ add_action( 'wp_head', function() {
         box-shadow:   0 2px 8px oklch(from var(--amber, #c4873a) l c h / 0.25);
     }
     .ads-pill:disabled,
-    .ads-pill.unavailable {
+    .ads-pill.is-disabled {
         opacity:       0.4;
         cursor:        not-allowed;
         border-color:  var(--mid, #e0d8cc);
