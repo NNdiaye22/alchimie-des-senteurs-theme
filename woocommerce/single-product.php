@@ -37,7 +37,6 @@ while ( have_posts() ) :
     $is_variable   = $product->is_type('variable');
     $variations_js = [];
 
-    // Flags pour badge initial produit variable
     $any_on_sale    = false;
     $any_low_stock  = false;
     $any_backorder  = false;
@@ -190,17 +189,14 @@ while ( have_posts() ) :
 
       <h1 class="sp-title"><?php the_title(); ?></h1>
 
-      <!-- Prix -->
       <div class="sp-price-block" id="sp-price-block">
         <?php echo $initial_price_html; ?>
       </div>
 
-      <!-- Description courte -->
       <?php if ( $short_desc ) : ?>
         <div class="sp-short-desc"><?php echo wp_kses_post($short_desc); ?></div>
       <?php endif; ?>
 
-      <!-- Attributs / Specs (non-variation uniquement) -->
       <?php if ( ! empty($attributes) ) : ?>
       <div class="sp-specs">
         <?php foreach ( $attributes as $attr ) :
@@ -224,7 +220,6 @@ while ( have_posts() ) :
       </div>
       <?php endif; ?>
 
-      <!-- FORMULAIRE VARIATION -->
       <?php if ( $is_variable && ! empty($variations_js) ) : ?>
 
         <?php
@@ -328,43 +323,44 @@ while ( have_posts() ) :
             else if (anyOnSale)     showBadge(badgePromo);
           }
 
-          // Grise les pills incompatibles avec la selection courante des AUTRES groupes
-          // et selectionne automatiquement si une seule option est disponible
+          // Retourne true si la variation v correspond aux attrs donnes
+          function varMatches(v, attrs) {
+            for (var k in attrs) {
+              if (attrs[k] && v.attributes[k] !== '' && v.attributes[k] !== attrs[k]) return false;
+            }
+            return true;
+          }
+
+          // Grisage intelligent + selection automatique
+          // Retourne true si une selection automatique a eu lieu (pour relancer matchVariation)
           function updatePillsAvailability() {
+            var autoSelected = false;
             document.querySelectorAll('.ads-var-group').forEach(function(group) {
               var groupKey = group.dataset.attrKey;
-              var pills = group.querySelectorAll('.ads-pill');
+              var pills    = group.querySelectorAll('.ads-pill');
 
-              // Construire les attrs des autres groupes seulement
+              // Attrs des autres groupes seulement
               var otherAttrs = {};
               for (var k in selectedAttrs) {
                 if (k !== groupKey) otherAttrs[k] = selectedAttrs[k];
               }
 
-              // Determiner quelles valeurs sont compatibles avec les autres groupes
               var availableVals = [];
               pills.forEach(function(pill) {
-                var val = pill.dataset.value;
+                var val       = pill.dataset.value;
                 var testAttrs = Object.assign({}, otherAttrs);
                 testAttrs[groupKey] = val;
-                var hasMatch = variations.some(function(v) {
-                  for (var attrKey in testAttrs) {
-                    if (testAttrs[attrKey] && v.attributes[attrKey] !== '' && v.attributes[attrKey] !== testAttrs[attrKey]) {
-                      return false;
-                    }
-                  }
-                  return true;
-                });
+                var hasMatch  = variations.some(function(v) { return varMatches(v, testAttrs); });
                 pill.classList.toggle('is-disabled', !hasMatch);
                 pill.disabled = !hasMatch;
                 if (hasMatch) availableVals.push({ pill: pill, val: val });
               });
 
-              // Si la valeur selectionnee est grisee, la deselectionner
+              // Si la valeur active est devenue incompatible, la deselectionner
               if (selectedAttrs[groupKey]) {
-                var currentPill = group.querySelector('.ads-pill.active');
-                if (currentPill && currentPill.classList.contains('is-disabled')) {
-                  currentPill.classList.remove('active');
+                var activePill = group.querySelector('.ads-pill.active');
+                if (activePill && activePill.classList.contains('is-disabled')) {
+                  activePill.classList.remove('active');
                   delete selectedAttrs[groupKey];
                   document.getElementById('hidden-' + groupKey).value = '';
                   var chosen = document.getElementById('chosen-' + groupKey);
@@ -378,10 +374,12 @@ while ( have_posts() ) :
                 onlyPill.classList.add('active');
                 selectedAttrs[groupKey] = availableVals[0].val;
                 document.getElementById('hidden-' + groupKey).value = availableVals[0].val;
-                var chosen = document.getElementById('chosen-' + groupKey);
-                if (chosen) chosen.textContent = onlyPill.textContent.trim();
+                var chosen2 = document.getElementById('chosen-' + groupKey);
+                if (chosen2) chosen2.textContent = onlyPill.textContent.trim();
+                autoSelected = true;
               }
             });
+            return autoSelected;
           }
 
           document.querySelectorAll('.ads-pill').forEach(function(pill){
@@ -396,6 +394,9 @@ while ( have_posts() ) :
               document.getElementById('hidden-'+key).value = val;
               var chosen = document.getElementById('chosen-'+key);
               if (chosen) chosen.textContent = this.textContent.trim();
+              // Relancer updatePillsAvailability jusqu'a stabilisation
+              var i = 0;
+              while (updatePillsAvailability() && i++ < 5) {}
               updatePillsAvailability();
               matchVariation();
             });
@@ -412,11 +413,8 @@ while ( have_posts() ) :
           function matchVariation() {
             var matched = null;
             for (var i = 0; i < variations.length; i++) {
-              var v = variations[i], ok = true;
-              for (var k in v.attributes) {
-                if (v.attributes[k] !== '' && v.attributes[k] !== selectedAttrs[k]) { ok = false; break; }
-              }
-              if (ok) { matched = v; break; }
+              var v = variations[i];
+              if (varMatches(v, selectedAttrs)) { matched = v; break; }
             }
 
             unavailMsg.style.display = 'none';
@@ -457,6 +455,9 @@ while ( have_posts() ) :
             }
           }
 
+          // Init
+          var i = 0;
+          while (updatePillsAvailability() && i++ < 5) {}
           updatePillsAvailability();
           matchVariation();
 
@@ -510,7 +511,6 @@ while ( have_posts() ) :
         </div>
       <?php endif; ?>
 
-      <!-- Meta -->
       <div class="sp-meta">
         <?php if ( $fam && $terms ) : ?>
           <div class="sp-meta-row">
@@ -529,7 +529,6 @@ while ( have_posts() ) :
     </div><!-- .sp-info -->
   </div><!-- .sp-main -->
 
-  <!-- DESCRIPTION LONGUE -->
   <?php if ( $long_desc ) : ?>
   <div class="sp-desc-section">
     <div class="sp-desc-title">Description</div>
@@ -537,7 +536,6 @@ while ( have_posts() ) :
   </div>
   <?php endif; ?>
 
-  <!-- PRODUITS SIMILAIRES -->
   <?php
   $related_args = [
     'post_type'      => 'product',
