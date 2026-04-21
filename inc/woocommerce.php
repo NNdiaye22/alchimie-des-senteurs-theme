@@ -16,6 +16,101 @@ remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 )
 add_filter( 'woocommerce_show_page_title', '__return_false' );
 
 // -------------------------------------------------------
+// CHAMPS CHECKOUT (Classic Checkout — shortcode)
+// -------------------------------------------------------
+add_filter( 'woocommerce_checkout_fields', function( $fields ) {
+
+    // Code postal : caché, rempli auto avec 00000
+    if ( isset( $fields['billing']['billing_postcode'] ) ) {
+        $fields['billing']['billing_postcode']['type']     = 'hidden';
+        $fields['billing']['billing_postcode']['required'] = false;
+        $fields['billing']['billing_postcode']['default']  = '00000';
+        $fields['billing']['billing_postcode']['label']    = '';
+        $fields['billing']['billing_postcode']['class']    = array( 'hidden' );
+    }
+    if ( isset( $fields['shipping']['shipping_postcode'] ) ) {
+        $fields['shipping']['shipping_postcode']['type']     = 'hidden';
+        $fields['shipping']['shipping_postcode']['required'] = false;
+        $fields['shipping']['shipping_postcode']['default']  = '00000';
+        $fields['shipping']['shipping_postcode']['label']    = '';
+        $fields['shipping']['shipping_postcode']['class']    = array( 'hidden' );
+    }
+
+    // Région / département : caché
+    if ( isset( $fields['billing']['billing_state'] ) ) {
+        $fields['billing']['billing_state']['type']     = 'hidden';
+        $fields['billing']['billing_state']['required'] = false;
+        $fields['billing']['billing_state']['label']    = '';
+        $fields['billing']['billing_state']['class']    = array( 'hidden' );
+    }
+    if ( isset( $fields['shipping']['shipping_state'] ) ) {
+        $fields['shipping']['shipping_state']['type']     = 'hidden';
+        $fields['shipping']['shipping_state']['required'] = false;
+        $fields['shipping']['shipping_state']['label']    = '';
+        $fields['shipping']['shipping_state']['class']    = array( 'hidden' );
+    }
+
+    // Email : facultatif
+    if ( isset( $fields['billing']['billing_email'] ) ) {
+        $fields['billing']['billing_email']['required'] = false;
+    }
+
+    // Société : caché
+    if ( isset( $fields['billing']['billing_company'] ) ) {
+        $fields['billing']['billing_company']['type']     = 'hidden';
+        $fields['billing']['billing_company']['required'] = false;
+        $fields['billing']['billing_company']['label']    = '';
+        $fields['billing']['billing_company']['class']    = array( 'hidden' );
+    }
+
+    // Téléphone : obligatoire, remonté en tête
+    if ( isset( $fields['billing']['billing_phone'] ) ) {
+        $fields['billing']['billing_phone']['required']    = true;
+        $fields['billing']['billing_phone']['priority']    = 5;
+        $fields['billing']['billing_phone']['label']       = __( 'Téléphone *', 'alchimie-des-senteurs' );
+        $fields['billing']['billing_phone']['placeholder'] = 'Ex : 77 000 00 00 ou +221 77 000 00 00';
+    }
+
+    return $fields;
+} );
+
+// Injecter 00000 si le code postal est vide au moment de la commande
+add_action( 'woocommerce_checkout_process', function() {
+    if ( empty( $_POST['billing_postcode'] ) ) {
+        $_POST['billing_postcode'] = '00000';
+    }
+    if ( isset( $_POST['shipping_postcode'] ) && empty( $_POST['shipping_postcode'] ) ) {
+        $_POST['shipping_postcode'] = '00000';
+    }
+} );
+
+// Validation serveur téléphone obligatoire
+add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) {
+    $phone = isset( $_POST['billing_phone'] ) ? trim( $_POST['billing_phone'] ) : '';
+    if ( empty( $phone ) ) {
+        $errors->add(
+            'billing_phone_required',
+            __( '<strong>Téléphone</strong> est un champ obligatoire.', 'alchimie-des-senteurs' )
+        );
+        return;
+    }
+    $cleaned = preg_replace( '/[\s\-\.\(\)]/', '', $phone );
+    if ( ! preg_match( '/^\+?[0-9]{7,15}$/', $cleaned ) ) {
+        $errors->add(
+            'billing_phone_invalid',
+            __( 'Veuillez entrer un numéro de téléphone valide (ex : 77 000 00 00).', 'alchimie-des-senteurs' )
+        );
+    }
+}, 10, 2 );
+
+// Validation téléphone assouplie (formats sénégalais)
+add_filter( 'woocommerce_validate_phone', function( $valid, $phone ) {
+    $cleaned = preg_replace( '/[\s\-\.\(\)]/', '', $phone );
+    $valid   = (bool) preg_match( '/^\+?[0-9]{7,15}$/', $cleaned );
+    return $valid;
+}, 10, 2 );
+
+// -------------------------------------------------------
 // FORCER nos templates via template_include
 // -------------------------------------------------------
 add_filter( 'template_include', function( $template ) {
@@ -32,6 +127,11 @@ add_filter( 'template_include', function( $template ) {
 
     if ( is_cart() ) {
         $custom = get_template_directory() . '/page-cart.php';
+        if ( file_exists( $custom ) ) return $custom;
+    }
+
+    if ( is_checkout() && ! is_wc_endpoint_url() ) {
+        $custom = get_template_directory() . '/page-checkout.php';
         if ( file_exists( $custom ) ) return $custom;
     }
 
