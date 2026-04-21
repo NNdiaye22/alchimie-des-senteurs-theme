@@ -4,6 +4,10 @@
  * Template page Validation de la commande — Alchimie des Senteurs
  */
 defined( 'ABSPATH' ) || exit;
+
+// Forcer WooCommerce à considérer cette page comme le checkout
+add_filter( 'woocommerce_is_checkout', '__return_true' );
+
 get_header();
 ?>
 
