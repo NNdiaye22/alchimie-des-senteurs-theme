@@ -3,18 +3,23 @@
    Alchimie des Senteurs
 ============================================== */
 
-/* ---- HERO ---- */
+/* ---- WRAP ---- */
 .thankyou-wrap,
 .myaccount-wrap {
   min-height: 100vh;
   background: var(--white);
 }
 
+/* ---- HERO ---- */
 .thankyou-hero,
 .myaccount-hero {
   padding: 9rem 6vw 4rem;
   background: var(--off);
   border-bottom: 1px solid var(--mid);
+}
+
+.thankyou-hero-inner {
+  max-width: 680px;
 }
 
 .ty-tag,
@@ -24,6 +29,7 @@
   text-transform: uppercase;
   color: var(--stone);
   margin-bottom: 1rem;
+  font-family: 'Georgia', serif;
 }
 
 .ty-title,
@@ -33,6 +39,7 @@
   letter-spacing: 0.03em;
   line-height: 1.1;
   color: var(--ink);
+  margin-bottom: 1.2rem;
 }
 
 .ty-title em,
@@ -41,13 +48,75 @@
   color: var(--amber);
 }
 
-/* ---- LAYOUT THANKYOU ---- */
+.ty-sub {
+  font-size: 0.88rem;
+  color: var(--stone);
+  line-height: 1.85;
+  max-width: 58ch;
+  font-family: 'Georgia', serif;
+}
+
+/* ---- BANDE ÉTAPES ---- */
+.ty-quick {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--mid);
+}
+
+.ty-quick-item {
+  padding: 1.8rem 2rem;
+  border-right: 1px solid var(--mid);
+  position: relative;
+}
+
+.ty-quick-item:last-child {
+  border-right: none;
+}
+
+.ty-quick-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mid);
+  margin-bottom: 1rem;
+}
+
+.ty-quick-item--done .ty-quick-dot {
+  background: var(--amber);
+}
+
+.ty-quick-item--active .ty-quick-dot {
+  background: var(--ink);
+}
+
+.ty-quick-label {
+  font-size: 0.52rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 0.4rem;
+  font-family: 'Georgia', serif;
+}
+
+.ty-quick-item--done .ty-quick-label,
+.ty-quick-item--active .ty-quick-label {
+  color: var(--ink);
+}
+
+.ty-quick-value {
+  font-size: 0.82rem;
+  color: var(--stone);
+  font-family: 'Georgia', serif;
+  line-height: 1.5;
+}
+
+/* ---- LAYOUT ---- */
 .ty-layout {
   max-width: 1100px;
   margin: 0 auto;
   padding: 4rem 6vw 6rem;
   display: grid;
-  grid-template-columns: 1fr 340px;
+  grid-template-columns: 1fr 320px;
   gap: 4rem;
   align-items: start;
 }
@@ -78,20 +147,6 @@
   border-left-color: var(--stone);
 }
 
-.ty-notice-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
-  border: 1px solid var(--amber);
-  color: var(--amber);
-  font-size: 0.85rem;
-  font-style: normal;
-  margin-top: 0.1rem;
-}
-
 .ty-notice p {
   font-size: 0.84rem;
   line-height: 1.8;
@@ -115,13 +170,8 @@
   border-bottom: 1px solid var(--mid);
 }
 
-.ty-meta-item:nth-child(2n) {
-  border-right: none;
-}
-
-.ty-meta-item:nth-last-child(-n+2) {
-  border-bottom: none;
-}
+.ty-meta-item:nth-child(2n) { border-right: none; }
+.ty-meta-item:nth-last-child(-n+2) { border-bottom: none; }
 
 .ty-meta-label {
   display: block;
@@ -158,27 +208,12 @@
 }
 
 .ty-status--processing,
-.ty-status--on-hold {
-  background: rgba(196,135,58,0.1);
-  color: var(--amber);
-}
-
-.ty-status--completed {
-  background: rgba(67,122,34,0.08);
-  color: #437a22;
-}
-
+.ty-status--on-hold { background: rgba(196,135,58,0.1); color: var(--amber); }
+.ty-status--completed { background: rgba(67,122,34,0.08); color: #437a22; }
 .ty-status--cancelled,
 .ty-status--refunded,
-.ty-status--failed {
-  background: rgba(185,74,72,0.07);
-  color: #b94a48;
-}
-
-.ty-status--pending {
-  background: var(--light);
-  color: var(--stone);
-}
+.ty-status--failed { background: rgba(185,74,72,0.07); color: #b94a48; }
+.ty-status--pending { background: var(--light); color: var(--stone); }
 
 /* ---- SECTIONS ---- */
 .ty-section {
@@ -215,13 +250,9 @@
   text-align: left;
 }
 
-.ty-table-right {
-  text-align: right !important;
-}
+.ty-table-right { text-align: right !important; }
 
-.ty-table tbody tr {
-  border-bottom: 1px solid var(--light);
-}
+.ty-table tbody tr { border-bottom: 1px solid var(--light); }
 
 .ty-table tbody td {
   padding: 1rem 0;
@@ -262,29 +293,6 @@
   border-top: 1px solid var(--mid);
 }
 
-/* Commandes : colonnes spéciales */
-.orders-table .order-num {
-  color: var(--ink);
-  text-decoration: none;
-  border-bottom: 1px solid var(--mid);
-  font-size: 0.84rem;
-  transition: color 0.2s, border-color 0.2s;
-}
-.orders-table .order-num:hover {
-  color: var(--amber);
-  border-color: var(--amber);
-}
-.orders-table .order-date {
-  font-size: 0.78rem;
-  color: var(--stone);
-}
-.orders-table .order-total {
-  font-size: 0.84rem;
-}
-.orders-table .order-actions {
-  text-align: right;
-}
-
 /* ---- PAIEMENT ---- */
 .ty-payment-method {
   font-size: 0.9rem;
@@ -292,6 +300,7 @@
   margin-bottom: 0.5rem;
   font-family: 'Georgia', serif;
 }
+
 .ty-payment-note {
   font-size: 0.76rem;
   color: var(--stone);
@@ -316,7 +325,7 @@
   letter-spacing: 0.05em;
 }
 
-/* ---- ASIDE (colonne droite thankyou) ---- */
+/* ---- ASIDE ---- */
 .ty-aside {
   position: sticky;
   top: 7rem;
@@ -330,6 +339,19 @@
 
 .ty-aside .ty-section-title {
   margin-bottom: 1.2rem;
+}
+
+.ty-aside-note {
+  margin-top: 1.5rem;
+  padding: 1.4rem 1.8rem;
+  border-left: 2px solid var(--mid);
+}
+
+.ty-aside-note p {
+  font-size: 0.78rem;
+  color: var(--stone);
+  line-height: 1.8;
+  font-family: 'Georgia', serif;
 }
 
 /* ---- BOUTONS ---- */
@@ -361,7 +383,7 @@
 }
 
 .ty-btn-ghost {
-  display: inline-block;
+  display: block;
   text-align: center;
   padding: 0.9rem 2rem;
   background: transparent;
@@ -373,7 +395,6 @@
   font-family: 'Georgia', serif;
   border: 1px solid var(--mid);
   transition: border-color 0.25s, color 0.25s;
-  cursor: pointer;
 }
 
 .ty-btn-ghost:hover {
@@ -381,10 +402,18 @@
   color: var(--ink);
 }
 
-.btn-sm {
-  padding: 0.5rem 1rem;
-  font-size: 0.56rem;
+/* Commandes : colonnes spéciales */
+.orders-table .order-num {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--mid);
+  font-size: 0.84rem;
+  transition: color 0.2s, border-color 0.2s;
 }
+.orders-table .order-num:hover { color: var(--amber); border-color: var(--amber); }
+.orders-table .order-date { font-size: 0.78rem; color: var(--stone); }
+.orders-table .order-total { font-size: 0.84rem; }
+.orders-table .order-actions { text-align: right; }
 
 /* ---- BACK LINK ---- */
 .ty-back-link {
@@ -398,10 +427,7 @@
   transition: color 0.2s, border-color 0.2s;
   font-family: 'Georgia', serif;
 }
-.ty-back-link:hover {
-  color: var(--ink);
-  border-color: var(--ink);
-}
+.ty-back-link:hover { color: var(--ink); border-color: var(--ink); }
 
 /* ---- PAGINATION ---- */
 .ty-pagination {
@@ -420,10 +446,7 @@
   padding: 4rem 2rem;
 }
 
-.ty-empty-icon {
-  color: var(--mid);
-  margin-bottom: 1.5rem;
-}
+.ty-empty-icon { color: var(--mid); margin-bottom: 1.5rem; }
 
 .ty-empty-title {
   font-size: 1rem;
@@ -464,21 +487,12 @@
   font-family: 'Georgia', serif;
   transition: color 0.2s, background 0.2s;
 }
-
-.myaccount-nav-item:last-child {
-  border-bottom: none;
-}
-
+.myaccount-nav-item:last-child { border-bottom: none; }
 .myaccount-nav-item:hover,
-.myaccount-nav-item.active {
-  color: var(--ink);
-  background: var(--off);
-}
+.myaccount-nav-item.active { color: var(--ink); background: var(--off); }
 
 /* ---- CONTENU MYACCOUNT ---- */
-.myaccount-content {
-  min-width: 0;
-}
+.myaccount-content { min-width: 0; }
 
 .myaccount-content h2 {
   font-size: 0.54rem;
@@ -492,10 +506,8 @@
   font-family: 'Georgia', serif;
 }
 
-/* Formulaires --*/
-.myaccount-content .form-row {
-  margin-bottom: 1.5rem;
-}
+/* Formulaires */
+.myaccount-content .form-row { margin-bottom: 1.5rem; }
 .myaccount-content .form-row label {
   display: block;
   font-size: 0.56rem;
@@ -524,10 +536,7 @@
   border-radius: 0;
 }
 .myaccount-content .form-row input:focus,
-.myaccount-content .form-row select:focus {
-  outline: none;
-  border-color: var(--amber);
-}
+.myaccount-content .form-row select:focus { outline: none; border-color: var(--amber); }
 .myaccount-content .woocommerce-Button,
 .myaccount-content .button {
   display: inline-block;
@@ -544,10 +553,7 @@
   text-decoration: none;
 }
 .myaccount-content .woocommerce-Button:hover,
-.myaccount-content .button:hover {
-  background: var(--amber);
-  border-color: var(--amber);
-}
+.myaccount-content .button:hover { background: var(--amber); border-color: var(--amber); }
 
 /* Messages WooCommerce */
 .myaccount-content .woocommerce-Message,
@@ -585,7 +591,20 @@
   list-style: none;
 }
 
+/* btn-sm helper */
+.btn-sm { padding: 0.5rem 1rem; font-size: 0.56rem; }
+
 /* ---- RESPONSIVE ---- */
+@media (max-width: 1024px) {
+  .ty-quick {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .ty-quick-item:nth-child(2) { border-right: none; }
+  .ty-quick-item:nth-child(3) { border-right: 1px solid var(--mid); }
+  .ty-quick-item:nth-child(3),
+  .ty-quick-item:nth-child(4) { border-top: 1px solid var(--mid); }
+}
+
 @media (max-width: 900px) {
   .ty-layout {
     grid-template-columns: 1fr;
@@ -607,31 +626,21 @@
     border-right: 1px solid var(--mid);
   }
 }
+
 @media (max-width: 600px) {
   .thankyou-hero,
-  .myaccount-hero {
-    padding: 7rem 6vw 2.5rem;
-  }
-  .ty-meta-grid {
+  .myaccount-hero { padding: 7rem 6vw 2.5rem; }
+  .ty-quick {
     grid-template-columns: 1fr;
   }
-  .ty-meta-item {
-    border-right: none;
-  }
-  .ty-meta-item:nth-last-child(-n+2) {
-    border-bottom: 1px solid var(--mid);
-  }
-  .ty-meta-item:last-child {
-    border-bottom: none;
-  }
+  .ty-quick-item { border-right: none; border-bottom: 1px solid var(--mid); }
+  .ty-quick-item:last-child { border-bottom: none; }
+  .ty-quick-item:nth-child(3) { border-right: none; }
+  .ty-meta-grid { grid-template-columns: 1fr; }
+  .ty-meta-item { border-right: none; }
+  .ty-meta-item:nth-last-child(-n+2) { border-bottom: 1px solid var(--mid); }
+  .ty-meta-item:last-child { border-bottom: none; }
   .ty-table thead { display: none; }
-  .ty-table tbody tr {
-    display: block;
-    padding: 1rem 0;
-  }
-  .ty-table tbody td {
-    display: block;
-    text-align: left !important;
-    padding: 0.3rem 0;
-  }
+  .ty-table tbody tr { display: block; padding: 1rem 0; }
+  .ty-table tbody td { display: block; text-align: left !important; padding: 0.3rem 0; }
 }

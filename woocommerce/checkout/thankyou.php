@@ -4,7 +4,7 @@
  */
 defined( 'ABSPATH' ) || exit;
 
-// Récupérer $order_id de façon fiable (WC le passe via extract mais peut être null)
+// Récupérer $order_id de façon fiable
 if ( empty( $order_id ) ) {
     global $wp;
     $order_id = isset( $wp->query_vars['order-received'] ) ? absint( $wp->query_vars['order-received'] ) : 0;
@@ -17,58 +17,46 @@ get_header();
 
 <?php if ( $order_id && ( $order = wc_get_order( $order_id ) ) ) : ?>
 
-  <!-- EN-TÊTE CONFIRMATION -->
-  <div class="ty-hero">
-    <div class="ty-hero-inner">
-      <div class="ty-hero-check">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <circle cx="14" cy="14" r="13.25" stroke="currentColor" stroke-width="1.5"/>
-          <polyline points="8,14 12,18 20,10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        </svg>
-      </div>
-      <p class="ty-hero-tag">Commande n°<?php echo esc_html( $order->get_order_number() ); ?></p>
-      <h1 class="ty-hero-title">Merci pour<br><em>votre confiance</em></h1>
-      <p class="ty-hero-sub">Votre commande a bien été enregistrée. Notre équipe vous contactera dans les meilleurs délais pour confirmer l’envoi et vous communiquer les frais de livraison.</p>
+  <!-- HERO -->
+  <section class="thankyou-hero">
+    <div class="thankyou-hero-inner">
+      <div class="ty-tag">Commande n°<?php echo esc_html( $order->get_order_number() ); ?></div>
+      <h1 class="ty-title">Merci pour<br><em>votre confiance</em></h1>
+      <p class="ty-sub">Votre commande a bien été enregistrée. Notre équipe vous contactera dans les meilleurs délais pour confirmer l'envoi et vous communiquer les frais de livraison.</p>
+    </div>
+  </section>
+
+  <!-- BANDE ÉTAPES RAPIDES -->
+  <div class="ty-quick">
+    <div class="ty-quick-item ty-quick-item--done">
+      <div class="ty-quick-dot"></div>
+      <div class="ty-quick-label">Commande reçue</div>
+      <div class="ty-quick-value"><?php echo esc_html( wc_format_datetime( $order->get_date_created() ) ); ?></div>
+    </div>
+    <div class="ty-quick-item ty-quick-item--active">
+      <div class="ty-quick-dot"></div>
+      <div class="ty-quick-label">Confirmation</div>
+      <div class="ty-quick-value">Appel au <?php echo esc_html( $order->get_billing_phone() ?: '—' ); ?></div>
+    </div>
+    <div class="ty-quick-item">
+      <div class="ty-quick-dot"></div>
+      <div class="ty-quick-label">Préparation</div>
+      <div class="ty-quick-value">Après accord</div>
+    </div>
+    <div class="ty-quick-item">
+      <div class="ty-quick-dot"></div>
+      <div class="ty-quick-label">Livraison</div>
+      <div class="ty-quick-value">Règlement à réception</div>
     </div>
   </div>
 
-  <!-- ÉTAPES DE SUIVI -->
-  <div class="ty-steps">
-    <div class="ty-step ty-step--done">
-      <div class="ty-step-dot"></div>
-      <div class="ty-step-body">
-        <span class="ty-step-title">Commande reçue</span>
-        <span class="ty-step-desc"><?php echo esc_html( wc_format_datetime( $order->get_date_created() ) ); ?></span>
-      </div>
-    </div>
-    <div class="ty-step ty-step--pending">
-      <div class="ty-step-dot"></div>
-      <div class="ty-step-body">
-        <span class="ty-step-title">Confirmation &amp; frais de livraison</span>
-        <span class="ty-step-desc">Nous vous rappelons au <?php echo esc_html( $order->get_billing_phone() ?: '—' ); ?></span>
-      </div>
-    </div>
-    <div class="ty-step ty-step--future">
-      <div class="ty-step-dot"></div>
-      <div class="ty-step-body">
-        <span class="ty-step-title">Préparation &amp; expédition</span>
-        <span class="ty-step-desc">Dès confirmation de votre accord</span>
-      </div>
-    </div>
-    <div class="ty-step ty-step--future">
-      <div class="ty-step-dot"></div>
-      <div class="ty-step-body">
-        <span class="ty-step-title">Livraison &amp; paiement</span>
-        <span class="ty-step-desc">Règlement en espèces à la réception</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- DÉTAIL COMMANDE -->
+  <!-- LAYOUT PRINCIPAL -->
   <div class="ty-layout">
 
+    <!-- COLONNE PRINCIPALE -->
     <div class="ty-main">
 
+      <!-- Détail commande -->
       <div class="ty-section">
         <h2 class="ty-section-title">Détail de la commande</h2>
         <table class="ty-table">
@@ -100,14 +88,16 @@ get_header();
         </table>
       </div>
 
-      <div class="ty-section ty-payment-block">
+      <!-- Paiement -->
+      <div class="ty-section">
         <h2 class="ty-section-title">Paiement</h2>
         <p class="ty-payment-method"><?php echo esc_html( $order->get_payment_method_title() ); ?></p>
-        <p class="ty-payment-note">Le règlement s&rsquo;effectue en espèces au moment de la livraison, après confirmation téléphonique.</p>
+        <p class="ty-payment-note">Le règlement s'effectue en espèces au moment de la livraison, après confirmation téléphonique.</p>
       </div>
 
     </div>
 
+    <!-- ASIDE -->
     <div class="ty-aside">
 
       <div class="ty-section">
@@ -120,8 +110,8 @@ get_header();
         </address>
       </div>
 
-      <div class="ty-aside-info">
-        <p>Vous avez une question&nbsp;? Contactez-nous directement — nous sommes disponibles pour vous accompagner.</p>
+      <div class="ty-aside-note">
+        <p>Une question ? Contactez-nous — nous sommes disponibles pour vous accompagner.</p>
       </div>
 
       <div class="ty-actions">
