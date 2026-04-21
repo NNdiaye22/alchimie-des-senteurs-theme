@@ -22,11 +22,11 @@ add_filter( 'woocommerce_checkout_fields', function( $fields ) {
 
     // Code postal : caché visuellement, valeur par défaut 00000
     if ( isset( $fields['billing']['billing_postcode'] ) ) {
-        $fields['billing']['billing_postcode']['type']      = 'hidden';
-        $fields['billing']['billing_postcode']['required']  = false;
-        $fields['billing']['billing_postcode']['default']   = '00000';
-        $fields['billing']['billing_postcode']['class']     = array( 'hidden' );
-        $fields['billing']['billing_postcode']['label']     = '';
+        $fields['billing']['billing_postcode']['type']     = 'hidden';
+        $fields['billing']['billing_postcode']['required'] = false;
+        $fields['billing']['billing_postcode']['default']  = '00000';
+        $fields['billing']['billing_postcode']['class']    = array( 'hidden' );
+        $fields['billing']['billing_postcode']['label']    = '';
     }
     if ( isset( $fields['shipping']['shipping_postcode'] ) ) {
         $fields['shipping']['shipping_postcode']['type']     = 'hidden';
@@ -47,7 +47,9 @@ add_filter( 'woocommerce_checkout_fields', function( $fields ) {
     return $fields;
 } );
 
-// Injecter 00000 si le code postal est vide au moment de la commande
+// -------------------------------------------------------
+// Injecter 00000 si le code postal est vide
+// -------------------------------------------------------
 add_action( 'woocommerce_checkout_process', function() {
     if ( empty( $_POST['billing_postcode'] ) ) {
         $_POST['billing_postcode'] = '00000';
@@ -58,12 +60,28 @@ add_action( 'woocommerce_checkout_process', function() {
 } );
 
 // -------------------------------------------------------
-// Validation téléphone assouplie (formats sénégalais)
+// Validation serveur IMPARABLE du téléphone
+// S'exécute après tous les filtres WooCommerce
 // -------------------------------------------------------
-add_filter( 'woocommerce_validate_phone', function( $valid, $phone ) {
+add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) {
+    $phone = isset( $_POST['billing_phone'] ) ? trim( $_POST['billing_phone'] ) : '';
+
+    if ( empty( $phone ) ) {
+        $errors->add(
+            'billing_phone_required',
+            __( '<strong>Téléphone</strong> est un champ obligatoire.', 'alchimie-des-senteurs' )
+        );
+        return;
+    }
+
+    // Validation format sénégalais (7–15 chiffres, +, espaces, tirets)
     $cleaned = preg_replace( '/[\s\-\.\(\)]/', '', $phone );
-    $valid   = (bool) preg_match( '/^\+?[0-9]{7,15}$/', $cleaned );
-    return $valid;
+    if ( ! preg_match( '/^\+?[0-9]{7,15}$/', $cleaned ) ) {
+        $errors->add(
+            'billing_phone_invalid',
+            __( 'Veuillez entrer un numéro de téléphone valide (ex : 77 000 00 00).', 'alchimie-des-senteurs' )
+        );
+    }
 }, 10, 2 );
 
 // -------------------------------------------------------
