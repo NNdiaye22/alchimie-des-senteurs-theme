@@ -1,0 +1,191 @@
+/* ==============================================
+   PAGES LÉGALES (privacy, cgv, mentions)
+   Alchimie des Senteurs
+============================================== */
+
+.legal-wrap {
+  min-height: 100vh;
+  background: var(--white);
+}
+
+/* Hero partagé via ty-tag / ty-title */
+.legal-hero {
+  padding: 9rem 6vw 4rem;
+  background: var(--off);
+  border-bottom: 1px solid var(--mid);
+}
+
+.legal-body {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 5rem 6vw 7rem;
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+/* ---- SOMMAIRE ---- */
+.legal-toc {
+  position: sticky;
+  top: 7rem;
+}
+
+.legal-toc-label {
+  font-size: 0.52rem;
+  letter-spacing: 0.55em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 1.2rem;
+  font-family: 'Georgia', serif;
+}
+
+.legal-toc nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--mid);
+}
+
+.legal-toc nav a {
+  display: block;
+  padding: 0.8rem 1rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--stone);
+  text-decoration: none;
+  border-bottom: 1px solid var(--mid);
+  font-family: 'Georgia', serif;
+  transition: color 0.2s, background 0.2s;
+}
+
+.legal-toc nav a:last-child {
+  border-bottom: none;
+}
+
+.legal-toc nav a:hover {
+  color: var(--ink);
+  background: var(--off);
+}
+
+/* ---- CONTENU ARTICLE ---- */
+.legal-intro {
+  font-size: 0.92rem;
+  line-height: 2;
+  color: var(--stone);
+  margin-bottom: 3.5rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--mid);
+  font-family: 'Georgia', serif;
+}
+
+.legal-content section {
+  margin-bottom: 3.5rem;
+  padding-bottom: 3.5rem;
+  border-bottom: 1px solid var(--light);
+  scroll-margin-top: 8rem;
+}
+
+.legal-content section:last-child {
+  border-bottom: none;
+}
+
+.legal-content h2 {
+  font-size: 0.58rem;
+  letter-spacing: 0.55em;
+  text-transform: uppercase;
+  color: var(--stone);
+  font-weight: 400;
+  margin-bottom: 1.5rem;
+  font-family: 'Georgia', serif;
+}
+
+.legal-content p {
+  font-size: 0.86rem;
+  line-height: 2;
+  color: var(--ink);
+  margin-bottom: 1.2rem;
+  font-family: 'Georgia', serif;
+  max-width: 62ch;
+}
+
+.legal-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.legal-content ul li {
+  font-size: 0.84rem;
+  line-height: 1.75;
+  color: var(--ink);
+  padding-left: 1.5rem;
+  position: relative;
+  font-family: 'Georgia', serif;
+}
+
+.legal-content ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 6px;
+  height: 1px;
+  background: var(--amber);
+}
+
+.legal-content a {
+  color: var(--amber);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(196,135,58,0.3);
+  transition: border-color 0.2s;
+}
+
+.legal-content a:hover {
+  border-color: var(--amber);
+}
+
+.legal-contact-block {
+  background: var(--off);
+  border: 1px solid var(--mid);
+  border-left: 2px solid var(--amber);
+  padding: 1.5rem 2rem;
+  font-size: 0.84rem;
+  line-height: 2;
+  color: var(--ink);
+  font-family: 'Georgia', serif;
+  margin: 1.5rem 0;
+}
+
+.legal-update {
+  font-size: 0.72rem !important;
+  color: var(--stone) !important;
+  font-style: italic;
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 800px) {
+  .legal-body {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    padding-top: 3rem;
+  }
+  .legal-toc {
+    position: static;
+  }
+  .legal-toc nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .legal-toc nav a {
+    border-right: 1px solid var(--mid);
+    border-bottom: none;
+  }
+  .legal-hero {
+    padding: 7rem 6vw 2.5rem;
+  }
+}
