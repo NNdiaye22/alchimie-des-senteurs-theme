@@ -16,11 +16,11 @@ remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 )
 add_filter( 'woocommerce_show_page_title', '__return_false' );
 
 // -------------------------------------------------------
-// CHAMPS CHECKOUT : code postal facultatif, téléphone obligatoire
+// CHAMPS CHECKOUT
 // -------------------------------------------------------
 add_filter( 'woocommerce_checkout_fields', function( $fields ) {
 
-    // Code postal facultatif
+    // Code postal : facultatif
     if ( isset( $fields['billing']['billing_postcode'] ) ) {
         $fields['billing']['billing_postcode']['required'] = false;
     }
@@ -28,7 +28,7 @@ add_filter( 'woocommerce_checkout_fields', function( $fields ) {
         $fields['shipping']['shipping_postcode']['required'] = false;
     }
 
-    // Téléphone sénégalais : obligatoire, en tête de formulaire
+    // Téléphone : obligatoire, remonté en tête
     if ( isset( $fields['billing']['billing_phone'] ) ) {
         $fields['billing']['billing_phone']['required']    = true;
         $fields['billing']['billing_phone']['priority']    = 5;
@@ -40,14 +40,42 @@ add_filter( 'woocommerce_checkout_fields', function( $fields ) {
 } );
 
 // -------------------------------------------------------
-// Validation téléphone assouplie (accepte formats sénégalais)
-// WooCommerce valide nativement le téléphone avec une regex stricte
-// On la remplace pour accepter 7+ chiffres, espaces, +, tirets
+// Désactiver la validation du code postal par pays
+// (WooCommerce force le code postal même si required=false
+//  pour certains pays via woocommerce_get_country_locale)
+// -------------------------------------------------------
+add_filter( 'woocommerce_get_country_locale', function( $locale ) {
+    foreach ( $locale as $country => $fields ) {
+        if ( isset( $locale[ $country ]['postcode'] ) ) {
+            $locale[ $country ]['postcode']['required'] = false;
+            $locale[ $country ]['postcode']['hidden']   = false;
+        }
+    }
+    return $locale;
+} );
+
+// Désactiver également la validation côté serveur du code postal
+add_filter( 'woocommerce_checkout_process', function() {
+    // Rien à faire : on supprime juste l'erreur si le champ est vide
+}, 1 );
+
+add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) {
+    // Retirer l'erreur de code postal si elle a été ajoutée
+    $error_codes = $errors->get_error_codes();
+    foreach ( $error_codes as $code ) {
+        $message = $errors->get_error_message( $code );
+        if ( strpos( $message, 'postcode' ) !== false || strpos( $message, 'code postal' ) !== false || strpos( $message, 'ZIP' ) !== false ) {
+            $errors->remove( $code );
+        }
+    }
+}, 10, 2 );
+
+// -------------------------------------------------------
+// Validation téléphone assouplie (formats sénégalais)
 // -------------------------------------------------------
 add_filter( 'woocommerce_validate_phone', function( $valid, $phone ) {
     $cleaned = preg_replace( '/[\s\-\.\(\)]/', '', $phone );
-    // Accepte : +221XXXXXXXX, 77XXXXXXX, 33XXXXXXX, etc. (min 7 chiffres)
-    $valid = (bool) preg_match( '/^\+?[0-9]{7,15}$/', $cleaned );
+    $valid   = (bool) preg_match( '/^\+?[0-9]{7,15}$/', $cleaned );
     return $valid;
 }, 10, 2 );
 
