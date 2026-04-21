@@ -16,6 +16,31 @@ remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 )
 add_filter( 'woocommerce_show_page_title', '__return_false' );
 
 // -------------------------------------------------------
+// CHAMPS CHECKOUT : code postal facultatif, téléphone obligatoire
+// -------------------------------------------------------
+add_filter( 'woocommerce_checkout_fields', function( $fields ) {
+
+    // Code postal de facturation : facultatif
+    if ( isset( $fields['billing']['billing_postcode'] ) ) {
+        $fields['billing']['billing_postcode']['required'] = false;
+    }
+    // Code postal de livraison : facultatif
+    if ( isset( $fields['shipping']['shipping_postcode'] ) ) {
+        $fields['shipping']['shipping_postcode']['required'] = false;
+    }
+
+    // Téléphone : obligatoire + affiché en premier dans le bloc facturation
+    if ( isset( $fields['billing']['billing_phone'] ) ) {
+        $fields['billing']['billing_phone']['required'] = true;
+        $fields['billing']['billing_phone']['priority'] = 5; // avant prénom/nom
+        $fields['billing']['billing_phone']['label']    = __( 'Téléphone', 'alchimie-des-senteurs' );
+        $fields['billing']['billing_phone']['placeholder'] = '+33 6 00 00 00 00';
+    }
+
+    return $fields;
+} );
+
+// -------------------------------------------------------
 // FORCER nos templates via template_include
 // -------------------------------------------------------
 add_filter( 'template_include', function( $template ) {
