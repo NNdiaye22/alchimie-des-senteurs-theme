@@ -20,12 +20,20 @@ add_filter( 'woocommerce_show_page_title', '__return_false' );
 // -------------------------------------------------------
 add_filter( 'woocommerce_checkout_fields', function( $fields ) {
 
-    // Code postal : facultatif
+    // Code postal : caché visuellement, valeur par défaut 00000
     if ( isset( $fields['billing']['billing_postcode'] ) ) {
-        $fields['billing']['billing_postcode']['required'] = false;
+        $fields['billing']['billing_postcode']['type']      = 'hidden';
+        $fields['billing']['billing_postcode']['required']  = false;
+        $fields['billing']['billing_postcode']['default']   = '00000';
+        $fields['billing']['billing_postcode']['class']     = array( 'hidden' );
+        $fields['billing']['billing_postcode']['label']     = '';
     }
     if ( isset( $fields['shipping']['shipping_postcode'] ) ) {
+        $fields['shipping']['shipping_postcode']['type']     = 'hidden';
         $fields['shipping']['shipping_postcode']['required'] = false;
+        $fields['shipping']['shipping_postcode']['default']  = '00000';
+        $fields['shipping']['shipping_postcode']['class']    = array( 'hidden' );
+        $fields['shipping']['shipping_postcode']['label']    = '';
     }
 
     // Téléphone : obligatoire, remonté en tête
@@ -39,36 +47,15 @@ add_filter( 'woocommerce_checkout_fields', function( $fields ) {
     return $fields;
 } );
 
-// -------------------------------------------------------
-// Désactiver la validation du code postal par pays
-// (WooCommerce force le code postal même si required=false
-//  pour certains pays via woocommerce_get_country_locale)
-// -------------------------------------------------------
-add_filter( 'woocommerce_get_country_locale', function( $locale ) {
-    foreach ( $locale as $country => $fields ) {
-        if ( isset( $locale[ $country ]['postcode'] ) ) {
-            $locale[ $country ]['postcode']['required'] = false;
-            $locale[ $country ]['postcode']['hidden']   = false;
-        }
+// Injecter 00000 si le code postal est vide au moment de la commande
+add_action( 'woocommerce_checkout_process', function() {
+    if ( empty( $_POST['billing_postcode'] ) ) {
+        $_POST['billing_postcode'] = '00000';
     }
-    return $locale;
+    if ( isset( $_POST['shipping_postcode'] ) && empty( $_POST['shipping_postcode'] ) ) {
+        $_POST['shipping_postcode'] = '00000';
+    }
 } );
-
-// Désactiver également la validation côté serveur du code postal
-add_filter( 'woocommerce_checkout_process', function() {
-    // Rien à faire : on supprime juste l'erreur si le champ est vide
-}, 1 );
-
-add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) {
-    // Retirer l'erreur de code postal si elle a été ajoutée
-    $error_codes = $errors->get_error_codes();
-    foreach ( $error_codes as $code ) {
-        $message = $errors->get_error_message( $code );
-        if ( strpos( $message, 'postcode' ) !== false || strpos( $message, 'code postal' ) !== false || strpos( $message, 'ZIP' ) !== false ) {
-            $errors->remove( $code );
-        }
-    }
-}, 10, 2 );
 
 // -------------------------------------------------------
 // Validation téléphone assouplie (formats sénégalais)
