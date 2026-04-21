@@ -17,48 +17,41 @@ add_filter( 'woocommerce_show_page_title', '__return_false' );
 add_filter( 'woocommerce_cart_needs_shipping',         '__return_false' );
 add_filter( 'woocommerce_cart_needs_shipping_address', '__return_false' );
 
-// Supprimer erreurs de validation liées à l'expédition
-add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) {
-    foreach ( $errors->get_error_codes() as $code ) {
-        if ( strpos( $code, 'shipping' ) !== false ) {
-            $errors->remove( $code );
-        }
-    }
-}, 20, 2 );
-
 // -------------------------------------------------------
-// PAIEMENT — Forcer "paiement à la livraison" (cod)
+// PAIEMENT — Forcer cod à tous les niveaux
 // -------------------------------------------------------
 
-// Toujours rendre cod disponible, quelle que soit la méthode d'expédition
+// 1. cod toujours disponible peu importe l'expédition
 add_filter( 'woocommerce_available_payment_gateways', function( $gateways ) {
-    // Si cod existe, on le force disponible
     if ( isset( $gateways['cod'] ) ) {
+        // Forcer la propriété interne de disponibilité
+        $gateways['cod']->enabled = 'yes';
         return array( 'cod' => $gateways['cod'] );
     }
     return $gateways;
+}, 9999 );
+
+// 2. cod valide même sans expédition
+add_filter( 'woocommerce_cod_process_payment_order_status', function( $status ) {
+    return 'processing';
 } );
 
-// Si aucun moyen de paiement POSTé, injecter cod automatiquement
+// 3. Forcer payment_method = cod avant tout traitement
 add_action( 'woocommerce_checkout_process', function() {
-    if ( empty( $_POST['payment_method'] ) ) {
-        $_POST['payment_method'] = 'cod';
-    }
-} );
+    $_POST['payment_method'] = 'cod';
+}, 1 );
 
-// Supprimer l'erreur "Moyen de paiement non valide" pour cod
+// 4. Supprimer TOUTES les erreurs de paiement et d'expédition après validation
 add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) {
-    $codes = $errors->get_error_codes();
-    foreach ( $codes as $code ) {
-        if ( strpos( $code, 'payment' ) !== false ) {
-            // Vérifier que cod est bien disponible avant de supprimer l'erreur
-            $gateways = WC()->payment_gateways()->get_available_payment_gateways();
-            if ( isset( $gateways['cod'] ) ) {
-                $errors->remove( $code );
-            }
+    foreach ( $errors->get_error_codes() as $code ) {
+        if (
+            strpos( $code, 'payment'  ) !== false ||
+            strpos( $code, 'shipping' ) !== false
+        ) {
+            $errors->remove( $code );
         }
     }
-}, 25, 2 );
+}, 9999, 2 );
 
 // -------------------------------------------------------
 // CHAMPS CHECKOUT
@@ -87,7 +80,6 @@ add_filter( 'woocommerce_checkout_fields', function( $fields ) {
         }
     }
 
-    // Adresse libre
     if ( isset( $fields['billing']['billing_address_1'] ) ) {
         $fields['billing']['billing_address_1']['required']    = false;
         $fields['billing']['billing_address_1']['label']       = 'Adresse / Quartier';
@@ -115,7 +107,7 @@ add_action( 'woocommerce_checkout_process', function() {
     if ( empty( $_POST['billing_city'] ) )      $_POST['billing_city']      = 'Dakar';
     if ( empty( $_POST['billing_address_1'] ) ) $_POST['billing_address_1'] = 'Non renseignée';
     if ( isset( $_POST['shipping_postcode'] ) && empty( $_POST['shipping_postcode'] ) ) $_POST['shipping_postcode'] = '00000';
-} );
+}, 5 );
 
 // Validation téléphone
 add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) {
