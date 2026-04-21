@@ -1,0 +1,637 @@
+/* ==============================================
+   PAGES CLIENT (thankyou, orders, account)
+   Alchimie des Senteurs
+============================================== */
+
+/* ---- HERO ---- */
+.thankyou-wrap,
+.myaccount-wrap {
+  min-height: 100vh;
+  background: var(--white);
+}
+
+.thankyou-hero,
+.myaccount-hero {
+  padding: 9rem 6vw 4rem;
+  background: var(--off);
+  border-bottom: 1px solid var(--mid);
+}
+
+.ty-tag,
+.myaccount-hero-tag {
+  font-size: 0.54rem;
+  letter-spacing: 0.65em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 1rem;
+}
+
+.ty-title,
+.myaccount-hero-title {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.ty-title em,
+.myaccount-hero-title em {
+  font-style: italic;
+  color: var(--amber);
+}
+
+/* ---- LAYOUT THANKYOU ---- */
+.ty-layout {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 4rem 6vw 6rem;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 4rem;
+  align-items: start;
+}
+
+/* ---- LAYOUT MYACCOUNT ---- */
+.myaccount-layout {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 4rem 6vw 6rem;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+/* ---- NOTICE ---- */
+.ty-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.2rem;
+  background: var(--off);
+  border-left: 2px solid var(--amber);
+  padding: 1.4rem 1.8rem;
+  margin-bottom: 3rem;
+}
+
+.ty-notice--info {
+  border-left-color: var(--stone);
+}
+
+.ty-notice-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border: 1px solid var(--amber);
+  color: var(--amber);
+  font-size: 0.85rem;
+  font-style: normal;
+  margin-top: 0.1rem;
+}
+
+.ty-notice p {
+  font-size: 0.84rem;
+  line-height: 1.8;
+  color: var(--stone);
+  font-family: 'Georgia', serif;
+  max-width: 100%;
+}
+
+/* ---- META GRID ---- */
+.ty-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  border: 1px solid var(--mid);
+  margin-bottom: 3rem;
+}
+
+.ty-meta-item {
+  padding: 1.4rem 1.8rem;
+  border-right: 1px solid var(--mid);
+  border-bottom: 1px solid var(--mid);
+}
+
+.ty-meta-item:nth-child(2n) {
+  border-right: none;
+}
+
+.ty-meta-item:nth-last-child(-n+2) {
+  border-bottom: none;
+}
+
+.ty-meta-label {
+  display: block;
+  font-size: 0.52rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 0.5rem;
+  font-family: 'Georgia', serif;
+}
+
+.ty-meta-value {
+  display: block;
+  font-size: 0.92rem;
+  font-weight: 300;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+  font-family: 'Georgia', serif;
+}
+
+.ty-total {
+  font-size: 1.1rem;
+  color: var(--amber);
+}
+
+/* ---- STATUTS ---- */
+.ty-status {
+  display: inline-block;
+  font-size: 0.56rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.8rem;
+  font-family: 'Georgia', serif;
+}
+
+.ty-status--processing,
+.ty-status--on-hold {
+  background: rgba(196,135,58,0.1);
+  color: var(--amber);
+}
+
+.ty-status--completed {
+  background: rgba(67,122,34,0.08);
+  color: #437a22;
+}
+
+.ty-status--cancelled,
+.ty-status--refunded,
+.ty-status--failed {
+  background: rgba(185,74,72,0.07);
+  color: #b94a48;
+}
+
+.ty-status--pending {
+  background: var(--light);
+  color: var(--stone);
+}
+
+/* ---- SECTIONS ---- */
+.ty-section {
+  margin-bottom: 3rem;
+}
+
+.ty-section-title {
+  font-size: 0.54rem;
+  letter-spacing: 0.55em;
+  text-transform: uppercase;
+  color: var(--stone);
+  font-weight: 400;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--mid);
+  font-family: 'Georgia', serif;
+}
+
+/* ---- TABLEAU ---- */
+.ty-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Georgia', serif;
+}
+
+.ty-table thead th {
+  font-size: 0.52rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--stone);
+  font-weight: 400;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--mid);
+  text-align: left;
+}
+
+.ty-table-right {
+  text-align: right !important;
+}
+
+.ty-table tbody tr {
+  border-bottom: 1px solid var(--light);
+}
+
+.ty-table tbody td {
+  padding: 1rem 0;
+  font-size: 0.84rem;
+  color: var(--ink);
+  vertical-align: middle;
+}
+
+.ty-product-name {
+  display: block;
+  font-size: 0.86rem;
+  color: var(--ink);
+}
+
+.ty-product-qty {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--stone);
+  margin-top: 0.2rem;
+  letter-spacing: 0.05em;
+}
+
+.ty-total-row th,
+.ty-total-row td {
+  padding: 0.8rem 0;
+  font-size: 0.78rem;
+  color: var(--stone);
+  border-bottom: 1px solid var(--light);
+  font-family: 'Georgia', serif;
+}
+
+.ty-grand-total th,
+.ty-grand-total td {
+  font-size: 0.95rem;
+  color: var(--ink);
+  padding-top: 1.2rem;
+  border-bottom: none;
+  border-top: 1px solid var(--mid);
+}
+
+/* Commandes : colonnes spéciales */
+.orders-table .order-num {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--mid);
+  font-size: 0.84rem;
+  transition: color 0.2s, border-color 0.2s;
+}
+.orders-table .order-num:hover {
+  color: var(--amber);
+  border-color: var(--amber);
+}
+.orders-table .order-date {
+  font-size: 0.78rem;
+  color: var(--stone);
+}
+.orders-table .order-total {
+  font-size: 0.84rem;
+}
+.orders-table .order-actions {
+  text-align: right;
+}
+
+/* ---- PAIEMENT ---- */
+.ty-payment-method {
+  font-size: 0.9rem;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+  font-family: 'Georgia', serif;
+}
+.ty-payment-note {
+  font-size: 0.76rem;
+  color: var(--stone);
+  line-height: 1.7;
+  font-family: 'Georgia', serif;
+}
+
+/* ---- ADRESSE ---- */
+.ty-address {
+  font-style: normal;
+  font-size: 0.86rem;
+  line-height: 2;
+  color: var(--ink);
+  font-family: 'Georgia', serif;
+}
+
+.ty-address-phone {
+  display: block;
+  margin-top: 0.6rem;
+  font-size: 0.8rem;
+  color: var(--stone);
+  letter-spacing: 0.05em;
+}
+
+/* ---- ASIDE (colonne droite thankyou) ---- */
+.ty-aside {
+  position: sticky;
+  top: 7rem;
+}
+
+.ty-aside .ty-section {
+  background: var(--off);
+  border: 1px solid var(--mid);
+  padding: 2rem;
+}
+
+.ty-aside .ty-section-title {
+  margin-bottom: 1.2rem;
+}
+
+/* ---- BOUTONS ---- */
+.ty-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+}
+
+.ty-btn-primary {
+  display: block;
+  text-align: center;
+  padding: 1rem 2rem;
+  background: var(--ink);
+  color: var(--white);
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-family: 'Georgia', serif;
+  transition: background 0.25s;
+  border: 1px solid var(--ink);
+}
+
+.ty-btn-primary:hover {
+  background: var(--amber);
+  border-color: var(--amber);
+}
+
+.ty-btn-ghost {
+  display: inline-block;
+  text-align: center;
+  padding: 0.9rem 2rem;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-family: 'Georgia', serif;
+  border: 1px solid var(--mid);
+  transition: border-color 0.25s, color 0.25s;
+  cursor: pointer;
+}
+
+.ty-btn-ghost:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.56rem;
+}
+
+/* ---- BACK LINK ---- */
+.ty-back-link {
+  font-size: 0.6rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--stone);
+  text-decoration: none;
+  border-bottom: 1px solid var(--mid);
+  padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
+  font-family: 'Georgia', serif;
+}
+.ty-back-link:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+/* ---- PAGINATION ---- */
+.ty-pagination {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  justify-content: center;
+}
+
+/* ---- EMPTY STATE ---- */
+.ty-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.ty-empty-icon {
+  color: var(--mid);
+  margin-bottom: 1.5rem;
+}
+
+.ty-empty-title {
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.6rem;
+  font-family: 'Georgia', serif;
+}
+
+.ty-empty-sub {
+  font-size: 0.8rem;
+  color: var(--stone);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  font-family: 'Georgia', serif;
+  max-width: 36ch;
+}
+
+/* ---- NAV MYACCOUNT ---- */
+.myaccount-nav {
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 7rem;
+  border: 1px solid var(--mid);
+}
+
+.myaccount-nav-item {
+  display: block;
+  padding: 1rem 1.4rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--stone);
+  text-decoration: none;
+  border-bottom: 1px solid var(--mid);
+  font-family: 'Georgia', serif;
+  transition: color 0.2s, background 0.2s;
+}
+
+.myaccount-nav-item:last-child {
+  border-bottom: none;
+}
+
+.myaccount-nav-item:hover,
+.myaccount-nav-item.active {
+  color: var(--ink);
+  background: var(--off);
+}
+
+/* ---- CONTENU MYACCOUNT ---- */
+.myaccount-content {
+  min-width: 0;
+}
+
+.myaccount-content h2 {
+  font-size: 0.54rem;
+  letter-spacing: 0.55em;
+  text-transform: uppercase;
+  color: var(--stone);
+  font-weight: 400;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--mid);
+  font-family: 'Georgia', serif;
+}
+
+/* Formulaires --*/
+.myaccount-content .form-row {
+  margin-bottom: 1.5rem;
+}
+.myaccount-content .form-row label {
+  display: block;
+  font-size: 0.56rem;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 0.5rem;
+  font-family: 'Georgia', serif;
+}
+.myaccount-content .form-row input[type="text"],
+.myaccount-content .form-row input[type="email"],
+.myaccount-content .form-row input[type="tel"],
+.myaccount-content .form-row input[type="password"],
+.myaccount-content .form-row select,
+.myaccount-content .form-row textarea {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--mid);
+  background: var(--white);
+  color: var(--ink);
+  font-size: 0.84rem;
+  font-family: 'Georgia', serif;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+}
+.myaccount-content .form-row input:focus,
+.myaccount-content .form-row select:focus {
+  outline: none;
+  border-color: var(--amber);
+}
+.myaccount-content .woocommerce-Button,
+.myaccount-content .button {
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  background: var(--ink);
+  color: var(--white);
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  font-family: 'Georgia', serif;
+  border: 1px solid var(--ink);
+  cursor: pointer;
+  transition: background 0.2s;
+  text-decoration: none;
+}
+.myaccount-content .woocommerce-Button:hover,
+.myaccount-content .button:hover {
+  background: var(--amber);
+  border-color: var(--amber);
+}
+
+/* Messages WooCommerce */
+.myaccount-content .woocommerce-Message,
+.myaccount-content .woocommerce-message {
+  background: var(--off);
+  border-left: 2px solid var(--amber);
+  padding: 1rem 1.5rem;
+  font-size: 0.82rem;
+  color: var(--ink);
+  font-family: 'Georgia', serif;
+  margin-bottom: 2rem;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.myaccount-content .woocommerce-error {
+  background: rgba(185,74,72,0.05);
+  border-left: 2px solid #b94a48;
+  padding: 1rem 1.5rem;
+  font-size: 0.82rem;
+  color: #b94a48;
+  font-family: 'Georgia', serif;
+  margin-bottom: 2rem;
+  list-style: none;
+}
+.myaccount-content .woocommerce-info {
+  background: var(--off);
+  border: 1px solid var(--mid);
+  padding: 1.5rem;
+  font-size: 0.82rem;
+  color: var(--stone);
+  font-family: 'Georgia', serif;
+  list-style: none;
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 900px) {
+  .ty-layout {
+    grid-template-columns: 1fr;
+  }
+  .ty-aside {
+    position: static;
+  }
+  .myaccount-layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .myaccount-nav {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .myaccount-nav-item {
+    border-bottom: none;
+    border-right: 1px solid var(--mid);
+  }
+}
+@media (max-width: 600px) {
+  .thankyou-hero,
+  .myaccount-hero {
+    padding: 7rem 6vw 2.5rem;
+  }
+  .ty-meta-grid {
+    grid-template-columns: 1fr;
+  }
+  .ty-meta-item {
+    border-right: none;
+  }
+  .ty-meta-item:nth-last-child(-n+2) {
+    border-bottom: 1px solid var(--mid);
+  }
+  .ty-meta-item:last-child {
+    border-bottom: none;
+  }
+  .ty-table thead { display: none; }
+  .ty-table tbody tr {
+    display: block;
+    padding: 1rem 0;
+  }
+  .ty-table tbody td {
+    display: block;
+    text-align: left !important;
+    padding: 0.3rem 0;
+  }
+}
