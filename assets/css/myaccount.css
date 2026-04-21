@@ -1,0 +1,278 @@
+/* ==============================================
+   MON COMPTE — Alchimie des Senteurs
+============================================== */
+
+.myaccount-wrap {
+  min-height: 100vh;
+  background: var(--white);
+}
+
+/* HERO */
+.myaccount-hero {
+  padding: 9rem 6vw 3.5rem;
+  background: var(--off);
+  border-bottom: 1px solid var(--mid);
+}
+.myaccount-hero-tag {
+  font-size: 0.54rem;
+  letter-spacing: 0.65em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 0.9rem;
+}
+.myaccount-hero-title {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.myaccount-hero-title em {
+  font-style: italic;
+  color: var(--amber);
+}
+
+/* LAYOUT */
+.myaccount-layout {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 4rem 6vw 6rem;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+/* NAV LATÉRALE */
+.myaccount-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: sticky;
+  top: 7rem;
+  border: 1px solid var(--mid);
+}
+.myaccount-nav-item {
+  display: block;
+  padding: 0.9rem 1.2rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--stone);
+  text-decoration: none;
+  border-bottom: 1px solid var(--mid);
+  font-family: 'Georgia', serif;
+  transition: color 0.2s, background 0.2s;
+}
+.myaccount-nav-item:last-child { border-bottom: none; }
+.myaccount-nav-item:hover,
+.myaccount-nav-item.active,
+.myaccount-nav-item.is-active {
+  color: var(--ink);
+  background: var(--off);
+}
+
+/* CONTENU */
+.myaccount-content {
+  min-width: 0;
+}
+
+/* Titre de section WooCommerce */
+.myaccount-content h2,
+.myaccount-content h3 {
+  font-size: 0.6rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--stone);
+  font-weight: 400;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--mid);
+  font-family: 'Georgia', serif;
+}
+
+/* TABLEAU COMMANDES */
+.myaccount-content .woocommerce-orders-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.myaccount-content .woocommerce-orders-table thead th {
+  font-size: 0.54rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--stone);
+  font-weight: 400;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--mid);
+  text-align: left;
+  font-family: 'Georgia', serif;
+}
+.myaccount-content .woocommerce-orders-table tbody tr {
+  border-bottom: 1px solid var(--light);
+}
+.myaccount-content .woocommerce-orders-table tbody td {
+  padding: 1.1rem 0;
+  font-size: 0.82rem;
+  color: var(--ink);
+  font-family: 'Georgia', serif;
+  vertical-align: middle;
+}
+.myaccount-content .woocommerce-orders-table tbody td a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--mid);
+  transition: border-color 0.2s, color 0.2s;
+}
+.myaccount-content .woocommerce-orders-table tbody td a:hover {
+  color: var(--amber);
+  border-color: var(--amber);
+}
+
+/* Statut commande */
+.woocommerce-order-status {
+  display: inline-block;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.8rem;
+  font-family: 'Georgia', serif;
+}
+.woocommerce-order-status.status-processing,
+.woocommerce-order-status.status-on-hold {
+  background: rgba(196,135,58,0.08);
+  color: var(--amber);
+}
+.woocommerce-order-status.status-completed {
+  background: rgba(67,122,34,0.08);
+  color: #437a22;
+}
+.woocommerce-order-status.status-cancelled,
+.woocommerce-order-status.status-refunded,
+.woocommerce-order-status.status-failed {
+  background: rgba(185,74,72,0.06);
+  color: #b94a48;
+}
+.woocommerce-order-status.status-pending {
+  background: var(--light);
+  color: var(--stone);
+}
+
+/* Bouton Voir / action */
+.myaccount-content .woocommerce-button,
+.myaccount-content .button {
+  display: inline-block;
+  padding: 0.55rem 1.2rem;
+  background: transparent;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  font-size: 0.58rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-family: 'Georgia', serif;
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+}
+.myaccount-content .woocommerce-button:hover,
+.myaccount-content .button:hover {
+  background: var(--ink);
+  color: var(--white);
+}
+
+/* Formulaires adresse / infos */
+.myaccount-content .woocommerce-address-fields,
+.myaccount-content .woocommerce-EditAccountForm {
+  max-width: 560px;
+}
+.myaccount-content .form-row {
+  margin-bottom: 1.4rem;
+}
+.myaccount-content .form-row label {
+  display: block;
+  font-size: 0.58rem;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 0.5rem;
+  font-family: 'Georgia', serif;
+}
+.myaccount-content .form-row input[type="text"],
+.myaccount-content .form-row input[type="email"],
+.myaccount-content .form-row input[type="tel"],
+.myaccount-content .form-row input[type="password"],
+.myaccount-content .form-row select,
+.myaccount-content .form-row textarea {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--mid);
+  border-radius: 0;
+  background: var(--white);
+  color: var(--ink);
+  font-size: 0.84rem;
+  font-family: 'Georgia', serif;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.myaccount-content .form-row input:focus,
+.myaccount-content .form-row select:focus,
+.myaccount-content .form-row textarea:focus {
+  outline: none;
+  border-color: var(--amber);
+}
+
+/* Messages */
+.myaccount-content .woocommerce-message {
+  background: var(--off);
+  border-left: 3px solid var(--amber);
+  padding: 1rem 1.5rem;
+  font-size: 0.82rem;
+  color: var(--ink);
+  font-family: 'Georgia', serif;
+  margin-bottom: 2rem;
+  list-style: none;
+}
+.myaccount-content .woocommerce-error {
+  background: rgba(185,74,72,0.06);
+  border-left: 3px solid #b94a48;
+  padding: 1rem 1.5rem;
+  font-size: 0.82rem;
+  color: #b94a48;
+  font-family: 'Georgia', serif;
+  margin-bottom: 2rem;
+  list-style: none;
+}
+
+/* État vide */
+.myaccount-content .woocommerce-info {
+  background: var(--off);
+  border: 1px solid var(--mid);
+  padding: 2rem;
+  font-size: 0.82rem;
+  color: var(--stone);
+  font-family: 'Georgia', serif;
+  text-align: center;
+  list-style: none;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .myaccount-layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .myaccount-nav {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    border: 1px solid var(--mid);
+  }
+  .myaccount-nav-item {
+    border-bottom: none;
+    border-right: 1px solid var(--mid);
+    padding: 0.7rem 1rem;
+  }
+}
+@media (max-width: 600px) {
+  .myaccount-hero { padding: 7rem 6vw 2.5rem; }
+}

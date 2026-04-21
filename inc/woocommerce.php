@@ -18,30 +18,27 @@ add_filter( 'woocommerce_cart_needs_shipping',         '__return_false' );
 add_filter( 'woocommerce_cart_needs_shipping_address', '__return_false' );
 
 // -------------------------------------------------------
-// PAIEMENT — Forcer cod à tous les niveaux
+// PAIEMENT — Forcer cod, bypass toutes les vérifications
 // -------------------------------------------------------
 
-// 1. cod toujours disponible peu importe l'expédition
+// cod toujours disponible (priority 9999 pour passer après tous les autres filtres)
 add_filter( 'woocommerce_available_payment_gateways', function( $gateways ) {
     if ( isset( $gateways['cod'] ) ) {
-        // Forcer la propriété interne de disponibilité
         $gateways['cod']->enabled = 'yes';
         return array( 'cod' => $gateways['cod'] );
     }
     return $gateways;
 }, 9999 );
 
-// 2. cod valide même sans expédition
-add_filter( 'woocommerce_cod_process_payment_order_status', function( $status ) {
-    return 'processing';
-} );
+// cod valide même sans expédition — désactiver la vérification native
+add_filter( 'woocommerce_cod_enabled_for_current_order', '__return_true', 9999 );
 
-// 3. Forcer payment_method = cod avant tout traitement
+// Forcer payment_method = cod avant tout traitement (priority 1)
 add_action( 'woocommerce_checkout_process', function() {
     $_POST['payment_method'] = 'cod';
 }, 1 );
 
-// 4. Supprimer TOUTES les erreurs de paiement et d'expédition après validation
+// Supprimer TOUTES les erreurs payment + shipping après validation (priority 9999)
 add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) {
     foreach ( $errors->get_error_codes() as $code ) {
         if (
@@ -52,6 +49,14 @@ add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) 
         }
     }
 }, 9999, 2 );
+
+// Intercepter l'exception WooCommerce lors du process_payment de cod
+// cod vérifie si l'expédition est activée — on neutralise cette vérif
+add_action( 'woocommerce_checkout_order_created', function( $order ) {
+    $order->set_payment_method( 'cod' );
+    $order->set_payment_method_title( 'Paiement à la livraison' );
+    $order->save();
+} );
 
 // -------------------------------------------------------
 // CHAMPS CHECKOUT
@@ -83,7 +88,7 @@ add_filter( 'woocommerce_checkout_fields', function( $fields ) {
     if ( isset( $fields['billing']['billing_address_1'] ) ) {
         $fields['billing']['billing_address_1']['required']    = false;
         $fields['billing']['billing_address_1']['label']       = 'Adresse / Quartier';
-        $fields['billing']['billing_address_1']['placeholder'] = 'Ex : Almadies, Mermoz, Médina…';
+        $fields['billing']['billing_address_1']['placeholder'] = 'Ex : Almadies, Mermoz, Médina…';
         $fields['billing']['billing_address_1']['class']       = array( 'form-row-wide' );
     }
 
@@ -95,7 +100,7 @@ add_filter( 'woocommerce_checkout_fields', function( $fields ) {
         $fields['billing']['billing_phone']['required']    = true;
         $fields['billing']['billing_phone']['priority']    = 5;
         $fields['billing']['billing_phone']['label']       = 'Téléphone';
-        $fields['billing']['billing_phone']['placeholder'] = 'Ex : 77 000 00 00';
+        $fields['billing']['billing_phone']['placeholder'] = 'Ex : 77 000 00 00';
     }
 
     return $fields;
@@ -118,7 +123,7 @@ add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) 
     }
     $cleaned = preg_replace( '/[\s\-\.\(\)]/', '', $phone );
     if ( ! preg_match( '/^\+?[0-9]{7,15}$/', $cleaned ) ) {
-        $errors->add( 'billing_phone_invalid', 'Veuillez entrer un numéro valide (ex : 77 000 00 00).' );
+        $errors->add( 'billing_phone_invalid', 'Veuillez entrer un numéro valide (ex : 77 000 00 00).' );
     }
 }, 10, 2 );
 
