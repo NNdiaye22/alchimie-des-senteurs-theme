@@ -1,12 +1,11 @@
 <?php
 /**
  * Alchimie des Senteurs - functions.php
- * Point d'entree principal du theme.
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'ADS_VERSION', '1.0.2' );
+define( 'ADS_VERSION', '1.0.3' );
 define( 'ADS_DIR', get_template_directory() );
 define( 'ADS_URI', get_template_directory_uri() );
 
@@ -177,25 +176,6 @@ function ads_option( $key, $default = '' ) {
 }
 
 // -------------------------------------------------------
-// Notice livraison sur devis au checkout
-// -------------------------------------------------------
-add_action( 'woocommerce_review_order_before_submit', function() {
-    echo '<p class="ads-shipping-notice" style="
-        font-size:0.78rem;
-        line-height:1.7;
-        color:#9a9088;
-        background:#f8f6f3;
-        border-left:2px solid #c4873a;
-        padding:0.9rem 1.2rem;
-        margin-bottom:1.4rem;
-        font-family: Georgia, serif;
-    ">
-        📦 <strong style="color:#1a1714;font-weight:normal;">Livraison calculée après commande.</strong><br>
-        Renseignez votre adresse ci-dessus — nous vous recontacterons rapidement pour vous communiquer les frais de livraison avant tout paiement.
-    </p>';
-} );
-
-// -------------------------------------------------------
 // CSS pages client (thankyou, account, orders)
 // -------------------------------------------------------
 add_action( 'wp_enqueue_scripts', function() {
@@ -228,18 +208,4 @@ add_filter( 'woocommerce_account_menu_items', function( $items ) {
         'edit-account'    => 'Mes informations',
         'customer-logout' => 'Déconnexion',
     );
-} );
-
-// -------------------------------------------------------
-// Forcer paiement à la livraison valide
-// -------------------------------------------------------
-add_filter( 'woocommerce_available_payment_gateways', function( $gateways ) {
-    if ( isset( $gateways['cod'] ) ) {
-        return array( 'cod' => $gateways['cod'] );
-    }
-    return $gateways;
-} );
-
-add_filter( 'woocommerce_cod_process_payment_order_status', function() {
-    return 'processing';
 } );

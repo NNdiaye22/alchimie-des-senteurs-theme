@@ -100,6 +100,17 @@ add_filter( 'woocommerce_checkout_required_field_notice', function( $notice, $fi
 }, 10, 2 );
 
 // -------------------------------------------------------
+// NOTICE LIVRAISON — affichée une seule fois avant le bouton
+// -------------------------------------------------------
+add_action( 'woocommerce_review_order_before_submit', function() {
+    echo '<p class="ads-shipping-notice">
+        <span class="ads-sn-icon">&#128230;</span>
+        <span><strong>Livraison calculée après commande.</strong><br>
+        Nous vous contacterons dans les meilleurs délais pour confirmer votre commande et vous communiquer les frais de livraison.</span>
+    </p>';
+} );
+
+// -------------------------------------------------------
 // TEMPLATES
 // -------------------------------------------------------
 add_filter( 'template_include', function( $template ) {
@@ -193,14 +204,4 @@ add_action( 'wp_head', function() {
     @keyframes ads-spin{to{transform:rotate(360deg);}}
     </style>
     <?php
-} );
-
-// -------------------------------------------------------
-// Notice livraison sur devis au checkout
-// -------------------------------------------------------
-add_action( 'woocommerce_review_order_before_submit', function() {
-    echo '<p class="ads-shipping-notice" style="font-size:0.78rem;line-height:1.7;color:#9a9088;background:#f8f6f3;border-left:2px solid #c4873a;padding:0.9rem 1.2rem;margin-bottom:1.4rem;font-family:Georgia,serif;">
-        📦 <strong style="color:#1a1714;font-weight:normal;">Livraison calculée après commande.</strong><br>
-        Renseignez votre adresse ci-dessus — nous vous recontacterons rapidement pour vous communiquer les frais de livraison avant tout paiement.
-    </p>';
 } );

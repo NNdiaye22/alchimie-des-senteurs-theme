@@ -8,62 +8,71 @@ get_header();
 
 <div class="thankyou-wrap">
 
-  <div class="thankyou-hero">
-    <p class="ty-tag"><?php esc_html_e( 'Commande', 'woocommerce' ); ?></p>
-    <h1 class="ty-title">Validation de<br><em>votre commande</em></h1>
+<?php if ( $order = wc_get_order( $order_id ) ) : ?>
+
+  <!-- EN-TÊTE CONFIRMATION -->
+  <div class="ty-hero">
+    <div class="ty-hero-inner">
+      <div class="ty-hero-check">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="14" cy="14" r="13.25" stroke="currentColor" stroke-width="1.5"/>
+          <polyline points="8,14 12,18 20,10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <p class="ty-hero-tag">Commande n°<?php echo esc_html( $order->get_order_number() ); ?></p>
+      <h1 class="ty-hero-title">Merci pour<br><em>votre confiance</em></h1>
+      <p class="ty-hero-sub">Votre commande a bien été enregistrée. Notre équipe vous contactera dans les meilleurs délais pour confirmer l'envoi et vous communiquer les frais de livraison.</p>
+    </div>
   </div>
 
-  <?php if ( $order = wc_get_order( $order_id ) ) : ?>
+  <!-- ÉTAPES DE SUIVI -->
+  <div class="ty-steps">
+    <div class="ty-step ty-step--done">
+      <div class="ty-step-dot"></div>
+      <div class="ty-step-body">
+        <span class="ty-step-title">Commande reçue</span>
+        <span class="ty-step-desc"><?php echo esc_html( wc_format_datetime( $order->get_date_created() ) ); ?></span>
+      </div>
+    </div>
+    <div class="ty-step ty-step--pending">
+      <div class="ty-step-dot"></div>
+      <div class="ty-step-body">
+        <span class="ty-step-title">Confirmation &amp; frais de livraison</span>
+        <span class="ty-step-desc">Nous vous rappelons au <?php echo esc_html( $order->get_billing_phone() ?: '—' ); ?></span>
+      </div>
+    </div>
+    <div class="ty-step ty-step--future">
+      <div class="ty-step-dot"></div>
+      <div class="ty-step-body">
+        <span class="ty-step-title">Préparation &amp; expédition</span>
+        <span class="ty-step-desc">Dès confirmation de votre accord</span>
+      </div>
+    </div>
+    <div class="ty-step ty-step--future">
+      <div class="ty-step-dot"></div>
+      <div class="ty-step-body">
+        <span class="ty-step-title">Livraison &amp; paiement</span>
+        <span class="ty-step-desc">Règlement en espèces à la réception</span>
+      </div>
+    </div>
+  </div>
 
+  <!-- DÉTAIL COMMANDE -->
   <div class="ty-layout">
 
-    <!-- COLONNE GAUCHE : résumé -->
     <div class="ty-main">
 
-      <div class="ty-notice">
-        <span class="ty-notice-icon">&#10003;</span>
-        <p><?php echo wp_kses_post( apply_filters( 'woocommerce_thankyou_order_received_text',
-          __( 'Merci. Votre commande a été bien reçue. Notre équipe vous contactera par téléphone pour confirmer la livraison.', 'woocommerce' ),
-          $order
-        ) ); ?></p>
-      </div>
-
-      <!-- Infos commande -->
-      <div class="ty-meta-grid">
-        <div class="ty-meta-item">
-          <span class="ty-meta-label"><?php esc_html_e( 'Numéro', 'woocommerce' ); ?></span>
-          <span class="ty-meta-value">#<?php echo esc_html( $order->get_order_number() ); ?></span>
-        </div>
-        <div class="ty-meta-item">
-          <span class="ty-meta-label"><?php esc_html_e( 'Date', 'woocommerce' ); ?></span>
-          <span class="ty-meta-value"><?php echo esc_html( wc_format_datetime( $order->get_date_created() ) ); ?></span>
-        </div>
-        <div class="ty-meta-item">
-          <span class="ty-meta-label"><?php esc_html_e( 'Statut', 'woocommerce' ); ?></span>
-          <span class="ty-meta-value ty-status ty-status--<?php echo esc_attr( $order->get_status() ); ?>">
-            <?php echo esc_html( wc_get_order_status_name( $order->get_status() ) ); ?>
-          </span>
-        </div>
-        <div class="ty-meta-item">
-          <span class="ty-meta-label"><?php esc_html_e( 'Total', 'woocommerce' ); ?></span>
-          <span class="ty-meta-value ty-total"><?php echo wp_kses_post( $order->get_formatted_order_total() ); ?></span>
-        </div>
-      </div>
-
-      <!-- Tableau produits -->
       <div class="ty-section">
-        <h2 class="ty-section-title"><?php esc_html_e( 'Détail de la commande', 'woocommerce' ); ?></h2>
+        <h2 class="ty-section-title">Détail de la commande</h2>
         <table class="ty-table">
           <thead>
             <tr>
-              <th><?php esc_html_e( 'Produit', 'woocommerce' ); ?></th>
-              <th class="ty-table-right"><?php esc_html_e( 'Total', 'woocommerce' ); ?></th>
+              <th>Produit</th>
+              <th class="ty-table-right">Total</th>
             </tr>
           </thead>
           <tbody>
-            <?php foreach ( $order->get_items() as $item ) :
-              $product = $item->get_product();
-            ?>
+            <?php foreach ( $order->get_items() as $item ) : ?>
             <tr>
               <td>
                 <span class="ty-product-name"><?php echo esc_html( $item->get_name() ); ?></span>
@@ -84,26 +93,28 @@ get_header();
         </table>
       </div>
 
-      <!-- Moyen de paiement -->
-      <div class="ty-section">
-        <h2 class="ty-section-title"><?php esc_html_e( 'Paiement', 'woocommerce' ); ?></h2>
+      <div class="ty-section ty-payment-block">
+        <h2 class="ty-section-title">Paiement</h2>
         <p class="ty-payment-method"><?php echo esc_html( $order->get_payment_method_title() ); ?></p>
-        <p class="ty-payment-note">Le règlement s&rsquo;effectue en espèces au moment de la livraison.</p>
+        <p class="ty-payment-note">Le règlement s&rsquo;effectue en espèces au moment de la livraison, après confirmation téléphonique.</p>
       </div>
 
     </div>
 
-    <!-- COLONNE DROITE : adresse -->
     <div class="ty-aside">
 
       <div class="ty-section">
-        <h2 class="ty-section-title"><?php esc_html_e( 'Adresse de livraison', 'woocommerce' ); ?></h2>
+        <h2 class="ty-section-title">Adresse de livraison</h2>
         <address class="ty-address">
-          <?php echo wp_kses_post( $order->get_formatted_billing_address() ?: esc_html__( 'Non renseignée', 'woocommerce' ) ); ?>
+          <?php echo wp_kses_post( $order->get_formatted_billing_address() ?: '<em>Non renseignée</em>' ); ?>
           <?php if ( $phone = $order->get_billing_phone() ) : ?>
           <span class="ty-address-phone"><?php echo esc_html( $phone ); ?></span>
           <?php endif; ?>
         </address>
+      </div>
+
+      <div class="ty-aside-info">
+        <p>Vous avez une question&nbsp;? Contactez-nous directement — nous sommes disponibles pour vous accompagner.</p>
       </div>
 
       <div class="ty-actions">
@@ -117,7 +128,8 @@ get_header();
 
   </div>
 
-  <?php else : ?>
+<?php else : ?>
+
   <div class="ty-layout">
     <div class="ty-main">
       <div class="ty-notice ty-notice--info">
@@ -125,7 +137,8 @@ get_header();
       </div>
     </div>
   </div>
-  <?php endif; ?>
+
+<?php endif; ?>
 
 </div>
 
