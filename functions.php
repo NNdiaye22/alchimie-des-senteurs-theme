@@ -1,79 +1,245 @@
 <?php
 /**
- * Alchimie des Senteurs — functions.php
+ * Alchimie des Senteurs - functions.php
+ * Point d'entree principal du theme.
  */
-defined( 'ABSPATH' ) || exit;
 
-/* ── SUPPORT THÈME ──────────────────────────────── */
-add_action( 'after_setup_theme', function () {
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+define( 'ADS_VERSION', '1.0.2' );
+define( 'ADS_DIR', get_template_directory() );
+define( 'ADS_URI', get_template_directory_uri() );
+
+// -------------------------------------------------------
+// Chargement des modules
+// -------------------------------------------------------
+require_once ADS_DIR . '/inc/enqueue.php';
+require_once ADS_DIR . '/inc/customizer.php';
+require_once ADS_DIR . '/inc/woocommerce.php';
+
+// -------------------------------------------------------
+// Prix "À partir de" pour les produits variables
+// -------------------------------------------------------
+add_filter( 'woocommerce_variable_price_html', function( $price, $product ) {
+    $min = wc_price( $product->get_variation_price( 'min', true ) );
+    return sprintf( 'À partir de %s', $min );
+}, 10, 2 );
+
+// -------------------------------------------------------
+// Helper badge produit (simple + variable)
+// -------------------------------------------------------
+function ads_card_badge( $product ) {
+    if ( ! $product ) return null;
+
+    if ( $product->is_type( 'variable' ) ) {
+        $any_sale      = false;
+        $any_low       = false;
+        $any_backorder = false;
+        $all_out       = true;
+
+        foreach ( $product->get_available_variations() as $v ) {
+            $vobj    = wc_get_product( $v['variation_id'] );
+            $v_stock = $vobj ? $vobj->get_stock_quantity() : null;
+            $v_back  = $vobj ? $vobj->backorders_allowed() : false;
+            $v_low   = ( $v['is_in_stock'] && $v_stock !== null && $v_stock > 0 && $v_stock <= 5 );
+            $on_sale = $v['display_regular_price'] > $v['display_price'];
+
+            if ( $v['is_in_stock'] || $v_back ) $all_out = false;
+            if ( $on_sale ) $any_sale      = true;
+            if ( $v_low )   $any_low       = true;
+            if ( $v_back && ! $v['is_in_stock'] ) $any_backorder = true;
+        }
+
+        if ( $all_out )        return array( 'id' => 'out',       'label' => '&Eacute;puis&eacute;' );
+        if ( $any_backorder )  return array( 'id' => 'backorder', 'label' => 'Bient&ocirc;t dispo' );
+        if ( $any_low )        return array( 'id' => 'low',       'label' => 'Stock limit&eacute;' );
+        if ( $any_sale )       return array( 'id' => 'promo',     'label' => 'Promo' );
+        return null;
+    }
+
+    $in_stock   = $product->is_in_stock();
+    $backorders = $product->backorders_allowed();
+    $stock_qty  = $product->get_stock_quantity();
+    $low_stock  = ( $in_stock && $stock_qty !== null && $stock_qty > 0 && $stock_qty <= 5 );
+    $sale_price = $product->get_sale_price();
+
+    if ( ! $in_stock && $backorders ) return array( 'id' => 'backorder', 'label' => 'Bient&ocirc;t dispo' );
+    if ( ! $in_stock )                return array( 'id' => 'out',       'label' => '&Eacute;puis&eacute;' );
+    if ( $low_stock )                 return array( 'id' => 'low',       'label' => 'Plus que ' . (int) $stock_qty . ' en stock' );
+    if ( $sale_price )                return array( 'id' => 'promo',     'label' => 'Promo' );
+    return null;
+}
+
+// -------------------------------------------------------
+// Support du theme
+// -------------------------------------------------------
+function ads_theme_setup() {
+    load_theme_textdomain( 'alchimie-des-senteurs', ADS_DIR . '/languages' );
     add_theme_support( 'title-tag' );
     add_theme_support( 'post-thumbnails' );
-    add_theme_support( 'woocommerce' );
-    register_nav_menus( [ 'primary' => 'Navigation principale' ] );
+    add_theme_support( 'custom-logo', array(
+        'height'      => 80,
+        'width'       => 300,
+        'flex-height' => true,
+        'flex-width'  => true,
+    ) );
+    add_theme_support( 'html5', array(
+        'search-form', 'comment-form', 'comment-list',
+        'gallery', 'caption', 'style', 'script',
+    ) );
+    add_theme_support( 'woocommerce', array(
+        'thumbnail_image_width' => 600,
+        'single_image_width'    => 900,
+        'product_grid'          => array(
+            'default_columns' => 3,
+            'default_rows'    => 4,
+            'min_columns'     => 1,
+            'max_columns'     => 4,
+        ),
+    ) );
+    add_theme_support( 'wc-product-gallery-zoom' );
+    add_theme_support( 'wc-product-gallery-lightbox' );
+    add_theme_support( 'wc-product-gallery-slider' );
+    register_nav_menus( array(
+        'primary'   => __( 'Menu Principal', 'alchimie-des-senteurs' ),
+        'footer_1'  => __( 'Footer - Collection', 'alchimie-des-senteurs' ),
+        'footer_2'  => __( 'Footer - Boutique', 'alchimie-des-senteurs' ),
+        'footer_3'  => __( 'Footer - Aide', 'alchimie-des-senteurs' ),
+    ) );
+    add_theme_support( 'automatic-feed-links' );
+    add_image_size( 'ads-product-card',     600,  800,  true );
+    add_image_size( 'ads-product-featured', 900,  1200, true );
+    add_image_size( 'ads-hero',             1920, 1080, true );
+}
+add_action( 'after_setup_theme', 'ads_theme_setup' );
+
+// -------------------------------------------------------
+// Zones de widgets
+// -------------------------------------------------------
+function ads_widgets_init() {
+    register_sidebar( array(
+        'name'          => __( 'Footer - Colonne 1 (Presentation)', 'alchimie-des-senteurs' ),
+        'id'            => 'footer-1',
+        'before_widget' => '<div class="footer-widget %2$s">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h4 class="widget-title">',
+        'after_title'   => '</h4>',
+    ) );
+    register_sidebar( array(
+        'name'          => __( 'Footer - Colonne 2 (Collection)', 'alchimie-des-senteurs' ),
+        'id'            => 'footer-2',
+        'before_widget' => '<div class="footer-widget %2$s">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h4 class="widget-title">',
+        'after_title'   => '</h4>',
+    ) );
+    register_sidebar( array(
+        'name'          => __( 'Footer - Colonne 3 (Boutique)', 'alchimie-des-senteurs' ),
+        'id'            => 'footer-3',
+        'before_widget' => '<div class="footer-widget %2$s">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h4 class="widget-title">',
+        'after_title'   => '</h4>',
+    ) );
+    register_sidebar( array(
+        'name'          => __( 'Footer - Colonne 4 (Aide)', 'alchimie-des-senteurs' ),
+        'id'            => 'footer-4',
+        'before_widget' => '<div class="footer-widget %2$s">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h4 class="widget-title">',
+        'after_title'   => '</h4>',
+    ) );
+}
+add_action( 'widgets_init', 'ads_widgets_init' );
+
+// -------------------------------------------------------
+// Longueur des extraits
+// -------------------------------------------------------
+add_filter( 'excerpt_length', function( $length ) { return 20; } );
+
+// -------------------------------------------------------
+// Helpers globaux
+// -------------------------------------------------------
+function ads_the_logo( $return = false ) {
+    $logo_id = get_theme_mod( 'custom_logo' );
+    if ( $logo_id ) {
+        $logo_url = wp_get_attachment_image_url( $logo_id, 'full' );
+        $output   = '<img src="' . esc_url( $logo_url ) . '" alt="' . esc_attr( get_bloginfo( 'name' ) ) . '" class="site-logo-img">';
+    } else {
+        $output = '<span class="site-logo-text">' . esc_html( get_bloginfo( 'name' ) ) . '</span>';
+    }
+    if ( $return ) return $output;
+    echo $output;
+}
+
+function ads_option( $key, $default = '' ) {
+    return get_theme_mod( $key, $default );
+}
+
+// -------------------------------------------------------
+// Notice livraison sur devis au checkout
+// -------------------------------------------------------
+add_action( 'woocommerce_review_order_before_submit', function() {
+    echo '<p class="ads-shipping-notice" style="
+        font-size:0.78rem;
+        line-height:1.7;
+        color:#9a9088;
+        background:#f8f6f3;
+        border-left:2px solid #c4873a;
+        padding:0.9rem 1.2rem;
+        margin-bottom:1.4rem;
+        font-family: Georgia, serif;
+    ">
+        📦 <strong style="color:#1a1714;font-weight:normal;">Livraison calculée après commande.</strong><br>
+        Renseignez votre adresse ci-dessus — nous vous recontacterons rapidement pour vous communiquer les frais de livraison avant tout paiement.
+    </p>';
 } );
 
-/* ── SCRIPTS & STYLES ───────────────────────────── */
-add_action( 'wp_enqueue_scripts', function () {
-
-    // Styles globaux
-    wp_enqueue_style( 'ads-main', get_template_directory_uri() . '/assets/css/main.css', [], '1.0' );
-
-    // Pages client (thankyou, account, orders)
-    if ( is_wc_endpoint_url() || is_page( 'mon-compte' ) || is_checkout() ) {
-        wp_enqueue_style( 'ads-thankyou', get_template_directory_uri() . '/assets/css/thankyou.css', [ 'ads-main' ], '1.0' );
+// -------------------------------------------------------
+// CSS pages client (thankyou, account, orders)
+// -------------------------------------------------------
+add_action( 'wp_enqueue_scripts', function() {
+    if ( is_wc_endpoint_url() || is_account_page() || is_checkout() ) {
+        wp_enqueue_style(
+            'ads-thankyou',
+            ADS_URI . '/assets/css/thankyou.css',
+            array(),
+            ADS_VERSION
+        );
     }
-
-    // Page politique de confidentialité
     if ( is_page_template( 'page-privacy-policy.php' ) ) {
-        wp_enqueue_style( 'ads-legal', get_template_directory_uri() . '/assets/css/legal.css', [ 'ads-main' ], '1.0' );
+        wp_enqueue_style(
+            'ads-legal',
+            ADS_URI . '/assets/css/legal.css',
+            array(),
+            ADS_VERSION
+        );
     }
-
-    // Checkout & cart
-    if ( is_checkout() || is_cart() ) {
-        wp_enqueue_style( 'ads-checkout', get_template_directory_uri() . '/assets/css/checkout.css', [ 'ads-main' ], '1.0' );
-    }
-
-    // JS principal
-    wp_enqueue_script( 'ads-main', get_template_directory_uri() . '/assets/js/main.js', [], '1.0', true );
 } );
 
-/* ── WOOCOMMERCE : FORCER PAIEMENT À LA LIVRAISON ── */
-add_filter( 'woocommerce_available_payment_gateways', function ( $gateways ) {
-    if ( isset( $gateways['cod'] ) ) {
-        return [ 'cod' => $gateways['cod'] ];
-    }
-    return $gateways;
-} );
-
-// Valider le paiement à la livraison même sans adresse de livraison
-add_filter( 'woocommerce_cod_process_payment_order_status', function ( $status ) {
-    return 'processing';
-} );
-
-// Forcer COD valide pour toutes les zones de livraison
-add_filter( 'woocommerce_payment_gateways', function ( $gateways ) {
-    return $gateways;
-} );
-
-/* ── REMOVE WC STYLES NON NÉCESSAIRES ──────────────── */
-add_filter( 'woocommerce_enqueue_styles', function ( $styles ) {
-    // Garder uniquement les styles essentiels WC
-    return $styles;
-} );
-
-/* ── MON COMPTE : PERSONNALISER LE MENU ─────────── */
-add_filter( 'woocommerce_account_menu_items', function ( $items ) {
-    $new_items = [
+// -------------------------------------------------------
+// Menu Mon Compte simplifié
+// -------------------------------------------------------
+add_filter( 'woocommerce_account_menu_items', function( $items ) {
+    return array(
         'dashboard'       => 'Tableau de bord',
         'orders'          => 'Mes commandes',
         'edit-address'    => 'Mes adresses',
         'edit-account'    => 'Mes informations',
         'customer-logout' => 'Déconnexion',
-    ];
-    return $new_items;
+    );
 } );
 
-/* ── PAGE TITLE HELPERS ──────────────────────────── */
-add_filter( 'woocommerce_page_title', function ( $title ) {
-    return $title;
+// -------------------------------------------------------
+// Forcer paiement à la livraison valide
+// -------------------------------------------------------
+add_filter( 'woocommerce_available_payment_gateways', function( $gateways ) {
+    if ( isset( $gateways['cod'] ) ) {
+        return array( 'cod' => $gateways['cod'] );
+    }
+    return $gateways;
+} );
+
+add_filter( 'woocommerce_cod_process_payment_order_status', function() {
+    return 'processing';
 } );
