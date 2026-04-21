@@ -1,7 +1,7 @@
 <?php
 /**
- * Template page Validation de la commande — Alchimie des Senteurs
  * Template Name: Validation de la commande
+ * Template page Validation de la commande — Alchimie des Senteurs
  */
 defined( 'ABSPATH' ) || exit;
 get_header();
@@ -27,11 +27,7 @@ get_header();
 
   <!-- FORMULAIRE WOOCOMMERCE -->
   <div class="checkout-layout">
-    <?php
-    if ( function_exists('woocommerce_checkout') ) {
-        woocommerce_checkout();
-    }
-    ?>
+    <?php echo do_shortcode( '[woocommerce_checkout]' ); ?>
   </div>
 
 </div>
