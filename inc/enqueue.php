@@ -92,6 +92,16 @@ function ads_enqueue_assets() {
         );
     }
 
+    // CSS Mon Compte
+    if ( function_exists('is_account_page') && is_account_page() ) {
+        wp_enqueue_style(
+            'ads-myaccount',
+            ADS_URI . '/assets/css/myaccount.css',
+            array( 'ads-main' ),
+            ADS_VERSION
+        );
+    }
+
     // CSS page Contact
     if ( is_page_template( 'page-contact.php' ) ) {
         wp_enqueue_style(
