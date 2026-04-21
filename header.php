@@ -47,9 +47,6 @@
                 <span class="nav-cart-count"><?php echo function_exists( 'WC' ) ? WC()->cart->get_cart_contents_count() : '0'; ?></span>
             </a>
         <?php endif; ?>
-        <button class="nav-cta" onclick="window.location='<?php echo esc_url( function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url() ); ?>'">
-            <?php esc_html_e( 'Decouvrir', 'alchimie-des-senteurs' ); ?>
-        </button>
         <button class="nav-burger" id="navBurger" aria-label="Menu" aria-expanded="false">
             <span></span><span></span><span></span>
         </button>
