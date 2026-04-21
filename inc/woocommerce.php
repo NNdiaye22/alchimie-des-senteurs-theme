@@ -12,6 +12,27 @@ remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 )
 add_filter( 'woocommerce_show_page_title', '__return_false' );
 
 // -------------------------------------------------------
+// EXPÉDITION — Bypass pour Sénégal (adresse approximative)
+// Permet de passer commande même sans zone d'expédition définie
+// -------------------------------------------------------
+
+// Désactiver le message "aucun mode d'expédition disponible"
+add_filter( 'woocommerce_cart_needs_shipping', '__return_false' );
+
+// Forcer la validation même sans méthode d'expédition sélectionnée
+add_filter( 'woocommerce_cart_needs_shipping_address', '__return_false' );
+
+// Supprimer l'erreur de validation "Veuillez sélectionner une méthode d'expédition"
+add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) {
+    $codes = $errors->get_error_codes();
+    foreach ( $codes as $code ) {
+        if ( strpos( $code, 'shipping' ) !== false ) {
+            $errors->remove( $code );
+        }
+    }
+}, 20, 2 );
+
+// -------------------------------------------------------
 // CHAMPS CHECKOUT
 // -------------------------------------------------------
 add_filter( 'woocommerce_checkout_fields', function( $fields ) {
@@ -39,6 +60,14 @@ add_filter( 'woocommerce_checkout_fields', function( $fields ) {
         }
     }
 
+    // Adresse 1 : libre, non obligatoire, label personnalisé
+    if ( isset( $fields['billing']['billing_address_1'] ) ) {
+        $fields['billing']['billing_address_1']['required']    = false;
+        $fields['billing']['billing_address_1']['label']       = 'Adresse / Quartier';
+        $fields['billing']['billing_address_1']['placeholder'] = 'Ex : Almadies, Mermoz, Médina…';
+        $fields['billing']['billing_address_1']['class']       = array( 'form-row-wide' );
+    }
+
     // Email : supprimé
     unset( $fields['billing']['billing_email'] );
 
@@ -59,10 +88,11 @@ add_filter( 'woocommerce_checkout_fields', function( $fields ) {
     return $fields;
 } );
 
-// Injecter 00000 si code postal vide
+// Injecter valeurs par défaut si vides
 add_action( 'woocommerce_checkout_process', function() {
     if ( empty( $_POST['billing_postcode'] ) )  $_POST['billing_postcode']  = '00000';
     if ( empty( $_POST['billing_city'] ) )      $_POST['billing_city']      = 'Dakar';
+    if ( empty( $_POST['billing_address_1'] ) ) $_POST['billing_address_1'] = 'Non renseignée';
     if ( isset( $_POST['shipping_postcode'] ) && empty( $_POST['shipping_postcode'] ) ) $_POST['shipping_postcode'] = '00000';
 } );
 
