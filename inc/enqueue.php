@@ -72,6 +72,16 @@ function ads_enqueue_assets() {
         );
     }
 
+    // CSS checkout
+    if ( function_exists('is_checkout') && is_checkout() ) {
+        wp_enqueue_style(
+            'ads-checkout',
+            ADS_URI . '/assets/css/checkout.css',
+            array( 'ads-main' ),
+            ADS_VERSION
+        );
+    }
+
     // CSS produit unique
     if ( function_exists( 'is_product' ) && is_product() ) {
         wp_enqueue_style(
