@@ -12,20 +12,14 @@ remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 )
 add_filter( 'woocommerce_show_page_title', '__return_false' );
 
 // -------------------------------------------------------
-// EXPÉDITION — Bypass pour Sénégal (adresse approximative)
-// Permet de passer commande même sans zone d'expédition définie
+// EXPÉDITION — Bypass pour Sénégal
 // -------------------------------------------------------
-
-// Désactiver le message "aucun mode d'expédition disponible"
-add_filter( 'woocommerce_cart_needs_shipping', '__return_false' );
-
-// Forcer la validation même sans méthode d'expédition sélectionnée
+add_filter( 'woocommerce_cart_needs_shipping',         '__return_false' );
 add_filter( 'woocommerce_cart_needs_shipping_address', '__return_false' );
 
-// Supprimer l'erreur de validation "Veuillez sélectionner une méthode d'expédition"
+// Supprimer erreurs de validation liées à l'expédition
 add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) {
-    $codes = $errors->get_error_codes();
-    foreach ( $codes as $code ) {
+    foreach ( $errors->get_error_codes() as $code ) {
         if ( strpos( $code, 'shipping' ) !== false ) {
             $errors->remove( $code );
         }
@@ -33,11 +27,44 @@ add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) 
 }, 20, 2 );
 
 // -------------------------------------------------------
+// PAIEMENT — Forcer "paiement à la livraison" (cod)
+// -------------------------------------------------------
+
+// Toujours rendre cod disponible, quelle que soit la méthode d'expédition
+add_filter( 'woocommerce_available_payment_gateways', function( $gateways ) {
+    // Si cod existe, on le force disponible
+    if ( isset( $gateways['cod'] ) ) {
+        return array( 'cod' => $gateways['cod'] );
+    }
+    return $gateways;
+} );
+
+// Si aucun moyen de paiement POSTé, injecter cod automatiquement
+add_action( 'woocommerce_checkout_process', function() {
+    if ( empty( $_POST['payment_method'] ) ) {
+        $_POST['payment_method'] = 'cod';
+    }
+} );
+
+// Supprimer l'erreur "Moyen de paiement non valide" pour cod
+add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) {
+    $codes = $errors->get_error_codes();
+    foreach ( $codes as $code ) {
+        if ( strpos( $code, 'payment' ) !== false ) {
+            // Vérifier que cod est bien disponible avant de supprimer l'erreur
+            $gateways = WC()->payment_gateways()->get_available_payment_gateways();
+            if ( isset( $gateways['cod'] ) ) {
+                $errors->remove( $code );
+            }
+        }
+    }
+}, 25, 2 );
+
+// -------------------------------------------------------
 // CHAMPS CHECKOUT
 // -------------------------------------------------------
 add_filter( 'woocommerce_checkout_fields', function( $fields ) {
 
-    // Code postal : caché, valeur auto
     foreach ( array( 'billing', 'shipping' ) as $type ) {
         if ( isset( $fields[ $type ][ $type . '_postcode' ] ) ) {
             $fields[ $type ][ $type . '_postcode' ]['type']     = 'hidden';
@@ -60,35 +87,29 @@ add_filter( 'woocommerce_checkout_fields', function( $fields ) {
         }
     }
 
-    // Adresse 1 : libre, non obligatoire, label personnalisé
+    // Adresse libre
     if ( isset( $fields['billing']['billing_address_1'] ) ) {
         $fields['billing']['billing_address_1']['required']    = false;
         $fields['billing']['billing_address_1']['label']       = 'Adresse / Quartier';
-        $fields['billing']['billing_address_1']['placeholder'] = 'Ex : Almadies, Mermoz, Médina…';
+        $fields['billing']['billing_address_1']['placeholder'] = 'Ex : Almadies, Mermoz, Médina…';
         $fields['billing']['billing_address_1']['class']       = array( 'form-row-wide' );
     }
 
-    // Email : supprimé
     unset( $fields['billing']['billing_email'] );
-
-    // Société : supprimée
     unset( $fields['billing']['billing_company'] );
+    unset( $fields['billing']['billing_address_2'] );
 
-    // Téléphone : obligatoire, en premier
     if ( isset( $fields['billing']['billing_phone'] ) ) {
         $fields['billing']['billing_phone']['required']    = true;
         $fields['billing']['billing_phone']['priority']    = 5;
         $fields['billing']['billing_phone']['label']       = 'Téléphone';
-        $fields['billing']['billing_phone']['placeholder'] = 'Ex : 77 000 00 00';
+        $fields['billing']['billing_phone']['placeholder'] = 'Ex : 77 000 00 00';
     }
-
-    // Adresse 2 : supprimée
-    unset( $fields['billing']['billing_address_2'] );
 
     return $fields;
 } );
 
-// Injecter valeurs par défaut si vides
+// Valeurs par défaut si vides
 add_action( 'woocommerce_checkout_process', function() {
     if ( empty( $_POST['billing_postcode'] ) )  $_POST['billing_postcode']  = '00000';
     if ( empty( $_POST['billing_city'] ) )      $_POST['billing_city']      = 'Dakar';
@@ -96,7 +117,7 @@ add_action( 'woocommerce_checkout_process', function() {
     if ( isset( $_POST['shipping_postcode'] ) && empty( $_POST['shipping_postcode'] ) ) $_POST['shipping_postcode'] = '00000';
 } );
 
-// Validation serveur téléphone
+// Validation téléphone
 add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) {
     $phone = isset( $_POST['billing_phone'] ) ? trim( $_POST['billing_phone'] ) : '';
     if ( empty( $phone ) ) {
@@ -105,17 +126,15 @@ add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) 
     }
     $cleaned = preg_replace( '/[\s\-\.\(\)]/', '', $phone );
     if ( ! preg_match( '/^\+?[0-9]{7,15}$/', $cleaned ) ) {
-        $errors->add( 'billing_phone_invalid', 'Veuillez entrer un numéro valide (ex : 77 000 00 00).' );
+        $errors->add( 'billing_phone_invalid', 'Veuillez entrer un numéro valide (ex : 77 000 00 00).' );
     }
 }, 10, 2 );
 
-// Validation téléphone format sénégalais
 add_filter( 'woocommerce_validate_phone', function( $valid, $phone ) {
     $cleaned = preg_replace( '/[\s\-\.\(\)]/', '', $phone );
     return (bool) preg_match( '/^\+?[0-9]{7,15}$/', $cleaned );
 }, 10, 2 );
 
-// Email non obligatoire au niveau WooCommerce core
 add_filter( 'woocommerce_checkout_required_field_notice', function( $notice, $field_label ) {
     if ( strpos( strtolower( $field_label ), 'email' ) !== false ) return '';
     return $notice;
@@ -140,9 +159,7 @@ add_filter( 'template_include', function( $template ) {
     return $template;
 }, 99 );
 
-// -------------------------------------------------------
 // Produits par page
-// -------------------------------------------------------
 add_filter( 'loop_shop_per_page', function() {
     return absint( get_theme_mod( 'ads_collection_nb', 6 ) );
 }, 20 );
