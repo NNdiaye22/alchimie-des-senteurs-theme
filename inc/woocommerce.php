@@ -4,6 +4,9 @@
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+// Gateway COD personnalisé (sans restriction expédition)
+require_once get_template_directory() . '/inc/class-ads-cod-gateway.php';
+
 // Retirer les wrappers WooCommerce natifs
 remove_action( 'woocommerce_before_main_content', 'woocommerce_output_content_wrapper', 10 );
 remove_action( 'woocommerce_after_main_content',  'woocommerce_output_content_wrapper_end', 10 );
@@ -16,47 +19,6 @@ add_filter( 'woocommerce_show_page_title', '__return_false' );
 // -------------------------------------------------------
 add_filter( 'woocommerce_cart_needs_shipping',         '__return_false' );
 add_filter( 'woocommerce_cart_needs_shipping_address', '__return_false' );
-
-// -------------------------------------------------------
-// PAIEMENT — Forcer cod, bypass toutes les vérifications
-// -------------------------------------------------------
-
-// cod toujours disponible (priority 9999 pour passer après tous les autres filtres)
-add_filter( 'woocommerce_available_payment_gateways', function( $gateways ) {
-    if ( isset( $gateways['cod'] ) ) {
-        $gateways['cod']->enabled = 'yes';
-        return array( 'cod' => $gateways['cod'] );
-    }
-    return $gateways;
-}, 9999 );
-
-// cod valide même sans expédition — désactiver la vérification native
-add_filter( 'woocommerce_cod_enabled_for_current_order', '__return_true', 9999 );
-
-// Forcer payment_method = cod avant tout traitement (priority 1)
-add_action( 'woocommerce_checkout_process', function() {
-    $_POST['payment_method'] = 'cod';
-}, 1 );
-
-// Supprimer TOUTES les erreurs payment + shipping après validation (priority 9999)
-add_action( 'woocommerce_after_checkout_validation', function( $data, $errors ) {
-    foreach ( $errors->get_error_codes() as $code ) {
-        if (
-            strpos( $code, 'payment'  ) !== false ||
-            strpos( $code, 'shipping' ) !== false
-        ) {
-            $errors->remove( $code );
-        }
-    }
-}, 9999, 2 );
-
-// Intercepter l'exception WooCommerce lors du process_payment de cod
-// cod vérifie si l'expédition est activée — on neutralise cette vérif
-add_action( 'woocommerce_checkout_order_created', function( $order ) {
-    $order->set_payment_method( 'cod' );
-    $order->set_payment_method_title( 'Paiement à la livraison' );
-    $order->save();
-} );
 
 // -------------------------------------------------------
 // CHAMPS CHECKOUT
@@ -231,4 +193,14 @@ add_action( 'wp_head', function() {
     @keyframes ads-spin{to{transform:rotate(360deg);}}
     </style>
     <?php
+} );
+
+// -------------------------------------------------------
+// Notice livraison sur devis au checkout
+// -------------------------------------------------------
+add_action( 'woocommerce_review_order_before_submit', function() {
+    echo '<p class="ads-shipping-notice" style="font-size:0.78rem;line-height:1.7;color:#9a9088;background:#f8f6f3;border-left:2px solid #c4873a;padding:0.9rem 1.2rem;margin-bottom:1.4rem;font-family:Georgia,serif;">
+        📦 <strong style="color:#1a1714;font-weight:normal;">Livraison calculée après commande.</strong><br>
+        Renseignez votre adresse ci-dessus — nous vous recontacterons rapidement pour vous communiquer les frais de livraison avant tout paiement.
+    </p>';
 } );
