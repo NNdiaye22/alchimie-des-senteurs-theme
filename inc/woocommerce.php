@@ -20,25 +20,36 @@ add_filter( 'woocommerce_show_page_title', '__return_false' );
 // -------------------------------------------------------
 add_filter( 'woocommerce_checkout_fields', function( $fields ) {
 
-    // Code postal de facturation : facultatif
+    // Code postal facultatif
     if ( isset( $fields['billing']['billing_postcode'] ) ) {
         $fields['billing']['billing_postcode']['required'] = false;
     }
-    // Code postal de livraison : facultatif
     if ( isset( $fields['shipping']['shipping_postcode'] ) ) {
         $fields['shipping']['shipping_postcode']['required'] = false;
     }
 
-    // Téléphone : obligatoire + affiché en premier dans le bloc facturation
+    // Téléphone sénégalais : obligatoire, en tête de formulaire
     if ( isset( $fields['billing']['billing_phone'] ) ) {
-        $fields['billing']['billing_phone']['required'] = true;
-        $fields['billing']['billing_phone']['priority'] = 5; // avant prénom/nom
-        $fields['billing']['billing_phone']['label']    = __( 'Téléphone', 'alchimie-des-senteurs' );
-        $fields['billing']['billing_phone']['placeholder'] = '+33 6 00 00 00 00';
+        $fields['billing']['billing_phone']['required']    = true;
+        $fields['billing']['billing_phone']['priority']    = 5;
+        $fields['billing']['billing_phone']['label']       = __( 'Téléphone', 'alchimie-des-senteurs' );
+        $fields['billing']['billing_phone']['placeholder'] = 'Ex : 77 000 00 00 ou +221 77 000 00 00';
     }
 
     return $fields;
 } );
+
+// -------------------------------------------------------
+// Validation téléphone assouplie (accepte formats sénégalais)
+// WooCommerce valide nativement le téléphone avec une regex stricte
+// On la remplace pour accepter 7+ chiffres, espaces, +, tirets
+// -------------------------------------------------------
+add_filter( 'woocommerce_validate_phone', function( $valid, $phone ) {
+    $cleaned = preg_replace( '/[\s\-\.\(\)]/', '', $phone );
+    // Accepte : +221XXXXXXXX, 77XXXXXXX, 33XXXXXXX, etc. (min 7 chiffres)
+    $valid = (bool) preg_match( '/^\+?[0-9]{7,15}$/', $cleaned );
+    return $valid;
+}, 10, 2 );
 
 // -------------------------------------------------------
 // FORCER nos templates via template_include
@@ -115,7 +126,6 @@ function ads_ajax_add_variation_to_cart() {
         wp_send_json_error( 'invalid_product' );
     }
 
-    // Recuperer les attributs de la variation
     $variation  = wc_get_product( $variation_id );
     $var_attrs  = $variation ? $variation->get_variation_attributes() : [];
 
@@ -145,126 +155,57 @@ add_action( 'wp_head', function() {
     if ( ! is_product() ) return;
     ?>
     <style id="ads-variation-css">
-    /* ---- Groupe variation ---- */
-    .ads-var-group {
-        margin-bottom: 1.25rem;
-    }
+    .ads-var-group { margin-bottom: 1.25rem; }
     .ads-var-label {
-        font-size:      0.7rem;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        color:          var(--stone, #9a9088);
-        margin-bottom:  0.6rem;
-        display:        flex;
-        align-items:    baseline;
-        gap:            0.5rem;
+        font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+        color: var(--stone, #9a9088); margin-bottom: 0.6rem;
+        display: flex; align-items: baseline; gap: 0.5rem;
     }
     .ads-var-chosen {
-        font-size:      0.72rem;
-        font-weight:    600;
-        color:          var(--amber, #c4873a);
-        letter-spacing: 0.02em;
-        text-transform: none;
+        font-size: 0.72rem; font-weight: 600; color: var(--amber, #c4873a);
+        letter-spacing: 0.02em; text-transform: none;
     }
-
-    /* ---- Pills ---- */
-    .ads-var-pills {
-        display:   flex;
-        flex-wrap: wrap;
-        gap:       0.5rem;
-    }
+    .ads-var-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
     .ads-pill {
-        display:         inline-flex;
-        align-items:     center;
-        justify-content: center;
-        padding:         0.4rem 1rem;
-        border:          1px solid var(--mid, #e0d8cc);
-        border-radius:   999px;
-        background:      transparent;
-        color:           var(--ink, #1a1714);
-        font-size:       0.8rem;
-        font-family:     inherit;
-        cursor:          pointer;
-        transition:      border-color 0.2s, background 0.2s, color 0.2s, box-shadow 0.2s;
-        line-height:     1;
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 0.4rem 1rem; border: 1px solid var(--mid, #e0d8cc);
+        border-radius: 999px; background: transparent; color: var(--ink, #1a1714);
+        font-size: 0.8rem; font-family: inherit; cursor: pointer;
+        transition: border-color 0.2s, background 0.2s, color 0.2s, box-shadow 0.2s;
+        line-height: 1;
     }
-    .ads-pill:hover {
-        border-color: var(--amber, #c4873a);
-        color:        var(--amber, #c4873a);
-    }
+    .ads-pill:hover { border-color: var(--amber, #c4873a); color: var(--amber, #c4873a); }
     .ads-pill.active {
-        border-color: var(--amber, #c4873a);
-        background:   var(--amber, #c4873a);
-        color:        #fff;
-        box-shadow:   0 2px 8px oklch(from var(--amber, #c4873a) l c h / 0.25);
+        border-color: var(--amber, #c4873a); background: var(--amber, #c4873a);
+        color: #fff; box-shadow: 0 2px 8px oklch(from var(--amber, #c4873a) l c h / 0.25);
     }
-    .ads-pill:disabled,
-    .ads-pill.is-disabled {
-        opacity:       0.4;
-        cursor:        not-allowed;
-        border-color:  var(--mid, #e0d8cc);
-        color:         var(--stone, #9a9088);
+    .ads-pill:disabled, .ads-pill.is-disabled {
+        opacity: 0.4; cursor: not-allowed;
+        border-color: var(--mid, #e0d8cc); color: var(--stone, #9a9088);
     }
-
-    /* ---- Message indisponible ---- */
     .ads-var-unavailable {
-        font-size:    0.78rem;
-        color:        #b94a48;
-        margin-top:   0.5rem;
-        padding:      0.4rem 0.75rem;
-        border-left:  2px solid #b94a48;
-        background:   rgba(185,74,72,0.06);
-        border-radius: 0 4px 4px 0;
+        font-size: 0.78rem; color: #b94a48; margin-top: 0.5rem;
+        padding: 0.4rem 0.75rem; border-left: 2px solid #b94a48;
+        background: rgba(185,74,72,0.06); border-radius: 0 4px 4px 0;
     }
-
-    /* ---- Bouton ajouter au panier ---- */
     .sp-add-btn {
-        display:         inline-flex;
-        align-items:     center;
-        gap:             0.5rem;
-        margin-top:      1rem;
-        padding:         0.75rem 1.75rem;
-        background:      var(--ink, #1a1714);
-        color:           #fff;
-        border:          none;
-        border-radius:   4px;
-        font-size:       0.85rem;
-        font-family:     inherit;
-        font-weight:     500;
-        letter-spacing:  0.05em;
-        text-transform:  uppercase;
-        cursor:          pointer;
-        transition:      background 0.2s, opacity 0.2s, transform 0.15s;
+        display: inline-flex; align-items: center; gap: 0.5rem;
+        margin-top: 1rem; padding: 0.75rem 1.75rem;
+        background: var(--ink, #1a1714); color: #fff; border: none;
+        border-radius: 4px; font-size: 0.85rem; font-family: inherit;
+        font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase;
+        cursor: pointer; transition: background 0.2s, opacity 0.2s, transform 0.15s;
     }
-    .sp-add-btn:hover:not(:disabled) {
-        background: var(--amber, #c4873a);
-        transform:  translateY(-1px);
-    }
-    .sp-add-btn:disabled {
-        opacity: 0.45;
-        cursor:  not-allowed;
-        transform: none;
-    }
-    .sp-add-btn.loading {
-        opacity: 0.7;
-        pointer-events: none;
-    }
-    .sp-add-btn.added {
-        background: #437a22;
-    }
+    .sp-add-btn:hover:not(:disabled) { background: var(--amber, #c4873a); transform: translateY(-1px); }
+    .sp-add-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+    .sp-add-btn.loading { opacity: 0.7; pointer-events: none; }
+    .sp-add-btn.added { background: #437a22; }
     .sp-add-btn.loading::after {
-        content: '';
-        display: inline-block;
-        width: 12px;
-        height: 12px;
-        border: 2px solid rgba(255,255,255,0.4);
-        border-top-color: #fff;
-        border-radius: 50%;
-        animation: ads-spin 0.7s linear infinite;
+        content: ''; display: inline-block; width: 12px; height: 12px;
+        border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff;
+        border-radius: 50%; animation: ads-spin 0.7s linear infinite;
     }
-    @keyframes ads-spin {
-        to { transform: rotate(360deg); }
-    }
+    @keyframes ads-spin { to { transform: rotate(360deg); } }
     </style>
     <?php
 } );
