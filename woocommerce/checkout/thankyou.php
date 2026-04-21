@@ -3,12 +3,19 @@
  * Confirmation de commande — Alchimie des Senteurs
  */
 defined( 'ABSPATH' ) || exit;
+
+// Récupérer $order_id de façon fiable (WC le passe via extract mais peut être null)
+if ( empty( $order_id ) ) {
+    global $wp;
+    $order_id = isset( $wp->query_vars['order-received'] ) ? absint( $wp->query_vars['order-received'] ) : 0;
+}
+
 get_header();
 ?>
 
 <div class="thankyou-wrap">
 
-<?php if ( $order = wc_get_order( $order_id ) ) : ?>
+<?php if ( $order_id && ( $order = wc_get_order( $order_id ) ) ) : ?>
 
   <!-- EN-TÊTE CONFIRMATION -->
   <div class="ty-hero">
@@ -21,7 +28,7 @@ get_header();
       </div>
       <p class="ty-hero-tag">Commande n°<?php echo esc_html( $order->get_order_number() ); ?></p>
       <h1 class="ty-hero-title">Merci pour<br><em>votre confiance</em></h1>
-      <p class="ty-hero-sub">Votre commande a bien été enregistrée. Notre équipe vous contactera dans les meilleurs délais pour confirmer l'envoi et vous communiquer les frais de livraison.</p>
+      <p class="ty-hero-sub">Votre commande a bien été enregistrée. Notre équipe vous contactera dans les meilleurs délais pour confirmer l’envoi et vous communiquer les frais de livraison.</p>
     </div>
   </div>
 
@@ -133,7 +140,7 @@ get_header();
   <div class="ty-layout">
     <div class="ty-main">
       <div class="ty-notice ty-notice--info">
-        <p><?php echo wp_kses_post( apply_filters( 'woocommerce_thankyou_order_received_text', __( 'Merci pour votre commande.', 'woocommerce' ), null ) ); ?></p>
+        <p><?php esc_html_e( 'Merci pour votre commande.', 'woocommerce' ); ?></p>
       </div>
     </div>
   </div>
@@ -143,6 +150,8 @@ get_header();
 </div>
 
 <?php
-do_action( 'woocommerce_thankyou', $order_id );
+if ( ! empty( $order_id ) ) {
+    do_action( 'woocommerce_thankyou', $order_id );
+}
 get_footer();
 ?>
