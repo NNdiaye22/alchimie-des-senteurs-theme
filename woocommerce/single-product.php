@@ -286,12 +286,15 @@ while ( have_posts() ) :
         </form>
 
         <script>
-        (function(){
+        (function($){
           var variations    = <?php echo wp_json_encode($variations_js); ?>;
           var anyOnSale     = <?php echo $any_on_sale   ? 'true' : 'false'; ?>;
           var anyLowStock   = <?php echo $any_low_stock ? 'true' : 'false'; ?>;
           var anyBackorder  = <?php echo $any_backorder ? 'true' : 'false'; ?>;
           var allOut        = <?php echo $all_out       ? 'true' : 'false'; ?>;
+
+          var productName   = <?php echo wp_json_encode( get_the_title() ); ?>;
+          var productImg    = <?php echo wp_json_encode( $img_url ); ?>;
 
           var selectedAttrs = {};
           var form          = document.getElementById('ads-variation-form');
@@ -323,13 +326,11 @@ while ( have_posts() ) :
             else if (anyOnSale)     showBadge(badgePromo);
           }
 
-          // Grise uniquement les pills dont TOUTES les variations sont epuisees (sans backorder)
           function updatePillsAvailability() {
             document.querySelectorAll('.ads-var-group').forEach(function(group) {
               var groupKey = group.dataset.attrKey;
               group.querySelectorAll('.ads-pill').forEach(function(pill) {
                 var val = pill.dataset.value;
-                // Cherche au moins une variation avec cette valeur qui est en stock ou backorder
                 var hasStock = variations.some(function(v) {
                   if (v.attributes[groupKey] !== '' && v.attributes[groupKey] !== val) return false;
                   return v.is_in_stock || v.backorders;
@@ -364,6 +365,8 @@ while ( have_posts() ) :
             return ok;
           }
 
+          var currentVariation = null;
+
           function matchVariation() {
             var matched = null;
             for (var i = 0; i < variations.length; i++) {
@@ -374,6 +377,7 @@ while ( have_posts() ) :
               if (ok) { matched = v; break; }
             }
 
+            currentVariation = matched;
             unavailMsg.style.display = 'none';
 
             if (!matched) {
@@ -402,7 +406,10 @@ while ( have_posts() ) :
               priceBlock.innerHTML = html;
             }
 
-            if (matched.image && mainImg) mainImg.src = matched.image;
+            if (matched.image && mainImg) {
+              mainImg.src = matched.image;
+              productImg  = matched.image;
+            }
 
             document.getElementById('ads-variation-id').value = matched.variation_id;
             addBtn.disabled = !matched.is_in_stock && !matched.backorders;
@@ -422,19 +429,44 @@ while ( have_posts() ) :
             addBtn.disabled = true;
             addBtn.classList.add('loading');
             var cartUrl = '<?php echo esc_url( wc_get_cart_url() ); ?>';
-            fetch('<?php echo esc_url( admin_url('admin-ajax.php') ); ?>', {
+            var ajaxUrl = typeof adsData !== 'undefined' ? adsData.ajaxUrl : '<?php echo esc_url( admin_url('admin-ajax.php') ); ?>';
+            var nonce   = typeof adsData !== 'undefined' ? adsData.nonce  : '<?php echo wp_create_nonce("ads-nonce"); ?>';
+
+            fetch(ajaxUrl, {
               method: 'POST',
               headers: {'Content-Type':'application/x-www-form-urlencoded'},
-              body: 'action=ads_add_variation_to_cart&nonce='+encodeURIComponent('<?php echo wp_create_nonce("ads-nonce"); ?>')+'&product_id='+prodId+'&variation_id='+varId+'&quantity=1'
+              body: 'action=ads_add_variation_to_cart&nonce='+encodeURIComponent(nonce)+'&product_id='+prodId+'&variation_id='+varId+'&quantity=1'
             })
             .then(function(r){ return r.json(); })
             .then(function(res){
               addBtn.classList.remove('loading');
               if (res.success) {
-                addBtn.classList.add('added');
-                addBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Ajouté !';
+                /* Mise à jour compteur panier */
                 var counter = document.querySelector('.cart-count');
                 if (counter) counter.textContent = res.data.count;
+
+                /* Prix affiché */
+                var currentPrice = priceBlock ? priceBlock.querySelector('.sp-price-current') : null;
+                var priceText    = currentPrice ? currentPrice.textContent.trim() : '';
+
+                /* Déclenchement event WooCommerce → ouvre le cart drawer */
+                $(document.body).trigger('added_to_cart', [{}, '', $(addBtn)]);
+
+                /* Surcharge directe du drawer avec les bonnes infos */
+                if (window.adsCartDrawer) {
+                  fetch(ajaxUrl + '?action=ads_get_cart_total&nonce=' + encodeURIComponent(nonce))
+                    .then(function(r2){ return r2.json(); })
+                    .then(function(r2res){
+                      var total = r2res && r2res.success ? r2res.data.total : '';
+                      window.adsCartDrawer.open(productName, priceText, productImg, total);
+                    })
+                    .catch(function(){
+                      window.adsCartDrawer.open(productName, priceText, productImg, '');
+                    });
+                }
+
+                addBtn.classList.add('added');
+                addBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Ajouté !';
                 setTimeout(function(){
                   addBtn.disabled = false;
                   addBtn.classList.remove('added');
@@ -451,14 +483,83 @@ while ( have_posts() ) :
               window.location.href = cartUrl;
             });
           });
-        })();
+        })(jQuery);
         </script>
 
       <?php else : ?>
+        <!-- Produit simple -->
         <div class="sp-cart-wrap">
-          <?php if ( $in_stock || $backorders ) :
-            woocommerce_template_single_add_to_cart();
-          else : ?>
+          <?php if ( $in_stock || $backorders ) : ?>
+            <button type="button" class="sp-add-btn" id="ads-simple-add-btn"
+                    data-product-id="<?php echo esc_attr(get_the_ID()); ?>"
+                    data-product-name="<?php echo esc_attr(get_the_title()); ?>"
+                    data-product-img="<?php echo esc_attr($img_url); ?>">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+              Ajouter au panier
+            </button>
+            <script>
+            (function($){
+              var btn     = document.getElementById('ads-simple-add-btn');
+              var cartUrl = '<?php echo esc_url( wc_get_cart_url() ); ?>';
+              var ajaxUrl = typeof adsData !== 'undefined' ? adsData.ajaxUrl : '<?php echo esc_url( admin_url('admin-ajax.php') ); ?>';
+              var nonce   = typeof adsData !== 'undefined' ? adsData.nonce  : '<?php echo wp_create_nonce("ads-nonce"); ?>';
+
+              btn.addEventListener('click', function(){
+                var prodId      = btn.dataset.productId;
+                var prodName    = btn.dataset.productName;
+                var prodImg     = btn.dataset.productImg;
+                var priceEl     = document.querySelector('.sp-price-current');
+                var priceText   = priceEl ? priceEl.textContent.trim() : '';
+
+                btn.disabled = true;
+                btn.classList.add('loading');
+
+                fetch(ajaxUrl, {
+                  method: 'POST',
+                  headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                  body: 'action=ads_add_to_cart&nonce='+encodeURIComponent(nonce)+'&product_id='+prodId+'&quantity=1'
+                })
+                .then(function(r){ return r.json(); })
+                .then(function(res){
+                  btn.classList.remove('loading');
+                  if (res.success) {
+                    var counter = document.querySelector('.cart-count');
+                    if (counter) counter.textContent = res.data.count;
+
+                    /* Ouvre le cart drawer directement */
+                    if (window.adsCartDrawer) {
+                      fetch(ajaxUrl + '?action=ads_get_cart_total&nonce=' + encodeURIComponent(nonce))
+                        .then(function(r2){ return r2.json(); })
+                        .then(function(r2res){
+                          var total = r2res && r2res.success ? r2res.data.total : '';
+                          window.adsCartDrawer.open(prodName, priceText, prodImg, total);
+                        })
+                        .catch(function(){
+                          window.adsCartDrawer.open(prodName, priceText, prodImg, '');
+                        });
+                    }
+
+                    btn.classList.add('added');
+                    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Ajouté !';
+                    setTimeout(function(){
+                      btn.disabled = false;
+                      btn.classList.remove('added');
+                      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg> Ajouter au panier';
+                    }, 2500);
+                  } else {
+                    btn.disabled = false;
+                    window.location.href = cartUrl;
+                  }
+                })
+                .catch(function(){
+                  btn.classList.remove('loading');
+                  btn.disabled = false;
+                  window.location.href = cartUrl;
+                });
+              });
+            })(jQuery);
+            </script>
+          <?php else : ?>
             <div class="sp-out-msg">&Eacute;puis&eacute; &mdash; revenez bient&ocirc;t</div>
           <?php endif; ?>
         </div>
