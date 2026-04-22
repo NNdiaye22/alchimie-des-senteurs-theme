@@ -73,7 +73,7 @@ function ads_customizer_register( $wp_customize ) {
        0. COULEURS GLOBALES
     ============================================================== */
     $wp_customize->add_section( 'ads_colors', array(
-        'title'       => '🎨 Couleurs Globales',
+        'title'       => 'Couleurs Globales',
         'description' => "Ces couleurs s'appliquent sur tout le site.",
         'panel'       => 'ads_theme_panel',
         'priority'    => 1,
@@ -238,9 +238,9 @@ function ads_customizer_register( $wp_customize ) {
     _ads_text(  $wp_customize, 'ads_phi_title', 'Titre', "L'encens comme rituel quotidien",  'ads_philosophy' );
     _ads_text(  $wp_customize, 'ads_phi_body',  'Texte', "Chaque bâtonnet est un pont entre le présent et l'ancestral.", 'ads_philosophy', 'textarea' );
     for ( $i = 1; $i <= 4; $i++ ) {
-        _ads_text( $wp_customize, "ads_phi_stat_{$i}_num",  "Stat {$i} - Chiffre",      '', 'ads_philosophy' );
-        _ads_text( $wp_customize, "ads_phi_stat_{$i}_unit", "Stat {$i} - Unité / Label",  '', 'ads_philosophy' );
-        _ads_text( $wp_customize, "ads_phi_stat_{$i}_desc", "Stat {$i} - Description",  '', 'ads_philosophy' );
+        _ads_text( $wp_customize, "ads_phi_stat_{$i}_num",  "Stat {$i} - Chiffre",       '', 'ads_philosophy' );
+        _ads_text( $wp_customize, "ads_phi_stat_{$i}_unit", "Stat {$i} - Unité / Label", '', 'ads_philosophy' );
+        _ads_text( $wp_customize, "ads_phi_stat_{$i}_desc", "Stat {$i} - Description",   '', 'ads_philosophy' );
     }
 
     /* ==============================================================
@@ -251,10 +251,10 @@ function ads_customizer_register( $wp_customize ) {
         'panel' => 'ads_theme_panel',
     ) );
     _ads_check( $wp_customize, 'ads_nl_show',  'Afficher cette section', '1', 'ads_newsletter' );
-    _ads_text(  $wp_customize, 'ads_nl_tag',   'Tag',          'Restez Informé',                                         'ads_newsletter' );
-    _ads_text(  $wp_customize, 'ads_nl_title', 'Titre',        'La Lettre des Senteurs',                                 'ads_newsletter' );
+    _ads_text(  $wp_customize, 'ads_nl_tag',   'Tag',          'Restez Informé',                                              'ads_newsletter' );
+    _ads_text(  $wp_customize, 'ads_nl_title', 'Titre',        'La Lettre des Senteurs',                                      'ads_newsletter' );
     _ads_text(  $wp_customize, 'ads_nl_sub',   'Sous-titre',   'Nouvelles collections, éditions limitées et conseils olfactifs.', 'ads_newsletter', 'textarea' );
-    _ads_text(  $wp_customize, 'ads_nl_btn',   'Texte bouton', "S'abonner",                                              'ads_newsletter' );
+    _ads_text(  $wp_customize, 'ads_nl_btn',   'Texte bouton', "S'abonner",                                                   'ads_newsletter' );
 
     /* ==============================================================
        9. PAGE BOUTIQUE
@@ -282,9 +282,9 @@ function ads_customizer_register( $wp_customize ) {
         'description' => "Ces textes s'appliquent à toutes les catégories sans réglages spécifiques.",
         'panel'       => 'ads_theme_panel',
     ) );
-    _ads_text( $wp_customize, 'ads_cat_default_tag',      'Tag générique',             'Collection',                                     'ads_cat_defaults' );
-    _ads_text( $wp_customize, 'ads_cat_default_ed_label', 'Case éditoriale - Label',   'La sélection',                                   'ads_cat_defaults' );
-    _ads_text( $wp_customize, 'ads_cat_default_ed_text',  'Case éditoriale - Citation','« Chaque forme, une expérience olfactive unique. »', 'ads_cat_defaults', 'textarea' );
+    _ads_text( $wp_customize, 'ads_cat_default_tag',      'Tag générique',              'Collection',                                      'ads_cat_defaults' );
+    _ads_text( $wp_customize, 'ads_cat_default_ed_label', 'Case éditoriale - Label',    'La sélection',                                    'ads_cat_defaults' );
+    _ads_text( $wp_customize, 'ads_cat_default_ed_text',  'Case éditoriale - Citation', '« Chaque forme, une expérience olfactive unique. »', 'ads_cat_defaults', 'textarea' );
 
     $known_cats = array(
         'batonnets' => array(
@@ -363,7 +363,7 @@ function ads_customizer_register( $wp_customize ) {
        13. NUMERO DE TELEPHONE
     ============================================================== */
     $wp_customize->add_section( 'ads_phone', array(
-        'title'       => '📱 Numéro de Téléphone',
+        'title'       => 'Numéro de Téléphone',
         'description' => 'Gérez le numéro WhatsApp affiché sur le site et activez/désactivez son affichage page par page.',
         'panel'       => 'ads_theme_panel',
         'priority'    => 200,
