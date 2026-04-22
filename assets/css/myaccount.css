@@ -12,7 +12,7 @@
 /* ---- HERO (identique checkout/contact) ---- */
 .myaccount-hero {
   background: var(--ink);
-  padding: 14rem 6vw 8rem;
+  padding: 9rem 6vw 5rem;
   position: relative;
   overflow: hidden;
 }
@@ -434,7 +434,7 @@
 }
 @media (max-width: 600px) {
   .myaccount-hero {
-    padding: 10rem 6vw 5rem;
+    padding: 7rem 6vw 4rem;
   }
   .myaccount-hero-title {
     font-size: 2.4rem;

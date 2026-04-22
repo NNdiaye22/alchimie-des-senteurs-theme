@@ -18,7 +18,7 @@
 /* ---- HERO (calque contact-hero) ---- */
 .checkout-hero {
   background: var(--ink);
-  padding: 14rem 6vw 8rem;
+  padding: 9rem 6vw 5rem;
   position: relative;
   overflow: hidden;
 }
@@ -369,7 +369,7 @@
   .cko-item:nth-child(4) { border-top: 1px solid var(--light); border-right: none; }
 }
 @media (max-width: 600px) {
-  .checkout-hero { padding: 10rem 6vw 5rem; }
+  .checkout-hero { padding: 7rem 6vw 4rem; }
   .checkout-hero-title { font-size: 2.2rem; }
   .checkout-quick { grid-template-columns: 1fr; }
   .cko-item { border-right: none !important; border-top: 1px solid var(--light); }
