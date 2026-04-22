@@ -49,6 +49,7 @@ while ( have_posts() ) :
             $v_back  = $vobj ? $vobj->backorders_allowed() : false;
             $v_low   = ( $v['is_in_stock'] && $v_stock !== null && $v_stock > 0 && $v_stock <= 5 );
             $has_sale = $v['display_regular_price'] > $v['display_price'];
+            $v_desc  = $vobj ? $vobj->get_description() : '';
 
             if ( $v['is_in_stock'] || $v_back ) $all_out = false;
             if ( $has_sale )  $any_on_sale   = true;
@@ -73,6 +74,7 @@ while ( have_posts() ) :
                 'stock_qty'     => $v_stock,
                 'backorders'    => $v_back,
                 'image'         => ! empty($v['image']['url']) ? $v['image']['url'] : '',
+                'description'   => $v_desc,
             ];
         }
     }
@@ -265,6 +267,9 @@ while ( have_posts() ) :
           </div>
           <?php endforeach; ?>
 
+          <!-- Description de la variation sélectionnée -->
+          <div class="ads-var-desc" id="ads-var-desc" style="display:none;"></div>
+
           <input type="hidden" name="variation_id" id="ads-variation-id" value="" />
           <input type="hidden" name="product_id"   value="<?php echo esc_attr(get_the_ID()); ?>" />
           <input type="hidden" name="quantity"     value="1" />
@@ -302,6 +307,7 @@ while ( have_posts() ) :
           var priceBlock    = document.getElementById('sp-price-block');
           var unavailMsg    = document.getElementById('ads-var-unavailable');
           var mainImg       = document.getElementById('sp-main-img');
+          var varDesc       = document.getElementById('ads-var-desc');
 
           var badgePromo     = document.getElementById('badge-promo');
           var badgeOut       = document.getElementById('badge-out');
@@ -380,6 +386,17 @@ while ( have_posts() ) :
             currentVariation = matched;
             unavailMsg.style.display = 'none';
 
+            // Description de la variation
+            if (varDesc) {
+              if (matched && matched.description) {
+                varDesc.innerHTML = matched.description;
+                varDesc.style.display = 'block';
+              } else {
+                varDesc.style.display = 'none';
+                varDesc.innerHTML = '';
+              }
+            }
+
             if (!matched) {
               resetBadge();
               if (allAttrsSelected()) unavailMsg.style.display = 'block';
@@ -441,18 +458,14 @@ while ( have_posts() ) :
             .then(function(res){
               addBtn.classList.remove('loading');
               if (res.success) {
-                /* Mise à jour compteur panier */
                 var counter = document.querySelector('.cart-count');
                 if (counter) counter.textContent = res.data.count;
 
-                /* Prix affiché */
                 var currentPrice = priceBlock ? priceBlock.querySelector('.sp-price-current') : null;
                 var priceText    = currentPrice ? currentPrice.textContent.trim() : '';
 
-                /* Déclenchement event WooCommerce → ouvre le cart drawer */
                 $(document.body).trigger('added_to_cart', [{}, '', $(addBtn)]);
 
-                /* Surcharge directe du drawer avec les bonnes infos */
                 if (window.adsCartDrawer) {
                   fetch(ajaxUrl + '?action=ads_get_cart_total&nonce=' + encodeURIComponent(nonce))
                     .then(function(r2){ return r2.json(); })
@@ -526,7 +539,6 @@ while ( have_posts() ) :
                     var counter = document.querySelector('.cart-count');
                     if (counter) counter.textContent = res.data.count;
 
-                    /* Ouvre le cart drawer directement */
                     if (window.adsCartDrawer) {
                       fetch(ajaxUrl + '?action=ads_get_cart_total&nonce=' + encodeURIComponent(nonce))
                         .then(function(r2){ return r2.json(); })
