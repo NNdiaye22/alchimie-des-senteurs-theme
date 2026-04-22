@@ -3,24 +3,6 @@
    Cohérent avec contact.css & checkout.css
 ============================================== */
 
-/* ---- RESET PAGE GÉNÉRIQUE (page.php) ---- */
-/* La page Mon Compte passe par page.php → on masque le titre brut
-   et on ajoute le décalage pour la nav fixe */
-.woocommerce-account .ads-page {
-  padding-top: 0;
-}
-.woocommerce-account .ads-page-title {
-  display: none;
-}
-.woocommerce-account .ads-container {
-  max-width: none;
-  padding: 0;
-  margin: 0;
-}
-.woocommerce-account .ads-page-content {
-  padding: 0;
-}
-
 /* ---- WRAP PRINCIPAL ---- */
 .myaccount-wrap {
   min-height: 100vh;
@@ -72,6 +54,12 @@
   grid-template-columns: 220px 1fr;
   gap: 5rem;
   align-items: start;
+}
+
+/* Si non connecté : pas de nav, contenu pleine largeur */
+.myaccount-layout:has(.myaccount-content:first-child) {
+  grid-template-columns: 1fr;
+  max-width: 700px;
 }
 
 /* ---- NAV LATÉRALE ---- */
@@ -127,13 +115,12 @@
 }
 
 /* ---- FORMULAIRE LOGIN / REGISTER ---- */
-.woocommerce-MyAccount-content .woocommerce-form-login,
-.woocommerce-MyAccount-content .woocommerce-form-register,
-.u-columns .col-1,
-.u-columns .col-2 {
+.woocommerce-form-login,
+.woocommerce-form-register {
   background: transparent;
   border: none;
   padding: 0;
+  box-shadow: none;
 }
 
 /* Deux colonnes login/register côte à côte */

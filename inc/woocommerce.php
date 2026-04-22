@@ -126,6 +126,10 @@ add_filter( 'template_include', function( $template ) {
         $custom = get_template_directory() . '/page-cart.php';
         if ( file_exists( $custom ) ) return $custom;
     }
+    if ( function_exists( 'is_account_page' ) && is_account_page() ) {
+        $custom = get_template_directory() . '/page-myaccount.php';
+        if ( file_exists( $custom ) ) return $custom;
+    }
     return $template;
 }, 99 );
 
@@ -199,7 +203,6 @@ add_action( 'wp_head', function() {
     .sp-add-btn:hover:not(:disabled){background:var(--amber,#c4873a);transform:translateY(-1px);}
     .sp-add-btn:disabled{opacity:0.45;cursor:not-allowed;transform:none;}
     .sp-add-btn.loading{opacity:0.7;pointer-events:none;}
-    .sp-add-btn.added{background:#437a22;}
     .sp-add-btn.loading::after{content:'';display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:ads-spin 0.7s linear infinite;}
     @keyframes ads-spin{to{transform:rotate(360deg);}}
     </style>
