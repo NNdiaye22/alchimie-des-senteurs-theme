@@ -199,6 +199,7 @@ add_action( 'wp_head', function() {
     .ads-pill.active{border-color:var(--amber,#c4873a);background:var(--amber,#c4873a);color:#fff;box-shadow:0 2px 8px rgba(196,135,58,0.25);}
     .ads-pill:disabled,.ads-pill.is-disabled{opacity:0.4;cursor:not-allowed;border-color:var(--mid,#e0d8cc);color:var(--stone,#9a9088);}
     .ads-var-unavailable{font-size:0.78rem;color:#b94a48;margin-top:0.5rem;padding:0.4rem 0.75rem;border-left:2px solid #b94a48;background:rgba(185,74,72,0.06);border-radius:0 4px 4px 0;}
+    .ads-var-desc{font-size:0.82rem;color:var(--stone,#9a9088);margin-top:0.5rem;padding:0.5rem 0.75rem;background:var(--off,#f7f4ef);border-radius:4px;line-height:1.5;}
     .sp-add-btn{display:inline-flex;align-items:center;gap:0.5rem;margin-top:1rem;padding:0.75rem 1.75rem;background:var(--ink,#1a1714);color:#fff;border:none;border-radius:4px;font-size:0.85rem;font-family:inherit;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;transition:background 0.2s,opacity 0.2s,transform 0.15s;}
     .sp-add-btn:hover:not(:disabled){background:var(--amber,#c4873a);transform:translateY(-1px);}
     .sp-add-btn:disabled{opacity:0.45;cursor:not-allowed;transform:none;}
@@ -220,7 +221,8 @@ function ads_get_cart_total_ajax() {
     }
     $total = '';
     if ( function_exists( 'WC' ) && WC()->cart ) {
-        $total = wp_strip_all_tags( WC()->cart->get_cart_total() );
+        $raw   = wp_strip_all_tags( WC()->cart->get_cart_total() );
+        $total = html_entity_decode( $raw, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
     }
     wp_send_json_success( array( 'total' => $total ) );
 }
