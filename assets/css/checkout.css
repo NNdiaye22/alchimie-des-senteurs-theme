@@ -1,5 +1,6 @@
 /* ==============================================
    CHECKOUT — Alchimie des Senteurs
+   Style calqué sur la page Contact
 ============================================== */
 
 .checkout-wrap {
@@ -7,61 +8,87 @@
   background: var(--white);
 }
 
-/* HERO */
+/* ---- HERO (calque contact-hero) ---- */
 .checkout-hero {
-  padding: 9rem 6vw 3.5rem;
-  background: var(--off);
-  border-bottom: 1px solid var(--mid);
+  background: var(--ink);
+  padding: 14rem 6vw 8rem;
+  position: relative;
+  overflow: hidden;
+}
+.checkout-hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 6vw; right: 6vw;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+}
+.checkout-hero-inner {
+  max-width: 700px;
 }
 .checkout-hero-tag {
-  font-size: 0.54rem;
-  letter-spacing: 0.65em;
+  font-size: 0.56rem;
+  letter-spacing: 0.7em;
   text-transform: uppercase;
-  color: var(--stone);
-  margin-bottom: 0.9rem;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 2rem;
 }
 .checkout-hero-title {
-  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-size: clamp(2.8rem, 5.5vw, 5.5rem);
   font-weight: 300;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   line-height: 1.1;
-  color: var(--ink);
+  color: var(--white);
+  margin-bottom: 2rem;
 }
 .checkout-hero-title em {
   font-style: italic;
-  color: var(--amber);
+  color: var(--amber-l);
+}
+.checkout-hero-sub {
+  font-size: 0.86rem;
+  line-height: 2;
+  color: rgba(255,255,255,0.4);
+  max-width: 440px;
 }
 
-/* NOTICE */
-.checkout-notice {
-  background: var(--light);
-  border-left: 3px solid var(--amber);
-  padding: 1rem 6vw;
+/* ---- BANDE INFOS RAPIDES (calque contact-quick) ---- */
+.checkout-quick {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--light);
 }
-.checkout-notice-inner {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  max-width: 1100px;
-  margin: 0 auto;
+.cko-item {
+  padding: 3rem 4vw;
+  border-right: 1px solid var(--light);
 }
-.checkout-notice-inner svg {
-  flex-shrink: 0;
-  margin-top: 2px;
-  color: var(--amber);
-}
-.checkout-notice-inner p {
-  font-size: 0.78rem;
-  line-height: 1.7;
+.cko-item:last-child { border-right: none; }
+.cko-label {
+  font-size: 0.5rem;
+  letter-spacing: 0.6em;
+  text-transform: uppercase;
   color: var(--stone);
+  margin-bottom: 0.8rem;
 }
-.checkout-notice-inner p strong { color: var(--ink); }
+.cko-value {
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.cko-link {
+  text-decoration: none;
+  color: var(--ink);
+  border-bottom: 1px solid var(--mid);
+  padding-bottom: 1px;
+  transition: color 0.3s, border-color 0.3s;
+}
+.cko-link:hover { color: var(--amber); border-color: var(--amber); }
 
-/* LAYOUT */
+/* ---- LAYOUT FORMULAIRE ---- */
 .checkout-layout {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 4rem 6vw 6rem;
+  padding: 5rem 6vw 7rem;
 }
 
 .checkout-layout .woocommerce,
@@ -69,7 +96,7 @@
   width: 100%;
 }
 
-/* GRID PRINCIPAL — 3 colonnes nommées */
+/* GRID PRINCIPAL */
 .checkout-layout .woocommerce-checkout {
   display: grid;
   grid-template-columns: 1fr 360px;
@@ -81,9 +108,8 @@
   align-items: start;
 }
 
-/* Placement explicite de chaque bloc */
 .checkout-layout #customer_details  { grid-area: details; }
-.checkout-layout #order_review      { grid-area: review;  position: sticky; top: 7rem; }
+.checkout-layout #order_review      { grid-area: review; position: sticky; top: 7rem; }
 .checkout-layout #payment           { grid-area: payment; padding-top: 2rem; }
 
 /* Masquer infos inutiles */
@@ -103,13 +129,13 @@
 .checkout-layout #customer_details::before {
   content: 'Vos informations';
   display: block;
-  font-size: 0.6rem;
-  letter-spacing: 0.5em;
+  font-size: 0.52rem;
+  letter-spacing: 0.65em;
   text-transform: uppercase;
   color: var(--stone);
   font-family: 'Georgia', serif;
-  padding-bottom: 1rem;
-  margin-bottom: 2rem;
+  padding-bottom: 1.2rem;
+  margin-bottom: 2.5rem;
   border-bottom: 1px solid var(--mid);
 }
 
@@ -124,15 +150,16 @@
 .checkout-layout #billing_last_name_field { margin-left: 1.2rem; }
 
 /* Champs */
-.checkout-layout .form-row { margin-bottom: 1.4rem; }
+.checkout-layout .form-row { margin-bottom: 1.6rem; }
 .checkout-layout .form-row label {
   display: block;
-  font-size: 0.58rem;
-  letter-spacing: 0.38em;
+  font-size: 0.52rem;
+  letter-spacing: 0.5em;
   text-transform: uppercase;
   color: var(--stone);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
   font-family: 'Georgia', serif;
+  font-weight: normal;
 }
 .checkout-layout .form-row label .required { color: var(--amber); margin-left: 2px; }
 .checkout-layout .form-row input[type="text"],
@@ -142,25 +169,25 @@
 .checkout-layout .form-row textarea,
 .checkout-layout .form-row select {
   width: 100%;
-  padding: 0.9rem 1rem;
+  padding: 1rem 1.2rem;
   border: 1px solid var(--mid);
   border-radius: 0;
   background: var(--white);
   color: var(--ink);
-  font-size: 0.84rem;
+  font-size: 0.88rem;
   font-family: 'Georgia', serif;
-  transition: border-color 0.2s;
+  transition: border-color 0.3s;
   appearance: none;
   -webkit-appearance: none;
+  outline: none;
 }
 .checkout-layout .form-row input:focus,
 .checkout-layout .form-row select:focus,
 .checkout-layout .form-row textarea:focus {
-  outline: none;
-  border-color: var(--amber);
+  border-color: var(--ink);
 }
 
-/* Champs cachés */
+/* Champs masqués */
 .checkout-layout #billing_company_field,
 .checkout-layout #billing_country_field,
 .checkout-layout #billing_postcode_field,
@@ -172,24 +199,25 @@
 
 /* Notes */
 .checkout-layout .woocommerce-additional-fields h3 {
-  font-size: 0.6rem;
-  letter-spacing: 0.45em;
+  font-size: 0.52rem;
+  letter-spacing: 0.5em;
   text-transform: uppercase;
   color: var(--stone);
   font-weight: 400;
   margin-bottom: 1.2rem;
   padding-bottom: 0.8rem;
   border-bottom: 1px solid var(--mid);
+  font-family: 'Georgia', serif;
 }
 .checkout-layout .woocommerce-additional-fields textarea {
   min-height: 100px;
   resize: vertical;
 }
 
-/* ---- RÉCAPITULATIF ---- */
+/* ---- RÉCAPITULATIF (style contact-form-col) ---- */
 #order_review_heading {
-  font-size: 0.6rem;
-  letter-spacing: 0.5em;
+  font-size: 0.52rem;
+  letter-spacing: 0.65em;
   text-transform: uppercase;
   color: var(--stone);
   font-weight: 400;
@@ -201,17 +229,17 @@
 
 .woocommerce-checkout-review-order {
   background: var(--off);
-  padding: 2.5rem 2rem;
+  padding: 2.5rem 2.2rem;
 }
 
 .woocommerce-checkout-review-order-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 1.8rem;
+  margin-bottom: 2rem;
 }
 .woocommerce-checkout-review-order-table thead th {
-  font-size: 0.54rem;
-  letter-spacing: 0.45em;
+  font-size: 0.5rem;
+  letter-spacing: 0.5em;
   text-transform: uppercase;
   color: var(--stone);
   font-weight: 400;
@@ -253,13 +281,13 @@
 .woocommerce-checkout #payment .wc_payment_methods {
   list-style: none;
   padding: 0;
-  margin: 0 0 1.2rem;
+  margin: 0 0 1.5rem;
   border: 1px solid var(--mid);
 }
 .woocommerce-checkout #payment .wc_payment_methods li {
-  padding: 0.9rem 1.2rem;
+  padding: 1rem 1.4rem;
   border-bottom: 1px solid var(--light);
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: var(--ink);
   font-family: 'Georgia', serif;
 }
@@ -268,31 +296,31 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.7rem;
 }
 .woocommerce-checkout #payment .payment_box {
-  padding: 0.8rem 1rem;
+  padding: 0.9rem 1.2rem;
   background: var(--light);
-  font-size: 0.76rem;
+  font-size: 0.78rem;
   color: var(--stone);
-  line-height: 1.6;
+  line-height: 1.7;
   font-family: 'Georgia', serif;
 }
 
-/* Bouton commander */
+/* Bouton commander (style cf-submit) */
 #place_order {
   display: block;
   width: 100%;
-  padding: 1.1rem 2rem;
+  padding: 1.2rem 2rem;
   background: var(--ink);
   color: var(--white);
   font-size: 0.6rem;
-  letter-spacing: 0.45em;
+  letter-spacing: 0.5em;
   text-transform: uppercase;
   font-family: 'Georgia', serif;
   border: none;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.35s;
   margin-top: 1.5rem;
 }
 #place_order:hover { background: var(--amber); }
@@ -310,8 +338,8 @@
   font-family: 'Georgia', serif;
 }
 
-/* RESPONSIVE */
-@media (max-width: 900px) {
+/* ---- RESPONSIVE ---- */
+@media (max-width: 1024px) {
   .checkout-layout .woocommerce-checkout {
     grid-template-columns: 1fr;
     grid-template-areas:
@@ -327,6 +355,18 @@
     margin-left: 0;
   }
 }
+@media (max-width: 768px) {
+  .checkout-quick {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .cko-item:nth-child(2) { border-right: none; }
+  .cko-item:nth-child(3) { border-top: 1px solid var(--light); }
+  .cko-item:nth-child(4) { border-top: 1px solid var(--light); border-right: none; }
+}
 @media (max-width: 600px) {
-  .checkout-hero { padding: 7rem 6vw 2.5rem; }
+  .checkout-hero { padding: 10rem 6vw 5rem; }
+  .checkout-hero-title { font-size: 2.2rem; }
+  .checkout-quick { grid-template-columns: 1fr; }
+  .cko-item { border-right: none !important; border-top: 1px solid var(--light); }
+  .cko-item:first-child { border-top: none; }
 }
