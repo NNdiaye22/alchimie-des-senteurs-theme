@@ -1,5 +1,6 @@
 /* ==============================================
    MON COMPTE — Alchimie des Senteurs
+   Cohérent avec contact.css & checkout.css
 ============================================== */
 
 .myaccount-wrap {
@@ -7,56 +8,64 @@
   background: var(--white);
 }
 
-/* HERO */
+/* ---- HERO (identique checkout/contact) ---- */
 .myaccount-hero {
-  padding: 9rem 6vw 3.5rem;
-  background: var(--off);
-  border-bottom: 1px solid var(--mid);
+  background: var(--ink);
+  padding: 14rem 6vw 8rem;
+  position: relative;
+  overflow: hidden;
+}
+.myaccount-hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 6vw; right: 6vw;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
 }
 .myaccount-hero-tag {
-  font-size: 0.54rem;
-  letter-spacing: 0.65em;
+  font-size: 0.56rem;
+  letter-spacing: 0.7em;
   text-transform: uppercase;
-  color: var(--stone);
-  margin-bottom: 0.9rem;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 2rem;
 }
 .myaccount-hero-title {
-  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-size: clamp(2.8rem, 5.5vw, 5.5rem);
   font-weight: 300;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   line-height: 1.1;
-  color: var(--ink);
+  color: var(--white);
+  margin-bottom: 0;
 }
 .myaccount-hero-title em {
   font-style: italic;
-  color: var(--amber);
+  color: var(--amber-l);
 }
 
-/* LAYOUT */
+/* ---- LAYOUT PRINCIPAL ---- */
 .myaccount-layout {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 4rem 6vw 6rem;
+  padding: 5rem 6vw 7rem;
   display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 4rem;
+  grid-template-columns: 220px 1fr;
+  gap: 5rem;
   align-items: start;
 }
 
-/* NAV LATÉRALE */
+/* ---- NAV LATÉRALE ---- */
 .myaccount-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
   position: sticky;
   top: 7rem;
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--mid);
 }
 .myaccount-nav-item {
   display: block;
-  padding: 0.9rem 1.2rem;
-  font-size: 0.7rem;
-  letter-spacing: 0.3em;
+  padding: 1rem 1.4rem;
+  font-size: 0.58rem;
+  letter-spacing: 0.45em;
   text-transform: uppercase;
   color: var(--stone);
   text-decoration: none;
@@ -65,44 +74,211 @@
   transition: color 0.2s, background 0.2s;
 }
 .myaccount-nav-item:last-child { border-bottom: none; }
-.myaccount-nav-item:hover,
+.myaccount-nav-item:hover {
+  color: var(--ink);
+  background: var(--off);
+}
 .myaccount-nav-item.active,
 .myaccount-nav-item.is-active {
   color: var(--ink);
   background: var(--off);
+  border-left: 2px solid var(--amber);
+  padding-left: calc(1.4rem - 2px);
 }
 
-/* CONTENU */
+/* ---- CONTENU ---- */
 .myaccount-content {
   min-width: 0;
 }
 
-/* Titre de section WooCommerce */
+/* Titres de section WC */
 .myaccount-content h2,
 .myaccount-content h3 {
-  font-size: 0.6rem;
-  letter-spacing: 0.5em;
+  font-size: 0.52rem;
+  letter-spacing: 0.65em;
   text-transform: uppercase;
   color: var(--stone);
   font-weight: 400;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.2rem;
   border-bottom: 1px solid var(--mid);
   font-family: 'Georgia', serif;
 }
 
-/* TABLEAU COMMANDES */
+/* ---- FORMULAIRE LOGIN / REGISTER (état non connecté) ---- */
+.woocommerce-MyAccount-content .woocommerce-form-login,
+.woocommerce-MyAccount-content .woocommerce-form-register,
+.u-columns .col-1,
+.u-columns .col-2 {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+/* Les deux colonnes login/register côte à côte */
+.u-columns.col2-set {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+/* Titres des blocs login/register */
+.woocommerce-form-login h2,
+.woocommerce-form-register h2 {
+  font-size: 0.52rem;
+  letter-spacing: 0.65em;
+  text-transform: uppercase;
+  color: var(--stone);
+  font-weight: 400;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--mid);
+  font-family: 'Georgia', serif;
+}
+
+/* Champs */
+.woocommerce-form-login .form-row,
+.woocommerce-form-register .form-row,
+.myaccount-content .form-row {
+  margin-bottom: 1.6rem;
+}
+.woocommerce-form-login .form-row label,
+.woocommerce-form-register .form-row label,
+.myaccount-content .form-row label {
+  display: block;
+  font-size: 0.52rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 0.6rem;
+  font-family: 'Georgia', serif;
+  font-weight: normal;
+}
+.woocommerce-form-login .form-row label .required,
+.woocommerce-form-register .form-row label .required,
+.myaccount-content .form-row label .required {
+  color: var(--amber);
+  margin-left: 2px;
+}
+.woocommerce-form-login input[type="text"],
+.woocommerce-form-login input[type="email"],
+.woocommerce-form-login input[type="password"],
+.woocommerce-form-register input[type="text"],
+.woocommerce-form-register input[type="email"],
+.woocommerce-form-register input[type="password"],
+.myaccount-content .form-row input[type="text"],
+.myaccount-content .form-row input[type="email"],
+.myaccount-content .form-row input[type="tel"],
+.myaccount-content .form-row input[type="password"],
+.myaccount-content .form-row select,
+.myaccount-content .form-row textarea {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  border: 1px solid var(--mid);
+  border-radius: 0;
+  background: var(--white);
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-family: 'Georgia', serif;
+  transition: border-color 0.3s;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+}
+.woocommerce-form-login input:focus,
+.woocommerce-form-register input:focus,
+.myaccount-content .form-row input:focus,
+.myaccount-content .form-row select:focus,
+.myaccount-content .form-row textarea:focus {
+  border-color: var(--ink);
+}
+
+/* Remember me */
+.woocommerce-form-login .woocommerce-form-login__rememberme {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.72rem;
+  color: var(--stone);
+  font-family: 'Georgia', serif;
+  margin-bottom: 1.6rem;
+}
+
+/* Boutons login/register */
+.woocommerce-form-login .woocommerce-button,
+.woocommerce-form-register .woocommerce-button,
+.woocommerce-form-login button[type="submit"],
+.woocommerce-form-register button[type="submit"] {
+  display: inline-block;
+  padding: 1.1rem 3rem;
+  background: var(--ink);
+  color: var(--white);
+  font-size: 0.6rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  font-family: 'Georgia', serif;
+  border: none;
+  cursor: pointer;
+  transition: background 0.35s;
+}
+.woocommerce-form-login .woocommerce-button:hover,
+.woocommerce-form-register .woocommerce-button:hover,
+.woocommerce-form-login button[type="submit"]:hover,
+.woocommerce-form-register button[type="submit"]:hover {
+  background: var(--amber);
+}
+
+/* Lien mot de passe perdu */
+.woocommerce-form-login .lost_password {
+  margin-top: 1.2rem;
+}
+.woocommerce-form-login .lost_password a {
+  font-size: 0.64rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--stone);
+  text-decoration: none;
+  border-bottom: 1px solid var(--mid);
+  padding-bottom: 1px;
+  transition: color 0.3s, border-color 0.3s;
+  font-family: 'Georgia', serif;
+}
+.woocommerce-form-login .lost_password a:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+/* Description inscription */
+.woocommerce-privacy-policy-text {
+  font-size: 0.72rem;
+  line-height: 1.8;
+  color: var(--stone);
+  font-family: 'Georgia', serif;
+  margin-bottom: 1.6rem;
+}
+.woocommerce-privacy-policy-text a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--mid);
+  transition: border-color 0.3s;
+}
+.woocommerce-privacy-policy-text a:hover {
+  border-color: var(--ink);
+}
+
+/* ---- TABLEAU COMMANDES ---- */
 .myaccount-content .woocommerce-orders-table {
   width: 100%;
   border-collapse: collapse;
 }
 .myaccount-content .woocommerce-orders-table thead th {
-  font-size: 0.54rem;
-  letter-spacing: 0.4em;
+  font-size: 0.5rem;
+  letter-spacing: 0.5em;
   text-transform: uppercase;
   color: var(--stone);
   font-weight: 400;
-  padding-bottom: 1rem;
+  padding-bottom: 1.2rem;
   border-bottom: 1px solid var(--mid);
   text-align: left;
   font-family: 'Georgia', serif;
@@ -111,8 +287,8 @@
   border-bottom: 1px solid var(--light);
 }
 .myaccount-content .woocommerce-orders-table tbody td {
-  padding: 1.1rem 0;
-  font-size: 0.82rem;
+  padding: 1.2rem 0;
+  font-size: 0.84rem;
   color: var(--ink);
   font-family: 'Georgia', serif;
   vertical-align: middle;
@@ -128,13 +304,13 @@
   border-color: var(--amber);
 }
 
-/* Statut commande */
+/* Statuts commande */
 .woocommerce-order-status {
   display: inline-block;
-  font-size: 0.6rem;
+  font-size: 0.56rem;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  padding: 0.3rem 0.8rem;
+  padding: 0.3rem 0.9rem;
   font-family: 'Georgia', serif;
 }
 .woocommerce-order-status.status-processing,
@@ -157,20 +333,20 @@
   color: var(--stone);
 }
 
-/* Bouton Voir / action */
+/* ---- BOUTONS GÉNÉRIQUES ---- */
 .myaccount-content .woocommerce-button,
 .myaccount-content .button {
   display: inline-block;
-  padding: 0.55rem 1.2rem;
+  padding: 0.6rem 1.4rem;
   background: transparent;
   border: 1px solid var(--ink);
   color: var(--ink);
-  font-size: 0.58rem;
-  letter-spacing: 0.35em;
+  font-size: 0.56rem;
+  letter-spacing: 0.38em;
   text-transform: uppercase;
   text-decoration: none;
   font-family: 'Georgia', serif;
-  transition: background 0.2s, color 0.2s;
+  transition: background 0.25s, color 0.25s;
   cursor: pointer;
 }
 .myaccount-content .woocommerce-button:hover,
@@ -179,50 +355,15 @@
   color: var(--white);
 }
 
-/* Formulaires adresse / infos */
+/* ---- FORMULAIRES ADRESSE / COMPTE ---- */
 .myaccount-content .woocommerce-address-fields,
 .myaccount-content .woocommerce-EditAccountForm {
   max-width: 560px;
 }
-.myaccount-content .form-row {
-  margin-bottom: 1.4rem;
-}
-.myaccount-content .form-row label {
-  display: block;
-  font-size: 0.58rem;
-  letter-spacing: 0.38em;
-  text-transform: uppercase;
-  color: var(--stone);
-  margin-bottom: 0.5rem;
-  font-family: 'Georgia', serif;
-}
-.myaccount-content .form-row input[type="text"],
-.myaccount-content .form-row input[type="email"],
-.myaccount-content .form-row input[type="tel"],
-.myaccount-content .form-row input[type="password"],
-.myaccount-content .form-row select,
-.myaccount-content .form-row textarea {
-  width: 100%;
-  padding: 0.9rem 1rem;
-  border: 1px solid var(--mid);
-  border-radius: 0;
-  background: var(--white);
-  color: var(--ink);
-  font-size: 0.84rem;
-  font-family: 'Georgia', serif;
-  transition: border-color 0.2s;
-  appearance: none;
-  -webkit-appearance: none;
-}
-.myaccount-content .form-row input:focus,
-.myaccount-content .form-row select:focus,
-.myaccount-content .form-row textarea:focus {
-  outline: none;
-  border-color: var(--amber);
-}
 
-/* Messages */
+/* ---- MESSAGES ---- */
 .myaccount-content .woocommerce-message {
+  list-style: none;
   background: var(--off);
   border-left: 3px solid var(--amber);
   padding: 1rem 1.5rem;
@@ -230,9 +371,9 @@
   color: var(--ink);
   font-family: 'Georgia', serif;
   margin-bottom: 2rem;
-  list-style: none;
 }
 .myaccount-content .woocommerce-error {
+  list-style: none;
   background: rgba(185,74,72,0.06);
   border-left: 3px solid #b94a48;
   padding: 1rem 1.5rem;
@@ -240,11 +381,9 @@
   color: #b94a48;
   font-family: 'Georgia', serif;
   margin-bottom: 2rem;
-  list-style: none;
 }
-
-/* État vide */
 .myaccount-content .woocommerce-info {
+  list-style: none;
   background: var(--off);
   border: 1px solid var(--mid);
   padding: 2rem;
@@ -252,27 +391,45 @@
   color: var(--stone);
   font-family: 'Georgia', serif;
   text-align: center;
-  list-style: none;
 }
 
-/* RESPONSIVE */
+/* ---- RESPONSIVE ---- */
+@media (max-width: 1024px) {
+  .u-columns.col2-set {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+}
 @media (max-width: 768px) {
   .myaccount-layout {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 2.5rem;
+    padding: 3rem 6vw 5rem;
   }
   .myaccount-nav {
     position: static;
     flex-direction: row;
     flex-wrap: wrap;
-    border: 1px solid var(--mid);
   }
   .myaccount-nav-item {
     border-bottom: none;
     border-right: 1px solid var(--mid);
-    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--mid);
+    padding: 0.8rem 1.1rem;
+  }
+  .myaccount-nav-item.active,
+  .myaccount-nav-item.is-active {
+    border-left: none;
+    border-bottom: 2px solid var(--amber);
+    padding-left: 1.1rem;
+    padding-bottom: calc(0.8rem - 1px);
   }
 }
 @media (max-width: 600px) {
-  .myaccount-hero { padding: 7rem 6vw 2.5rem; }
+  .myaccount-hero {
+    padding: 10rem 6vw 5rem;
+  }
+  .myaccount-hero-title {
+    font-size: 2.4rem;
+  }
 }
