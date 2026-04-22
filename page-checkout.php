@@ -13,19 +13,37 @@ get_header();
 
 <div class="checkout-wrap">
 
-  <!-- HERO -->
-  <div class="checkout-hero">
+  <!-- HERO (style contact-hero) -->
+  <section class="checkout-hero">
     <div class="checkout-hero-inner">
       <div class="checkout-hero-tag">Commande</div>
-      <h1 class="checkout-hero-title">Validation de<br><em>votre commande</em></h1>
+      <h1 class="checkout-hero-title">
+        Validation de<br>
+        <em>votre commande</em>
+      </h1>
+      <p class="checkout-hero-sub">Renseignez vos informations ci-dessous. Notre équipe vous contactera pour confirmer la livraison.</p>
     </div>
-  </div>
+  </section>
 
-  <!-- NOTICE LIVRAISON -->
-  <div class="checkout-notice">
-    <div class="checkout-notice-inner">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <p>Notre service client vous contactera par téléphone pour confirmer votre commande. <strong>Le coût de la livraison dépend du montant total de la commande et de votre adresse.</strong></p>
+  <!-- BANDE INFOS RAPIDES (style contact-quick) -->
+  <div class="checkout-quick">
+    <div class="cko-item">
+      <div class="cko-label">Paiement</div>
+      <div class="cko-value">À la livraison</div>
+    </div>
+    <div class="cko-item">
+      <div class="cko-label">Livraison</div>
+      <div class="cko-value">Dakar &amp; environs</div>
+    </div>
+    <div class="cko-item">
+      <div class="cko-label">Confirmation</div>
+      <div class="cko-value">Par téléphone</div>
+    </div>
+    <div class="cko-item">
+      <div class="cko-label">Besoin d'aide ?</div>
+      <a class="cko-value cko-link"
+         href="<?php echo esc_url( get_theme_mod('ads_footer_wa','https://wa.me/221776440125') ); ?>"
+         target="_blank" rel="noopener">WhatsApp</a>
     </div>
   </div>
 
