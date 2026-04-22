@@ -3,6 +3,25 @@
    Cohérent avec contact.css & checkout.css
 ============================================== */
 
+/* ---- RESET PAGE GÉNÉRIQUE (page.php) ---- */
+/* La page Mon Compte passe par page.php → on masque le titre brut
+   et on ajoute le décalage pour la nav fixe */
+.woocommerce-account .ads-page {
+  padding-top: 0;
+}
+.woocommerce-account .ads-page-title {
+  display: none;
+}
+.woocommerce-account .ads-container {
+  max-width: none;
+  padding: 0;
+  margin: 0;
+}
+.woocommerce-account .ads-page-content {
+  padding: 0;
+}
+
+/* ---- WRAP PRINCIPAL ---- */
 .myaccount-wrap {
   min-height: 100vh;
   background: var(--white);
@@ -28,6 +47,7 @@
   text-transform: uppercase;
   color: rgba(255,255,255,0.3);
   margin-bottom: 2rem;
+  font-family: 'Georgia', serif;
 }
 .myaccount-hero-title {
   font-size: clamp(2.8rem, 5.5vw, 5.5rem);
@@ -36,6 +56,7 @@
   line-height: 1.1;
   color: var(--white);
   margin-bottom: 0;
+  font-family: 'Georgia', serif;
 }
 .myaccount-hero-title em {
   font-style: italic;
@@ -105,7 +126,7 @@
   font-family: 'Georgia', serif;
 }
 
-/* ---- FORMULAIRE LOGIN / REGISTER (état non connecté) ---- */
+/* ---- FORMULAIRE LOGIN / REGISTER ---- */
 .woocommerce-MyAccount-content .woocommerce-form-login,
 .woocommerce-MyAccount-content .woocommerce-form-register,
 .u-columns .col-1,
@@ -115,7 +136,7 @@
   padding: 0;
 }
 
-/* Les deux colonnes login/register côte à côte */
+/* Deux colonnes login/register côte à côte */
 .u-columns.col2-set {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -123,7 +144,7 @@
   align-items: start;
 }
 
-/* Titres des blocs login/register */
+/* Titres des blocs */
 .woocommerce-form-login h2,
 .woocommerce-form-register h2 {
   font-size: 0.52rem;
@@ -249,7 +270,7 @@
   border-color: var(--ink);
 }
 
-/* Description inscription */
+/* Texte RGPD */
 .woocommerce-privacy-policy-text {
   font-size: 0.72rem;
   line-height: 1.8;
@@ -412,9 +433,8 @@
     flex-wrap: wrap;
   }
   .myaccount-nav-item {
-    border-bottom: none;
-    border-right: 1px solid var(--mid);
     border-bottom: 1px solid var(--mid);
+    border-right: 1px solid var(--mid);
     padding: 0.8rem 1.1rem;
   }
   .myaccount-nav-item.active,
