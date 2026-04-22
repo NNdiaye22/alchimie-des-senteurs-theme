@@ -139,9 +139,4 @@ get_header();
 
 </div>
 
-<?php
-if ( ! empty( $order_id ) ) {
-    do_action( 'woocommerce_thankyou', $order_id );
-}
-get_footer();
-?>
+<?php get_footer(); ?>
