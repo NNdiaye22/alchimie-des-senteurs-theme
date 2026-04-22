@@ -8,6 +8,13 @@
   background: var(--white);
 }
 
+/* ---- FIX pleine largeur : annule le max-width de woocommerce.css ---- */
+.checkout-wrap .woocommerce-checkout {
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 /* ---- HERO (calque contact-hero) ---- */
 .checkout-hero {
   background: var(--ink);
@@ -98,7 +105,7 @@
 
 /* GRID PRINCIPAL */
 .checkout-layout .woocommerce-checkout {
-  display: grid;
+  display: grid !important;
   grid-template-columns: 1fr 360px;
   grid-template-rows: auto auto;
   grid-template-areas:
@@ -214,7 +221,7 @@
   resize: vertical;
 }
 
-/* ---- RÉCAPITULATIF (style contact-form-col) ---- */
+/* ---- RÉCAPITULATIF ---- */
 #order_review_heading {
   font-size: 0.52rem;
   letter-spacing: 0.65em;
@@ -307,7 +314,7 @@
   font-family: 'Georgia', serif;
 }
 
-/* Bouton commander (style cf-submit) */
+/* Bouton commander */
 #place_order {
   display: block;
   width: 100%;
@@ -341,7 +348,7 @@
 /* ---- RESPONSIVE ---- */
 @media (max-width: 1024px) {
   .checkout-layout .woocommerce-checkout {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
     grid-template-areas:
       "details"
       "review"
@@ -356,9 +363,7 @@
   }
 }
 @media (max-width: 768px) {
-  .checkout-quick {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .checkout-quick { grid-template-columns: repeat(2, 1fr); }
   .cko-item:nth-child(2) { border-right: none; }
   .cko-item:nth-child(3) { border-top: 1px solid var(--light); }
   .cko-item:nth-child(4) { border-top: 1px solid var(--light); border-right: none; }
