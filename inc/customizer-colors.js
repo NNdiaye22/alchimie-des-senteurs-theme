@@ -9,11 +9,23 @@
         document.documentElement.style.setProperty(name, val);
     }
 
+    /* Décode les séquences \uXXXX que WordPress peut envoyer via postMessage */
+    function decodeUnicode(str) {
+        try {
+            return str.replace(/\\u([0-9a-fA-F]{4})/g, function(_, code) {
+                return String.fromCharCode(parseInt(code, 16));
+            });
+        } catch(e) {
+            return str;
+        }
+    }
+
     function txt(id, sel) {
         wp.customize(id, function (v) {
             v.bind(function (val) {
+                var decoded = decodeUnicode(val);
                 document.querySelectorAll(sel).forEach(function (el) {
-                    el.innerHTML = val;
+                    el.innerHTML = decoded;
                 });
             });
         });
