@@ -112,6 +112,23 @@ function ads_enqueue_assets() {
         );
     }
 
+    // CSS + JS Cart Drawer (toutes les pages WooCommerce)
+    if ( function_exists( 'is_woocommerce' ) || function_exists( 'WC' ) ) {
+        wp_enqueue_style(
+            'ads-cart-drawer',
+            ADS_URI . '/assets/css/cart-drawer.css',
+            array( 'ads-main' ),
+            ADS_VERSION
+        );
+        wp_enqueue_script(
+            'ads-cart-drawer',
+            ADS_URI . '/assets/js/cart-drawer.js',
+            array( 'jquery', 'ads-main' ),
+            ADS_VERSION,
+            true
+        );
+    }
+
     // JS canvas (homepage uniquement)
     if ( is_front_page() ) {
         wp_enqueue_script(
