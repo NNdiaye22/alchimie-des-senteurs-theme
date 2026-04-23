@@ -26,17 +26,17 @@ function ads_c_f( $key, $default = '' ) {
   </div>
 
   <div class="f-col">
-    <h5>Collection</h5>
+    <h5><?php echo ads_c_f('ads_footer_col1_title', 'Collection'); ?></h5>
     <?php wp_nav_menu(array('theme_location' => 'footer_1', 'container' => false, 'fallback_cb' => false)); ?>
   </div>
 
   <div class="f-col">
-    <h5>Boutique</h5>
+    <h5><?php echo ads_c_f('ads_footer_col2_title', 'Boutique'); ?></h5>
     <?php wp_nav_menu(array('theme_location' => 'footer_2', 'container' => false, 'fallback_cb' => false)); ?>
   </div>
 
   <div class="f-col">
-    <h5>Aide</h5>
+    <h5><?php echo ads_c_f('ads_footer_col3_title', 'Aide'); ?></h5>
     <?php wp_nav_menu(array('theme_location' => 'footer_3', 'container' => false, 'fallback_cb' => false)); ?>
   </div>
 </footer>
