@@ -269,7 +269,7 @@ function ads_customizer_register( $wp_customize ) {
     _ads_text(  $wp_customize, 'ads_shop_title_l2',        'Hero - Titre ligne 2 (ambre)',  'Alchimie',          'ads_shop' );
     _ads_text(  $wp_customize, 'ads_shop_sub',             'Hero - Sous-titre',             "Encens, résines et accessoires sélectionnés pour leur authenticité et leur intensité olfactive.", 'ads_shop', 'textarea' );
     _ads_text(  $wp_customize, 'ads_shop_editorial_label', 'Case éditoriale - Label',       'La philosophie',    'ads_shop' );
-    _ads_text(  $wp_customize, 'ads_shop_editorial',       'Case éditoriale - Citation',    "« L'encens comme rituel. »", 'ads_shop', 'textarea' );
+    _ads_text(  $wp_customize, 'ads_shop_editorial',       'Case éditoriale - Citation',    "\u00ab L'encens comme rituel. \u00bb", 'ads_shop', 'textarea' );
     _ads_text(  $wp_customize, 'ads_shop_card_btn',        'Bouton sur chaque carte',       'Voir',              'ads_shop' );
     _ads_text(  $wp_customize, 'ads_shop_empty',           'Message si aucun produit',      'Aucun produit trouvé.', 'ads_shop' );
     _ads_color( $wp_customize, 'ads_shop_hero_bg',         'Hero - Couleur de fond',        '#1a1714',           'ads_shop' );
@@ -292,14 +292,14 @@ function ads_customizer_register( $wp_customize ) {
             'tag_def' => 'Collection Bâtonnets',
             'sub_def' => "Nos encens en bâtonnets : une combustion lente, une diffusion continuelle. Le format traditionnel par excellence.",
             'ed_lbl'  => 'Le classique',
-            'ed_txt'  => "« Le bâtonnet d'encens, génération après génération. »",
+            'ed_txt'  => "\u00ab Le bâtonnet d'encens, génération après génération. \u00bb",
         ),
         'cones' => array(
             'label'   => 'Catégorie - Cônes',
             'tag_def' => 'Collection Cônes',
             'sub_def' => 'Nos encens en cônes : une combustion concentrée, une diffusion intense et enveloppante.',
             'ed_lbl'  => "L'intensité",
-            'ed_txt'  => '« Le cône concentre toute la puissance du parfum. »',
+            'ed_txt'  => '\u00ab Le cône concentre toute la puissance du parfum. \u00bb',
         ),
     );
     foreach ( $known_cats as $slug => $cfg ) {
@@ -358,6 +358,9 @@ function ads_customizer_register( $wp_customize ) {
     _ads_text( $wp_customize, 'ads_footer_fb',    'Lien Facebook',                '#',                                 'ads_footer' );
     _ads_text( $wp_customize, 'ads_footer_copy',  'Texte copyright',              '© 2026 Alchimie des Senteurs · Dakar, Sénégal', 'ads_footer' );
     _ads_text( $wp_customize, 'ads_footer_pay',   'Moyens de paiement (virgule)', 'Orange Money,Wave,Carte',           'ads_footer' );
+    _ads_text( $wp_customize, 'ads_footer_col1_title', 'Footer - Titre colonne 1', 'Collection', 'ads_footer' );
+    _ads_text( $wp_customize, 'ads_footer_col2_title', 'Footer - Titre colonne 2', 'Boutique',   'ads_footer' );
+    _ads_text( $wp_customize, 'ads_footer_col3_title', 'Footer - Titre colonne 3', 'Aide',       'ads_footer' );
 
     /* ==============================================================
        13. NUMERO DE TELEPHONE
